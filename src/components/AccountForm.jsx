@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Dropdown from "./ui/DropDown";
 import InputComponent from "./InputComponent";
 import Tabs from "./Tabs"; // تأكد من مسار الملف حسب مكانه
-import { Checkbox } from "@mui/material";
-
+import Checkbox from "./Checkbox";
+import AccountsChartLang from "@/constants/Lang/AccountsChart";
+import { useLanguage } from "@/context/LanguageContext";
 export default function ArabicForm() {
+  const { languageId } = useLanguage();
   const [formData, setFormData] = useState({
     agency: "",
     name: "",
@@ -15,311 +17,192 @@ export default function ArabicForm() {
   });
   const contentsData = [
     {
-      tab_title: "معلومات",
+      tab_title: AccountsChartLang.information[languageId],
       tab_contents: (
         <div className="flex-col gap-x-6 gap-y-4" dir="rtl">
-          <InputComponent flex label={"عنوان 1"} title={"عنوان 1"} />
-          <InputComponent flex label={"عنوان 2"} title={"عنوان 2"} />
-          <InputComponent flex label={"فاكس/هاتف"} title={"فاكس/هاتف"} />
-          <InputComponent flex label={"جوال/اخرى"} title={"جوال/اخرى"} />
           <InputComponent
             flex
-            label={"بريد إلكتروني"}
-            title={"بريد إلكتروني"}
-          />
-          <InputComponent flex label={"رقم ضريبي"} title={"رقم ضريبي"} />
-          <InputComponent
-            flex
-            label={"بريد إلكتروني"}
-            title={"بريد إلكتروني"}
+            label={AccountsChartLang.Address1[languageId]}
+            title={AccountsChartLang.Address1[languageId]}
           />
           <InputComponent
             flex
-            label={" تاريخ الحساب"}
-            title={" تاريخ الحساب"}
+            label={AccountsChartLang.Address2[languageId]}
+            title={AccountsChartLang.Address2[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.Fax[languageId]}
+            title={AccountsChartLang.Fax[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.Mobile[languageId]}
+            title={AccountsChartLang.Mobile[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.email[languageId]}
+            title={AccountsChartLang.email[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.Tax[languageId]}
+            title={AccountsChartLang.Tax[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.email[languageId]}
+            title={AccountsChartLang.email[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.AccountHistory[languageId]}
+            title={AccountsChartLang.AccountHistory[languageId]}
           />
         </div>
       ),
     },
     {
-      tab_title: "الرصيد الافتتاحى",
+      tab_title: AccountsChartLang.openingBalance[languageId],
       tab_contents: (
-        <div className="gap-x-6 gap-y-4 sm:grid-cols-6" dir="rtl">
-          <p className=" font-medium  text-gray-900">
-            الرصيد الافتتاحى للحساب بالعمله الاساسيه{" "}
-          </p>
-          <InputComponent flex label={"مدين"} title={"مدين"} />
-          <InputComponent flex label={"دائن"} title={"دائن"} />
-
-          <p className=" font-medium  text-gray-900">
-            العملات الاجنبيه و الرصيد الافتتاحى بها{" "}
-          </p>
-          <Dropdown flex rtl={true} label={"اختر العمله"} />
-          <InputComponent flex label={"مدين"} title={"مدين"} />
-          <InputComponent flex label={"دائن"} title={"دائن"} />
-        </div>
-      ),
-    },
-    {
-      tab_title: "التحكم بالحساب",
-      tab_contents: (
-        <div className="gap-x-6 gap-y-4 sm:grid-cols-6" dir="rtl">
-          <div className="flex">
-            <label
-              htmlFor="TxtFax"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              حد الائتمان
-            </label>
-            <InputComponent flex label={"مدين"} title={"حد الائتمان"} />
-            <InputComponent flex label={"دائن"} title={""} />
-          </div>
-
-          <div
-            className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between"
-            dir="rtl"
+        <div className="gap-x-6 gap-y-4 text-center sm:grid-cols-6" dir="rtl">
+          <p
+            className={`text-sm font-semibold mb-2   w-full  justify-center flex text-text-light dark:text-text-dark text-start `}
           >
+            {AccountsChartLang.openingBalanceCurrent[languageId]}
+          </p>
+          <InputComponent
+            flex
+            label={AccountsChartLang.debtor[languageId]}
+            title={AccountsChartLang.debtor[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.creditor[languageId]}
+            title={AccountsChartLang.creditor[languageId]}
+          />
+
+          <p
+            className={`text-sm font-semibold mb-2 w-full  justify-center flex text-text-light dark:text-text-dark text-start `}
+          >
+            {AccountsChartLang.ForeignCurrencies[languageId]}
+          </p>
+          <Dropdown
+            flex
+            rtl={true}
+            label={AccountsChartLang.ChooseCurrency[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.debtor[languageId]}
+            title={AccountsChartLang.debtor[languageId]}
+          />
+          <InputComponent
+            flex
+            label={AccountsChartLang.creditor[languageId]}
+            title={AccountsChartLang.creditor[languageId]}
+          />
+        </div>
+      ),
+    },
+    {
+      tab_title: AccountsChartLang.AccountControl[languageId],
+      tab_contents: (
+        <div className="gap-x-6 gap-y-4 sm:grid-cols-6 " dir="rtl">
+          <div className="items-center gap-4  flex justify-between">
+            <p
+              className={`text-sm font-semibold mb-2  justify-center flex text-text-light dark:text-text-dark text-start `}
+            >
+              {AccountsChartLang.CreditLimit[languageId]}{" "}
+            </p>
+
+            <InputComponent
+              flex
+              label={AccountsChartLang.debtor[languageId]}
+              title={AccountsChartLang.debtor[languageId]}
+            />
+            <InputComponent
+              flex
+              label={AccountsChartLang.creditor[languageId]}
+              title={AccountsChartLang.creditor[languageId]}
+            />
+          </div>
+
+          <div className="col-span-full  gap-x-6 " dir="rtl">
             {" "}
-            <label
-              htmlFor="Txtparaccname"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              الاطلاع على{" "}
-            </label>
-            <select
-              id="Combtype0"
-              name="Combtype0"
-              autoComplete="country-name"
-              value={"roomId"}
-              //   onChange={e => setRoomId(e.target.value)}
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
-            >
-              <option value="real">عام</option>
-              <option value="denar">رئيسي</option>
-              <option value="eg">قطاع</option>
-            </select>
-            {/* <ChevronDownIcon
-                  aria-hidden="true"
-                  className="pointer-events-none col-start-1 row-start-1 mr-2 size-5 self-center justify-self-end text-gray-500 sm:size-4"
-                /> */}
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <Checkbox id="ChkMobileMssg" />
-            <label
-              htmlFor="TxtAdress2"
-              className="text-sm/6 font-medium text-gray-900"
-            >
-              اخطار العميل عند تعدى حد الائتمان بالايميل{" "}
-            </label>
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <Checkbox id="ChkAccStop" />
-            <label
-              htmlFor="TxtAdress2"
-              className="text-sm/6 font-medium text-gray-900"
-            >
-              ايقاف التعامل مع الحساب{" "}
-            </label>
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <input
-              id="TxtAccStop"
-              name="TxtAccStop"
-              type="text"
-              placeholder="سبب  ايقاف التعامل مع الحساب"
-              className=" min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <Dropdown flex label={AccountsChartLang.View[languageId]} />
+            <Checkbox label={AccountsChartLang.NotifyCustomer[languageId]} />
+            <Checkbox label={AccountsChartLang.SuspendAccount[languageId]} />
+            <InputComponent
+              title={AccountsChartLang.SuspendAccountReason[languageId]}
+              placeholder={AccountsChartLang.SuspendAccountReason[languageId]}
             />
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <Checkbox id="ChkAccNotes" />
-            <label
-              htmlFor="TxtAdress2"
-              className="text-sm/6 font-medium text-gray-900"
-            >
-              ملاحظات التعامل مع الحساب{" "}
-            </label>
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <input
-              id="TxtAccNotes"
-              name="TxtAccNotes"
-              type="text"
-              placeholder="  ملاحظات التعامل مع الحساب"
-              className=" min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <Checkbox
+              label={AccountsChartLang.AccountHandlingNotes[languageId]}
             />
-          </div>
-          <div className="col-span-full flex items-center gap-x-6 " dir="rtl">
-            <Checkbox id="ChkCostNeeded " />
-            <label
-              htmlFor="TxtAdress2"
-              className="text-sm/6 font-medium text-gray-900"
-            >
-              يلزم ربط الحساب مع مركز التكلفه{" "}
-            </label>
+            <InputComponent
+              title={AccountsChartLang.AccountHandlingNotes[languageId]}
+              placeholder={AccountsChartLang.AccountHandlingNotes[languageId]}
+            />
+            <Checkbox label={AccountsChartLang.accountMustLinked[languageId]} />
           </div>
         </div>
       ),
     },
     {
-      tab_title: "معلومات#1",
+      tab_title: AccountsChartLang.Information1[languageId],
       tab_contents: (
         <div
           className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6"
           dir="rtl"
         >
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtCountry"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              البلد/الرمز{" "}
-            </label>
-            <input
-              id="TxtCountry"
-              name="TxtCountry"
-              type="number"
-              placeholder="000 0000 000"
-              className="col-span-6 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
-            />{" "}
-            <input
-              id="TxtCountrySign"
-              name="TxtCountrySign"
-              type="number"
-              placeholder="+00"
-              className="col-span-3 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
-            />{" "}
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtCntSubEnƟty"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              منطقه/محافظه{" "}
-            </label>
-            <input
-              id="TxtCntSubEnƟty"
-              name="TxtCntSubEnƟty"
-              type="text"
-              placeholder=" ادخل المنطقه"
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
-            />{" "}
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtPostalZone"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              رقم بريدى{" "}
-            </label>
-            <input
-              id="TxtPostalZone"
-              name="TxtPostalZone"
-              type="number"
-              placeholder="الرقم البريدى"
-              className="col-span-3 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+          <div className="col-span-full  items-center gap-x-6 justify-between">
+            <InputComponent
+              flex
+              label={AccountsChartLang.Country[languageId]}
+              title={AccountsChartLang.Country[languageId]}
             />
-            <label
-              htmlFor="TxtBuildNo"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              رقم المبنى{" "}
-            </label>
-            <input
-              id="TxtBuildNo"
-              name="TxtBuildNo"
-              type="text"
-              placeholder="رقم المبنى"
-              className="col-span-3 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.Governorate[languageId]}
+              title={AccountsChartLang.Governorate[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtCity"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              المدينه
-            </label>
-            <input
-              id="TxtCity"
-              name="TxtCity"
-              type="text"
-              placeholder="المدينه"
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.ZipCode[languageId]}
+              title={AccountsChartLang.ZipCode[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtCityDiv"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              الحي
-            </label>
-            <input
-              id="TxtCityDiv"
-              name="TxtCityDiv"
-              type="text"
-              placeholder="الحي"
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.buildingNumber[languageId]}
+              title={AccountsChartLang.buildingNumber[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtPlotId"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              PIot ID{" "}
-            </label>
-            <input
-              id="TxtPlotId"
-              name="TxtPlotId"
-              type="number"
-              placeholder=" PIot ID"
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.city[languageId]}
+              title={AccountsChartLang.city[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtCr"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              سجل تجارى{" "}
-            </label>
-            <input
-              id="TxtCr"
-              name="TxtCr"
-              type="number"
-              placeholder=" سجل تجارى"
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.neighborhood[languageId]}
+              title={AccountsChartLang.neighborhood[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtStretName"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              اسم الشارع{" "}
-            </label>
-            <input
-              id="TxtStretName"
-              name="TxtStretName"
-              type="text"
-              placeholder=" اسم الشارع "
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent flex label={"PIot ID"} title={"PIot ID"} />
+            <InputComponent
+              flex
+              label={AccountsChartLang.commercialRegister[languageId]}
+              title={AccountsChartLang.commercialRegister[languageId]}
             />
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex items-center gap-x-6 justify-between">
-            <label
-              htmlFor="TxtAddStretName"
-              className="col-span-3 text-sm/6 font-medium text-gray-900"
-            >
-              شارع اضافي{" "}
-            </label>
-            <input
-              id="TxtAddStretName"
-              name="TxtAddStretName"
-              type="text"
-              placeholder="   شارع اضافي  "
-              className="col-span-9 min-w-0 grow py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-gray-400 focus:outline-1 border-gray-200 border-[1px] rounded focus:outline-gray-300 sm:text-sm/6"
+            <InputComponent
+              flex
+              label={AccountsChartLang.streetName[languageId]}
+              title={AccountsChartLang.streetName[languageId]}
+            />
+            <InputComponent
+              flex
+              label={AccountsChartLang.ExtraStreet[languageId]}
+              title={AccountsChartLang.ExtraStreet[languageId]}
             />
           </div>
         </div>
@@ -348,26 +231,29 @@ export default function ArabicForm() {
   return (
     <div dir="rtl" className="max-w-3xl mx-auto p-6 rounded-md shadow-md">
       <div className="">
-        <InputComponent flex label={" رقم الحساب"} title={" رقم الحساب"} />
         <InputComponent
           flex
-          label={" عربي / اسم الحساب"}
-          title={" عربي / اسم الحساب"}
+          label={AccountsChartLang.AccountNumber[languageId]}
+          title={AccountsChartLang.AccountNumber[languageId]}
         />
         <InputComponent
           flex
-          label={"انجليزى / اسم الحساب"}
-          title={"انجليزى / اسم الحساب"}
+          label={AccountsChartLang.AccountNameAr[languageId]}
+          title={AccountsChartLang.AccountNameAr[languageId]}
         />
         <InputComponent
           flex
-          label={"الحساب الرئيسي"}
-          title={"الحساب الرئيسي"}
+          label={AccountsChartLang.AccountNameEn[languageId]}
+          title={AccountsChartLang.AccountNameEn[languageId]}
+        />
+        <InputComponent
+          flex
+          label={AccountsChartLang.MainAccount[languageId]}
+          title={AccountsChartLang.MainAccount[languageId]}
         />
 
-        <Dropdown flex label={"نوع الحساب"} />
+        <Dropdown flex label={AccountsChartLang.AccountType[languageId]} />
       </div>
-
       <div className="">
         <div>
           <Tabs contents={contentsData} />
