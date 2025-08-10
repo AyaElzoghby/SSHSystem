@@ -1,7 +1,7 @@
 // import React from 'react'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import AccountForm from "../components/AccountForm";
+import AccountForm from "./AccountFormAccountsChart";
 import NestedTree from "../components/NestedTree";
 import InputComponent from "@/components/InputComponent";
 import { useLanguage } from "@/context/LanguageContext";
@@ -19,6 +19,7 @@ import {
   faFloppyDisk,
 } from "@fortawesome/free-solid-svg-icons";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
+import Checkbox from "@/components/Checkbox";
 export default function AccountsChart() {
   const items = {
     company: {
@@ -98,7 +99,7 @@ export default function AccountsChart() {
         <div className="flex grid grid-cols-12 my-5 gap-4">
           <div className="col-span-5 max-w-3xl text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark p-4 shadow-md h-fit rounded-lg">
             <h3 className="block mb-1 border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
-              هيكليه الوحدات
+              {AccountsChartLang.UnitStructure[languageId]}
             </h3>
             <NestedTree data={items} initialExpanded={items[0]} />
           </div>
@@ -110,7 +111,12 @@ export default function AccountsChart() {
                       [&::-webkit-scrollbar-thumb]:rounded-full
                       [&::-webkit-scrollbar-thumb]:bg-background-light
                       dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
-                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark" >
+                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
+          >
+            <div className="flex justify-between px-10 pt-4">
+              <Checkbox label={AccountsChartLang.general[languageId]} />
+              <Checkbox label={AccountsChartLang.partial[languageId]} />
+            </div>
             <AccountForm />
           </div>
         </div>

@@ -1,10 +1,24 @@
 // import React from 'react'
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-
-import AccountForm from "../components/AccountForm";
+import AccountForm from "./AccountFormCostCenter";
 import NestedTree from "../components/NestedTree";
-import InputComponent from "@/components/InputComponent";
+import { useLanguage } from "@/context/LanguageContext";
+import CustomButton from "@/components/CustomButton";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faRightFromBracket,
+  faSquarePlus,
+  faFileLines,
+  faPenToSquare,
+  faTrash,
+  faFolderTree,
+  faPrint,
+  faRightLeft,
+  faFloppyDisk,
+} from "@fortawesome/free-solid-svg-icons";
+import CostCenterLang from "@/constants/Lang/CostCenter";
+import Checkbox from "@/components/Checkbox";
 export default function CostCenter() {
   const items = {
     company: {
@@ -35,15 +49,75 @@ export default function CostCenter() {
     hr: { name: "HR" },
     finance: { name: "Finance" },
   };
+  const { languageId } = useLanguage();
+
   return (
     <>
-      <div className="flex-col p-4 justify-around my-auto overflow-y-auto">
-        <div className="flex grid grid-cols-12 my-5 gap-x-5" dir="rtl">
-          <div className="col-span-5 bg-[#ffffff] p-4 shadow-md h-fit rounded-lg">
-            <h3 className="block mb-1 border-orange-400 border-b-2 w-fit mb-4 font-bold text-gray-700">هيكليه الوحدات</h3>
+      <div
+        dir={languageId === 1 ? "rtl" : "ltr"}
+        className="flex-col p-4 justify-around m-auto items-center  overflow-y-auto"
+      >
+        <div className="flex-wrap flex items-center justify-center gap-4">
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faSquarePlus} />}
+            title={CostCenterLang.new[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faFileLines} />}
+            title={CostCenterLang.Branching[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faPenToSquare} />}
+            title={CostCenterLang.Edit[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faTrash} />}
+            title={CostCenterLang.delete[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faFloppyDisk} />}
+            title={CostCenterLang.Save[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faRightLeft} />}
+            title={CostCenterLang.transfer[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faPrint} />}
+            title={CostCenterLang.print[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faFolderTree} />}
+            title={CostCenterLang.tree[languageId]}
+          />
+          <CustomButton
+            icon={<FontAwesomeIcon icon={faRightFromBracket} />}
+            title={CostCenterLang.exit[languageId]}
+          />
+        </div>
+        <div className="flex grid grid-cols-12 my-5 gap-4">
+          <div className="col-span-5 max-w-3xl text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark p-4 shadow-md h-fit rounded-lg">
+            <h3 className="block mb-1 border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
+              {CostCenterLang.Projects[languageId]}
+            </h3>
             <NestedTree data={items} initialExpanded={items[0]} />
           </div>
-          <div className="col-span-7 ">
+          <div
+            className="col-span-7 shadow-md h-fit rounded-lg max-h-[75svh] text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark overflow-y-auto
+                      [&::-webkit-scrollbar]:w-2
+                      [&::-webkit-scrollbar-track]:rounded-full
+                      [&::-webkit-scrollbar-track]:bg-navbar-bg-light
+                      [&::-webkit-scrollbar-thumb]:rounded-full
+                      [&::-webkit-scrollbar-thumb]:bg-background-light
+                      dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
+                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
+          >
+            <div className="flex justify-between px-10 pt-4">
+              <Checkbox label={CostCenterLang.GeneralCostCenter[languageId]} />
+              <Checkbox
+                label={CostCenterLang.AnalyticalCostCenter[languageId]}
+              />
+            </div>
             <AccountForm />
           </div>
         </div>

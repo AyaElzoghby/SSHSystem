@@ -2,18 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 /* @import url("https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@300&display=swap"); */
-@layer components{
-  .btn{
-    @apply px-3 py-1 rounded-md bg-slate-200 hover:bg-slate-300 transition-colors duration-300 ;
+@layer components {
+  .btn {
+    @apply px-3 py-1 rounded-md bg-slate-200 hover:bg-slate-300 transition-colors duration-300;
   }
-  .form-control{
-    @apply px-2 py-1 rounded-md focus:outline-none border-2 border-slate-400 border-opacity-50 focus:border-lime-500 focus:caret-lime-600
+  .form-control {
+    @apply px-2 py-1 rounded-md focus:outline-none border-2 border-slate-400 border-opacity-50 focus:border-lime-500 focus:caret-lime-600;
   }
-  .container{
-    @apply m-auto
+  .container {
+    @apply m-auto;
   }
 }
-body{
+body {
   overflow: hidden;
+  font-family: "Tajawal", sans-serif; 
 }
-

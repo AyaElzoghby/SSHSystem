@@ -1,4 +1,4 @@
-const AccountsChartLang = {
+const CostCenterLang = {
   Save: {
     1: "حفظ",
     2: "Save",
@@ -35,17 +35,9 @@ const AccountsChartLang = {
     1: "خروج",
     2: "exit",
   },
-  partial: {
-    1: "حساب جزئي",
-    2: "partial account",
-  },
-  general: {
-    1: "حساب عام",
-    2:"general account",
-  },
-  UnitStructure: {
-    1: "هيكليه الوحدات",
-    2: "Unit structure",
+  Projects: {
+    1: "المشاريع ",
+    2: " Projects",
   },
   information: {
     1: "معلومات",
@@ -71,13 +63,21 @@ const AccountsChartLang = {
     1: "بريد إلكتروني",
     2: "email",
   },
-  Tax: {
-    1: "رقم ضريبي",
-    2: "Tax number",
+  delegate: {
+    1: "المندوب",
+    2: "The delegate",
   },
-  AccountHistory: {
-    1: "تاريخ الحساب",
-    2: "Account history",
+  CostCenterHistory: {
+    1: "تاريخ مركز التكلفه",
+    2: "Cost Center history",
+  },
+  GeneralCostCenter: {
+    1: " مركز تكلفه عام",
+    2: "General Cost Center",
+  },
+  AnalyticalCostCenter: {
+    1: " مركز تكلفه تحليلي",
+    2: "Analytical Cost Center",
   },
   openingBalance: {
     1: "الرصيد الافتتاحى",
@@ -91,6 +91,10 @@ const AccountsChartLang = {
     1: "مدين",
     2: "debtor",
   },
+  Employee: {
+    1: "الموظف",
+    2: "Employee",
+  },
   creditor: {
     1: "دائن",
     2: "creditor",
@@ -103,9 +107,9 @@ const AccountsChartLang = {
     1: "اختر العمله",
     2: "Choose the currency",
   },
-  AccountControl: {
-    1: "التحكم بالحساب",
-    2: "Account Control",
+  CostCenterControl: {
+    1: "التحكم بمركز التكلفه",
+    2: "Cost Center Control",
   },
   CreditLimit: {
     1: "حد الائتمان",
@@ -179,9 +183,9 @@ const AccountsChartLang = {
     1: " رقم الحساب",
     2: "Account number",
   },
-   AccountNameAr: {
-    1: " عربي / اسم الحساب",
-    2: "Arabic / Account Name",
+   CenterName: {
+    1: "  اسم المركز",
+    2: "Center Name",
   },
    AccountNameEn: {
     1:"انجليزى / اسم الحساب",
@@ -197,4 +201,4 @@ const AccountsChartLang = {
   },
  
 };
-export default AccountsChartLang;
+export default CostCenterLang;

@@ -12,8 +12,8 @@ export default function Tabs({ contents }) {
             type="button"
             className={`p-2 px-4 w-full text-sm rounded-ss-lg rounded-se-lg font-medium ${
               activeTab === index
-                ? "text-text-light dark:text-text-dark  bg-button-warning-light dark:bg-button-warning-dark"
-                : "text-text-light dark:text-text-dark dark:bg-opacity-40 bg-opacity-80 bg-background-light dark:bg-background-dark"
+                ? "text-text-dark  bg-button-warning-light dark:bg-button-warning-dark"
+                : "text-text-dark dark:bg-opacity-40 bg-opacity-80 bg-background-light dark:bg-background-dark"
             }`}
             onClick={() => setActiveTab(index)}
           >

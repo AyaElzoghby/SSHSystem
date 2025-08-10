@@ -2,7 +2,7 @@
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
 
-import AccountForm from "../components/AccountForm";
+import AccountForm from "./AccountFormCostCenter";
 import NestedTree from "../components/NestedTree";
 import InputComponent from "@/components/InputComponent";
 export default function Receipt() {

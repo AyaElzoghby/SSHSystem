@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import Dropdown from "./ui/DropDown";
-import InputComponent from "./InputComponent";
-import Tabs from "./Tabs"; // تأكد من مسار الملف حسب مكانه
-import Checkbox from "./Checkbox";
+import Dropdown from "../components/ui/DropDown";
+import InputComponent from "../components/InputComponent";
+import Tabs from "../components/Tabs"; // تأكد من مسار الملف حسب مكانه
+import Checkbox from "../components/Checkbox";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
 import { useLanguage } from "@/context/LanguageContext";
-export default function ArabicForm() {
+export default function AccountFormAccountsChart() {
   const { languageId } = useLanguage();
   const [formData, setFormData] = useState({
     agency: "",
@@ -19,7 +19,10 @@ export default function ArabicForm() {
     {
       tab_title: AccountsChartLang.information[languageId],
       tab_contents: (
-        <div className="flex-col gap-x-6 gap-y-4" dir="rtl">
+        <div
+          className="flex-col gap-x-6 gap-y-4"
+          dir={languageId == 1 ? "rtl" : "ltr"}
+        >
           <InputComponent
             flex
             label={AccountsChartLang.Address1[languageId]}
@@ -66,12 +69,17 @@ export default function ArabicForm() {
     {
       tab_title: AccountsChartLang.openingBalance[languageId],
       tab_contents: (
-        <div className="gap-x-6 gap-y-4 text-center sm:grid-cols-6" dir="rtl">
-          <p
-            className={`text-sm font-semibold mb-2   w-full  justify-center flex text-text-light dark:text-text-dark text-start `}
-          >
-            {AccountsChartLang.openingBalanceCurrent[languageId]}
-          </p>
+        <div
+          className="gap-x-6 gap-y-4 text-center sm:grid-cols-6"
+          dir={languageId == 1 ? "rtl" : "ltr"}
+        >
+          <div className="justify-center flex">
+            <p
+              className={`text-sm  border-button-warning-light dark:border-button-warning-dark border-b-2 font-semibold mb-4 w-fit  justify-center flex text-text-light dark:text-text-dark text-start `}
+            >
+              {AccountsChartLang.openingBalanceCurrent[languageId]}
+            </p>
+          </div>
           <InputComponent
             flex
             label={AccountsChartLang.debtor[languageId]}
@@ -82,15 +90,16 @@ export default function ArabicForm() {
             label={AccountsChartLang.creditor[languageId]}
             title={AccountsChartLang.creditor[languageId]}
           />
-
-          <p
-            className={`text-sm font-semibold mb-2 w-full  justify-center flex text-text-light dark:text-text-dark text-start `}
-          >
-            {AccountsChartLang.ForeignCurrencies[languageId]}
-          </p>
+          <div className="justify-center flex">
+            <p
+              className={`text-sm  border-button-warning-light dark:border-button-warning-dark border-b-2 font-semibold mb-4 w-fit  text-text-light dark:text-text-dark text-start `}
+            >
+              {AccountsChartLang.ForeignCurrencies[languageId]}
+            </p>
+          </div>
           <Dropdown
             flex
-            rtl={true}
+            rtl={languageId == 1}
             label={AccountsChartLang.ChooseCurrency[languageId]}
           />
           <InputComponent
@@ -109,7 +118,10 @@ export default function ArabicForm() {
     {
       tab_title: AccountsChartLang.AccountControl[languageId],
       tab_contents: (
-        <div className="gap-x-6 gap-y-4 sm:grid-cols-6 " dir="rtl">
+        <div
+          className="gap-x-6 gap-y-4 sm:grid-cols-6 "
+          dir={languageId == 1 ? "rtl" : "ltr"}
+        >
           <div className="items-center gap-4  flex justify-between">
             <p
               className={`text-sm font-semibold mb-2  justify-center flex text-text-light dark:text-text-dark text-start `}
@@ -129,9 +141,16 @@ export default function ArabicForm() {
             />
           </div>
 
-          <div className="col-span-full  gap-x-6 " dir="rtl">
+          <div
+            className="col-span-full  gap-x-6 "
+            dir={languageId == 1 ? "rtl" : "ltr"}
+          >
             {" "}
-            <Dropdown flex label={AccountsChartLang.View[languageId]} />
+            <Dropdown
+              rtl={languageId == 1}
+              flex
+              label={AccountsChartLang.View[languageId]}
+            />
             <Checkbox label={AccountsChartLang.NotifyCustomer[languageId]} />
             <Checkbox label={AccountsChartLang.SuspendAccount[languageId]} />
             <InputComponent
@@ -155,7 +174,7 @@ export default function ArabicForm() {
       tab_contents: (
         <div
           className="grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6"
-          dir="rtl"
+          dir={languageId == 1 ? "rtl" : "ltr"}
         >
           <div className="col-span-full  items-center gap-x-6 justify-between">
             <InputComponent
@@ -229,7 +248,10 @@ export default function ArabicForm() {
   };
 
   return (
-    <div dir="rtl" className="max-w-3xl mx-auto p-6 rounded-md shadow-md">
+    <div
+      dir={languageId == 1 ? "rtl" : "ltr"}
+      className="max-w-3xl mx-auto p-6 rounded-md shadow-md"
+    >
       <div className="">
         <InputComponent
           flex
@@ -251,8 +273,11 @@ export default function ArabicForm() {
           label={AccountsChartLang.MainAccount[languageId]}
           title={AccountsChartLang.MainAccount[languageId]}
         />
-
-        <Dropdown flex label={AccountsChartLang.AccountType[languageId]} />
+        <Dropdown
+          rtl={languageId == 1}
+          flex
+          label={AccountsChartLang.AccountType[languageId]}
+        />
       </div>
       <div className="">
         <div>

@@ -5,7 +5,7 @@ import Box from "@mui/material/Box";
 import { SimpleTreeView } from "@mui/x-tree-view/SimpleTreeView";
 import { TreeItem } from "@mui/x-tree-view/TreeItem";
 
-import AccountForm from "../../components/AccountForm";
+import AccountForm from "../AccountFormCostCenter";
 export default function Home() {
 
   return (
