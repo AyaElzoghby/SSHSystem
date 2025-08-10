@@ -13,7 +13,7 @@ export default function Sidebar({ children }) {
     <>
       <aside className="h-screen relative">
         <nav className="h-full flex flex-col  bg-[#1e3756] border-s shadow-sm">
-          <div  className="p-4 pb-2 flex justify-between items-center">
+          <div  className={`${expanded ? "my-2" : "my-6"} p-4 pb-2 flex justify-between items-center`}>
             <button
               onClick={() => setExpanded((curr) => !curr)}
               className="p-1.5 end-2 top-4 absolute rounded-full bg-navbar-bg-light dark:bg-navbar-bg-dark text-navbar-text-light dark:text-navbar-text-dark hover:bg-gray-100"
@@ -24,9 +24,9 @@ export default function Sidebar({ children }) {
           <div className="p-4 pb-2 flex justify-center items-center">
             <img
               src={logo}
-              className={`overflow-hidden transition-all ${
+              className={`overflow-hidden h-32 transition-all ${
                 expanded ? "w-32" : "w-0"
-              }  ${expanded ? "h-32" : "h-0"}`}
+              }  `}
             />
           </div>
 
@@ -52,7 +52,7 @@ export function SidebarItem({ icon, text, path, alert }) {
   return (
     <li
       onClick={() => navigate(path)}
-      className={`relative flex items-center font-bold py-3 px-3 my-1 rounded-s-full cursor-pointer transition-colors group
+      className={`relative flex items-center font-bold py-3  px-3 my-1 rounded-s-full cursor-pointer transition-colors group
         ${
           isActive
             ? "bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark"
@@ -62,7 +62,7 @@ export function SidebarItem({ icon, text, path, alert }) {
       {icon}
       <span
         className={`overflow-hidden transition-all ${
-          expanded ? "w-52 mx-4" : "w-0"
+          expanded ? "w-52 mx-4" : "hidden"
         }`}
       >
         {text}

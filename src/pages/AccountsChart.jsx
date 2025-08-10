@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
 import Checkbox from "@/components/Checkbox";
+import DatePickerInput from "@/components/DatePicker";
 export default function AccountsChart() {
   const items = {
     company: {

@@ -40,10 +40,16 @@ export default function Layout({ children }) {
               alert
             />
             <SidebarItem
+              icon={<StickyNote size={20} />}
+              text={layoutLang.AccountsStatement[languageId]}
+              path="/AccountsStatement"
+              alert
+            />
+            {/* <SidebarItem
               icon={<Layers size={20} />}
               text={layoutLang.AccountsStatement[languageId]}
               path="/AccountsStatement"
-            />
+            /> */}
             <SidebarItem
               icon={<Layers size={20} />}
               text={layoutLang.ServicBill[languageId]}
