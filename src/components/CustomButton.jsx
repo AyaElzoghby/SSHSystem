@@ -6,7 +6,7 @@ export default function CustomButton({
   icon,
   onClick,
   width,
-  color = "text-text-dark bg-button-warning-light dark:bg--button-warning-dark",
+  color = "text-textPrimary bg-bg",
   type = "button",
   disabled = false,
   loading = false,
@@ -17,7 +17,7 @@ export default function CustomButton({
 }) {
   // تحديد حجم الزر
   const sizeClasses = {
-    small: "px-3 py-1 text-sm",
+    small: "px-2 py-1 text-sm",
     medium: "px-4 py-2 text-base",
     large: "px-6 py-3 text-lg",
   };
@@ -44,7 +44,7 @@ export default function CustomButton({
       `}
     >
       {loading ? (
-        <Loader2 className="animate-spin" size={18} />
+        <Loader2 className="animate-spin" size={16} />
       ) : (
         icon && <span className="flex-shrink-0">{icon}</span>
       )}

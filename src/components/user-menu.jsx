@@ -18,23 +18,30 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUser } from "@/context/userContext";
+import { useNavigate } from "react-router-dom";
 
 export default function UserMenu() {
+  const { token, logout } = useUser();
+  const navigate = useNavigate();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        {/* <Button variant="ghost" className="outline outline-2 outline-blue-500"> */}
-        <Button variant="ghost" className="w-12 h-12 shadow-md rounded-full hover:bg-transparent">
+        <Button
+          className="w-8 h-8 flex  relative shadow-md bg-surfaceHover "
+        >
           <Avatar>
             <AvatarImage
-              src="https://ui.shadcn.com/avatars/01.png"
+              src="src\assets\user.png"
               alt="Profile"
+              
             />
-            <AvatarFallback>KK</AvatarFallback>
+            <AvatarFallback>User</AvatarFallback>
           </Avatar>
         </Button>{" "}
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className={''}>
         <DropdownMenuLabel className="flex min-w-0 flex-col">
           <span className="text-foreground truncate text-sm font-medium">
             Keith Kennedy
@@ -70,7 +77,12 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            logout();
+            navigate("/");
+          }}
+        >
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>
         </DropdownMenuItem>{" "}

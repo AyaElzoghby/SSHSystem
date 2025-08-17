@@ -10,7 +10,7 @@ import Logo from "../components/logo";
 import NotificationMenu from "../components/notification-menu";
 import UserMenu from "../components/user-menu";
 import { Button } from "../components/ui/button";
-import  Input  from "../components/ui/input";
+import Input from "../components/ui/input";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -39,6 +39,8 @@ import {
   SelectValue,
 } from "../components/ui/select";
 import { useLanguage } from "@/context/LanguageContext";
+import { useUser } from "@/context/userContext";
+import SearchInput from "@/components/SearchInput";
 
 // Navigation links array to be used in both desktop and mobile menus
 const navigationLinks = [
@@ -51,9 +53,11 @@ const navigationLinks = [
 export default function Component() {
   const id = useId();
   const { languageId, toggleLanguage } = useLanguage();
+  const { token, setToken } = useUser();
+
   return (
-    <header className="sticky shadow-md text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark rounded-ss-3xl rounded-se-3xl px-4 md:px-6">
-      <div className="flex  h-12 items-center justify-between gap-4">
+    <header className="shadow-md  bg-surface rounded-md   shadow-sm px-4 ">
+      <div className="flex  h-14 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">
           {/* Mobile menu trigger */}
@@ -116,23 +120,10 @@ export default function Component() {
               </NavigationMenu>
             </PopoverContent>
           </Popover>
-          <div className="flex items-center gap-6">
-            {/* <a href="#" className="text-primary hover:text-primary/90">
-              <Logo />
-            </a> */}
-            {/* Search form */}
-            <div className="relative ">
-              <Input
-                id={id}
-                className="peer rounded-lg ps-8 pe-2"
-                placeholder="Search..."
-                type="search"
-              />
-              <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
-                <SearchIcon size={16} />
-              </div>
-            </div>
-          </div>
+
+          {/* Search form */}
+          <SearchInput />
+      
         </div>
 
         {/* Right side */}
@@ -142,20 +133,31 @@ export default function Component() {
             <ThemeToggle />
             {/* Language selector */}
 
-            <button className="w-9 h-9 rounded-full shadow-md flex justify-center items-center" onClick={toggleLanguage}>
-              {languageId === 1 ? <p className="text-sm font-tbold font-bold text-slate-700">AR</p> : <p className="text-sm font-tbold font-bold text-slate-700">EN</p>}
+            <button
+              className="w-8 h-8 rounded-md shadow-md flex justify-center items-center"
+              onClick={toggleLanguage}
+            >
+              {languageId === 1 ? (
+                <p className="text-sm font-tbold font-bold text-slate-700">
+                  AR
+                </p>
+              ) : (
+                <p className="text-sm font-tbold font-bold text-slate-700">
+                  EN
+                </p>
+              )}
             </button>
             {/* Messages */}
             <Button
               size="icon"
               variant="ghost"
-              className="text-muted-foreground relative w-9 h-9 px-4 rounded-full shadow-md"
+              className="text-muted-foreground relative w-8 h-8 px-4 rounded-md shadow-md"
               aria-label="Open notifications"
             >
-              <MailIcon size={16} aria-hidden="true" />
+              <MailIcon size={14} aria-hidden="true" />
               <div
                 aria-hidden="true"
-                className="bg-primary absolute top-0.5 right-0.5 size-1 rounded-full"
+                className="bg-primary absolute top-0.5 right-0.5 size-1 rounded-md"
               />
             </Button>
             {/* Notification menu */}

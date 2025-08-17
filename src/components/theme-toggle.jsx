@@ -22,12 +22,12 @@ export default function ThemeToggle() {
   }, [theme]);
 
   return (
-    <div className="w-9 h-9 rounded-full shadow-md flex justify-center items-center">
+    <div className="w-8 h-8 rounded-md shadow-md flex justify-center items-center">
       <Toggle
         variant="outline"
         className="group data-[state=on]:hover:bg-muted text-muted-foreground 
                   data-[state=on]:text-muted-foreground data-[state=on]:hover:text-foreground 
-                  size-8 rounded-full border-none shadow-none data-[state=on]:bg-transparent"
+                  size-8 rounded-md border-none shadow-none data-[state=on]:bg-transparent"
         pressed={theme === "dark"}
         onPressedChange={() => setTheme(prev => prev === "dark" ? "light" : "dark")}
         aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
@@ -58,10 +58,10 @@ export default function ThemeToggle() {
 //   const [theme, setTheme] = useState("light")
 
 //   return (
-//     <div className="w-9 h-9 rounded-full shadow-md flex justify-center items-center" >
+//     <div className="w-9 h-9 rounded-md shadow-md flex justify-center items-center" >
 //       <Toggle
 //         variant="outline"
-//         className="group data-[state=on]:hover:bg-muted text-muted-foreground data-[state=on]:text-muted-foreground data-[state=on]:hover:text-foreground size-8 rounded-full border-none shadow-none data-[state=on]:bg-transparent"
+//         className="group data-[state=on]:hover:bg-muted text-muted-foreground data-[state=on]:text-muted-foreground data-[state=on]:hover:text-foreground size-8 rounded-md border-none shadow-none data-[state=on]:bg-transparent"
 //         pressed={theme === "dark"}
 //         onPressedChange={() =>
 //           setTheme((prev) => (prev === "dark" ? "light" : "dark"))

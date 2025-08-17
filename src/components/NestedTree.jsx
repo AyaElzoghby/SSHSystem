@@ -10,11 +10,15 @@ import { useTree } from "@headless-tree/react";
 import { SearchIcon } from "lucide-react";
 
 import Input from "./ui/input";
+import { Button } from "./ui/button";
+
 import { Tree, TreeItem, TreeItemLabel } from "./tree";
 import folderopened from "../assets/folder opened.png";
 import folderclosed from "../assets/folder closed.png";
 import file from "../assets/file.png";
 import clsx from "clsx";
+import { useLanguage } from "@/context/LanguageContext";
+import SearchInput from "./SearchInput";
 /**
  * Props:
  * - data: object map of itemId -> { name, children?: [childId,...], ... }
@@ -26,14 +30,22 @@ export default function NestedTree({
   data,
   initialExpanded,
   onItemClicked,
-  indent = 20,
+  indent = 30,
+  onItemSelected, // جديد: callback لتعريف العنصر المختار للأب
 }) {
-  const defaultRoot = useMemo(() => {
-    const keys = Object.keys(data || {});
-    return keys[0] || null;
-  }, [data]);
+  // const defaultRoot = useMemo(() => {
+  //   const keys = Object.keys(data || {});
+  //   return keys[0] || null;
+  // }, [data]);
+const defaultRoot = useMemo(() => {
+  if (data["root"]) return "root"; // جذر وهمي موجود؟
+  const keys = Object.keys(data || {});
+  return keys[0] || null;
+}, [data]);
 
   const [state, setState] = useState({});
+  const [selectedItemId, setSelectedItemId] = useState(null); // حالة العنصر المختار
+  const { languageId } = useLanguage();
 
   const tree = useTree({
     state,
@@ -77,81 +89,90 @@ export default function NestedTree({
     [searchInputProps, tree, initialExpanded, defaultRoot]
   );
 
+  // عند الضغط على عنصر، نخزن الـ selectedItemId ونرسلها للأب (لو موجود)
   const handleItemClick = useCallback(
     (item) => {
+      setSelectedItemId(item.getId());
+      if (onItemSelected) {
+        onItemSelected(item.getId());
+      }
+      // لو عايزة تنفذي وظيفة أخرى على النقر
       onItemClicked?.(item.getId());
     },
-    [onItemClicked]
+    [onItemClicked, onItemSelected]
   );
+  // const handleItemClick = useCallback(
+  //   (item) => {
+  //     onItemClicked?.(item.getId());
+  //   },
+  //   [onItemClicked]
+  // );
 
   if (!defaultRoot) return null; // no data
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <div className="relative">
-        <Input
-          className="peer ps-9 transition"
-          {...{
-            ...searchInputProps,
-            onChange: handleSearchChange,
-          }}
-          type="search"
-          placeholder="Quick search..."
-        />
-        <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
-          <SearchIcon className="size-4" aria-hidden="true" />
-        </div>
-      </div>
-
+       {/* Search form */}
+       <SearchInput/>
       <Tree indent={indent} tree={tree}>
-        {tree.getItems().map((item) => (
-          <div key={item.getId()} className="group">
-            <button
-              onDoubleClick={() => handleItemClick(item)}
-              className={`
-                w-full text-left flex items-center gap-2 rounded px-2 py-1
+        {tree.getItems().map((item) => {
+          const isSelected = item.getId() === selectedItemId;
+          return (
+            <div key={item.getId()} className="group">
+              <button
+                onDoubleClick={() => handleItemClick(item)}
+                className={`
+                inline-flex text-left flex items-center gap-2 rounded px-2 py-1
                 transition-colors duration-150
-                hover:bg-slate-600 dark:hover:bg-slate-200
+                hover:bg-slate-600 dark:hover:bg-slate-200 font-medium
                 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-primary
-                origin-left
+                origin-left ${
+                  isSelected
+                    ? "bg-blue-600 text-white dark:bg-blue-400 dark:text-black" // ستايل العنصر المحدد
+                    : ""
+                }
               `}
-              style={{
-                transform: item.isExpanded() ? "scale(1.02)" : "scale(1)",
-                transition: "transform .2s ease, background-color .15s ease",
-              }}
-            >
-              <TreeItem item={item}>
-                <TreeItemLabel>
-                  <span
-                    className={clsx(
-                      "flex items-center gap-2 transition-all duration-200",
-                    )}
+                style={{
+                  paddingInlineEnd: `${
+                    item.getItemMeta().level * indent + 8
+                  }px`, // +8 for extra padding
 
-                  >
-                    {item.isFolder() ? (
-                      item.isExpanded() ? (
-                        <img
-                          src={folderopened}
-                          alt="Opened folder"
-                          className="w-4 h-4"
-                        />
+                  transform: item.isExpanded() ? "scale(1.02)" : "scale(1)",
+                  transition: "transform .2s ease, background-color .15s ease",
+                }}
+              >
+                <TreeItem item={item}>
+                  <TreeItemLabel>
+                    <span
+                      className={clsx(
+                        "flex items-center gap-2 transition-all duration-200"
+                      )}
+                    >
+                      {item.isFolder() ? (
+                        item.isExpanded() ? (
+                          <img
+                            src={folderopened}
+                            alt="Opened folder"
+                            className="w-4 h-4"
+                          />
+                        ) : (
+                          <img
+                            src={folderclosed}
+                            alt="Closed folder"
+                            className="w-4 h-4"
+                          />
+                        )
                       ) : (
-                        <img
-                          src={folderclosed}
-                          alt="Closed folder"
-                          className="w-4 h-4"
-                        />
-                      )
-                    ) : (
-                      <img src={file} alt="file" className="w-4 h-4" />
-                    )}
-                    {item.getItemName()}
-                  </span>
-                </TreeItemLabel>
-              </TreeItem>
-            </button>
-          </div>
-        ))}
+                        <img src={file} alt="file" className="w-4 h-4" />
+                      )}
+                      {item.getItemName()}
+                    </span>
+                  </TreeItemLabel>
+                </TreeItem>
+              </button>
+            </div>
+          );
+        })}
       </Tree>
     </div>
   );

@@ -7,26 +7,29 @@ import {
   Flag,
   Calendar,
   LifeBuoy,
-  Settings,
 } from "lucide-react";
 import Sidebar, { SidebarItem } from "./Aside";
 import Navbar from "./Navbar";
 import useSystemTheme from "@/hooks/SystemTheme";
 import layoutLang from "@/constants/Lang/layout";
 import { useLanguage } from "@/context/LanguageContext";
+import { useUser } from "@/context/userContext";
 export default function Layout({ children }) {
-  const { languageId, toggleLanguage } = useLanguage();
+  const { languageId } = useLanguage();
+  const {token}=useUser()
   useSystemTheme();
+  
   return (
     <>
-      <div className="bg-[#1e3756]" dir={languageId===1?"rtl":"ltr"}>
+      <div className={`${token&&"p-4"}`} dir={languageId===1?"rtl":"ltr"}>
         <div className="flex">
+          {token&&(
+
           <Sidebar>
             <SidebarItem
               icon={<Home size={20} />}
               text={layoutLang.Receipt[languageId]}
               path="/Receipt"
-              alert
             />
             <SidebarItem
               icon={<LayoutDashboard size={20} />}
@@ -34,22 +37,17 @@ export default function Layout({ children }) {
               path="/AccountsChart"
             />
             <SidebarItem
-              icon={<StickyNote size={20} />}
+              icon={<LifeBuoy size={20} />}
               text={layoutLang.JournalEntry[languageId]}
               path="/JournalEntry"
-              alert
+              
             />
             <SidebarItem
               icon={<StickyNote size={20} />}
               text={layoutLang.AccountsStatement[languageId]}
               path="/AccountsStatement"
-              alert
+              
             />
-            {/* <SidebarItem
-              icon={<Layers size={20} />}
-              text={layoutLang.AccountsStatement[languageId]}
-              path="/AccountsStatement"
-            /> */}
             <SidebarItem
               icon={<Layers size={20} />}
               text={layoutLang.ServicBill[languageId]}
@@ -67,9 +65,13 @@ export default function Layout({ children }) {
             />
            
           </Sidebar>
+          )}
 
-          <div className="flex-1 bg-background-light dark:bg-background-dark rounded-3xl my-2  me-2 max-h-[98svh] overflow-y-auto">
+          <div className={`${token&&" ms-4 max-h-[98svh] overflow-y-auto"} flex-1`}>
+            {token&&(
+              
             <Navbar />
+            )}
             <Outlet>{children}</Outlet>
           </div>
         </div>

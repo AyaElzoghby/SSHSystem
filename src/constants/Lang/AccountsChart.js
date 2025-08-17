@@ -47,9 +47,9 @@ const AccountsChartLang = {
     1: "هيكليه الوحدات",
     2: "Unit structure",
   },
-  information: {
-    1: "معلومات",
-    2: "Information",
+  UnityElements: {
+    1: "عناصر الوحده",
+    2: "Elements of Unity",
   },
   Address1: {
     1: "عنوان 1",
@@ -79,9 +79,9 @@ const AccountsChartLang = {
     1: "تاريخ الحساب",
     2: "Account history",
   },
-  openingBalance: {
-    1: "الرصيد الافتتاحى",
-    2: "opening balance",
+  UnityDetails: {
+    1: "تفاصيل الوحده",
+    2: "Unity Details",
   },
   openingBalanceCurrent: {
     1: "الرصيد الافتتاحى للحساب بالعمله الاساسيه",

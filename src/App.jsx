@@ -12,7 +12,6 @@ import Receipt from "./pages/Receipt";
 import Layout from "./Layout/Layout";
 import { Toaster } from "react-hot-toast";
 
-
 export default function App() {
   const router = createBrowserRouter([
     {
@@ -36,9 +35,8 @@ export default function App() {
 
   return (
     <>
-      
-          <RouterProvider router={router} />
-     
+      <RouterProvider router={router} />
+
       <Toaster position="top-right" />
     </>
   );

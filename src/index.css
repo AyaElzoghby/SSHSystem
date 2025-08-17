@@ -13,7 +13,67 @@
     @apply m-auto;
   }
 }
+/* Light mode */
+:root {
+  --bg-color: #f3f5f8;
+  --surface-color: #fffffe;
+  --surface-color-hover: #f3f5f9;
+  --border-color: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --primary-color: #2563eb;
+  --primary-hover: #1e4db7;
+  --secondary-color: #6b7280;
+  --secondary-hover: #4b5563;
+  --highlight-color: #9333ea;
+  --success-color: #16a34a;
+  --danger-color: #dc2626;
+  --warning-color: #ca8a04;
+}
+
+/* Dark mode */
+.dark {
+  --bg-color: #111827;
+  --surface-color: #1f2937;
+    --surface-color-hover: #111827cc;
+
+  --border-color: #374151;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --primary-color: #2563eb;
+  --primary-hover: #1e4db7;
+  --secondary-color: #9ca3af;
+  --secondary-hover: #6b7280;
+  --highlight-color: #9333ea;
+  --success-color: #16a34a;
+  --danger-color: #dc2626;
+  --warning-color: #ca8a04;
+}
+
 body {
   overflow: hidden;
-  font-family: "Tajawal", sans-serif; 
+  font-family: "Tajawal", sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
 }
+
+.card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px var(--shadow-color);
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.button-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.button-primary:hover {
+  background-color: var(--primary-hover);
+}
+

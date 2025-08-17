@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Dropdown from "../components/ui/DropDown";
 import InputComponent from "../components/InputComponent";
-import Tabs from "../components/Tabs"; // تأكد من مسار الملف حسب مكانه
+import Tabs from "../components/Tabs"; 
 import Checkbox from "../components/Checkbox";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
 import { useLanguage } from "@/context/LanguageContext";

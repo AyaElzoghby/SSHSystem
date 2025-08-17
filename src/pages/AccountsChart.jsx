@@ -1,14 +1,14 @@
-// import React from 'react'
+import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 
-import AccountForm from "./AccountFormAccountsChart";
 import NestedTree from "../components/NestedTree";
-import InputComponent from "@/components/InputComponent";
-import { useLanguage } from "@/context/LanguageContext";
+import Dropdown from "../components/ui/DropDown";
+import InputComponent from "../components/InputComponent";
+import Tabs from "../components/Tabs";
 import CustomButton from "@/components/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faRightFromBracket,
+  faTrashCan,
   faSquarePlus,
   faFileLines,
   faPenToSquare,
@@ -19,109 +19,161 @@ import {
   faFloppyDisk,
 } from "@fortawesome/free-solid-svg-icons";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
+import { useLanguage } from "@/context/LanguageContext";
+import AccountForm from "./AccountFormAccountsChart";
 import Checkbox from "@/components/Checkbox";
-import DatePickerInput from "@/components/DatePicker";
-export default function AccountsChart() {
-  const items = {
-    company: {
-      name: "Company",
-      children: ["engineering", "marketing", "operations"],
-    },
-    engineering: {
-      name: "Engineering",
-      children: ["frontend", "backend", "platform-team"],
-    },
-    frontend: { name: "Frontend", children: ["design-system", "web-platform"] },
-    "design-system": {
-      name: "Design System",
-      children: ["components", "tokens", "guidelines"],
-    },
-    components: { name: "Components" },
-    tokens: { name: "Tokens" },
-    guidelines: { name: "Guidelines" },
-    "web-platform": { name: "Web Platform" },
-    backend: { name: "Backend", children: ["apis", "infrastructure"] },
-    apis: { name: "APIs" },
-    infrastructure: { name: "Infrastructure" },
-    "platform-team": { name: "Platform Team" },
-    marketing: { name: "Marketing", children: ["content", "seo"] },
-    content: { name: "Content" },
-    seo: { name: "SEO" },
-    operations: { name: "Operations", children: ["hr", "finance"] },
-    hr: { name: "HR" },
-    finance: { name: "Finance" },
-  };
-  const { languageId } = useLanguage();
 
-  return (
-    <>
-      <div
-        dir={languageId === 1 ? "rtl" : "ltr"}
-        className="flex-col p-4 justify-around m-auto items-center  overflow-y-auto"
-      >
-        <div className="flex-wrap flex items-center justify-center gap-4">
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faSquarePlus} />}
-            title={AccountsChartLang.new[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faFileLines} />}
-            title={AccountsChartLang.Branching[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPenToSquare} />}
-            title={AccountsChartLang.Edit[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faTrash} />}
-            title={AccountsChartLang.delete[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faFloppyDisk} />}
-            title={AccountsChartLang.Save[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faRightLeft} />}
-            title={AccountsChartLang.transfer[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPrint} />}
-            title={AccountsChartLang.print[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faFolderTree} />}
-            title={AccountsChartLang.tree[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faRightFromBracket} />}
-            title={AccountsChartLang.exit[languageId]}
-          />
+export default function AccountsChart() {
+  const { languageId } = useLanguage();
+  const [data, setData] = useState(null);
+  const [item, setItem] = useState(null);
+  const [rawData, setRawData] = React.useState(null);
+
+  const normalizeTreeDataWithRoot = (array) => {
+    const map = {};
+
+    const traverse = (node) => {
+      map[node.dcodE2] = {
+        name: node.dname,
+        children: node.children?.map((child) => child.dcodE2) || [],
+      };
+      node.children?.forEach(traverse);
+    };
+
+    array.forEach(traverse);
+
+    // جذر وهمي
+    map["root"] = {
+      name: "Root",
+      children: array.map((node) => node.dcodE2),
+    };
+
+    return map;
+  };
+  // دالة تساعدنا نجيب children بناءً على الـ id
+  const getChildrenById = (id, data) => {
+    for (const node of data) {
+      if (node.dcodE2 === id) return node.children || [];
+      if (node.children) {
+        const found = getChildrenById(id, node.children);
+        if (found.length) return found;
+      }
+    }
+    return [];
+  };
+
+  const childrenToDisplay = item
+    ? getChildrenById(item, rawData) // item هو selected id
+    : [];
+
+  useEffect(() => {
+    fetch("/api/Account/GetFullTree.json")
+      .then((res) => res.json())
+      .then((json) => {
+        setRawData(json); // خزّن النسخة الأصلية
+        const normalized = normalizeTreeDataWithRoot(json);
+        setData(normalized);
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+      });
+  }, []);
+
+  const hasData = data && Object.keys(data).length > 0;
+  const contentsData = [
+    {
+      tab_title: AccountsChartLang.UnityElements[languageId],
+      tab_contents: (
+    
+        <div>
+          <ul>
+            {childrenToDisplay.map((child) => (
+              <li
+                className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
+                key={child.dcodE2}
+              >
+                {child.dname}
+                <div className=" flex gap-2">
+                  {child.secondary != false && (
+                    <CustomButton
+                      icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                      size="small"
+                      className="bg-success text-gray-100"
+                      title={"اضافه"}
+                    />
+                  )}
+                  <CustomButton
+                    icon={<FontAwesomeIcon icon={faPenToSquare} />}
+                    size="small"
+                    className="bg-warning  text-gray-100"
+                    title={"تعديل"}
+                  />
+                  <CustomButton
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
+                    size="small"
+                    className="bg-danger  text-gray-100"
+                    title={"حذف"}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="flex grid grid-cols-12 my-5 gap-4">
-          <div className="col-span-5 max-w-3xl text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark p-4 shadow-md h-fit rounded-lg">
-            <h3 className="block mb-1 border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
-              {AccountsChartLang.UnitStructure[languageId]}
-            </h3>
-            <NestedTree data={items} initialExpanded={items[0]} />
+      ),
+    },
+    {
+      tab_title: AccountsChartLang.UnityDetails[languageId],
+      tab_contents: (
+        <>
+          <div className="flex justify-between px-10 pt-4">
+            <Checkbox label={AccountsChartLang.general[languageId]} />
+            <Checkbox label={AccountsChartLang.partial[languageId]} />
           </div>
-          <div
-            className="col-span-7 shadow-md h-fit rounded-lg max-h-[75svh] text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark overflow-y-auto
-                      [&::-webkit-scrollbar]:w-2
-                      [&::-webkit-scrollbar-track]:rounded-full
-                      [&::-webkit-scrollbar-track]:bg-navbar-bg-light
-                      [&::-webkit-scrollbar-thumb]:rounded-full
-                      [&::-webkit-scrollbar-thumb]:bg-background-light
-                      dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
-                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
-          >
-            <div className="flex justify-between px-10 pt-4">
-              <Checkbox label={AccountsChartLang.general[languageId]} />
-              <Checkbox label={AccountsChartLang.partial[languageId]} />
-            </div>
-            <AccountForm />
+          <AccountForm />
+        </>
+      ),
+    },
+  ];
+  return (
+    <div
+      dir={languageId === 1 ? "rtl" : "ltr"}
+      className="flex-col justify-around m-auto items-center overflow-y-auto"
+    >
+      {/* المحتوى الرئيسي */}
+      <div className="flex grid grid-cols-12 my-5 gap-4">
+        {/* قسم الشجرة */}
+        <div className="col-span-5 max-w-3xl text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
+          <h3 className="block mb-1 border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
+            {AccountsChartLang.UnitStructure[languageId]}
+          </h3>
+
+          {/* شرط عرض الشجرة بعد تحميل البيانات */}
+          {hasData && rawData ? (
+            <NestedTree
+              data={data}
+              initialExpanded={["root"]} // توسيع الجذر الوهمي افتراضياً
+              onItemSelected={(v) => setItem(v)}
+            />
+          ) : (
+            <div>Loading tree data...</div>
+          )}
+        </div>
+
+        {/* قسم النموذج */}
+        <div
+          className="col-span-7 shadow-md h-fit rounded-md max-h-[85svh] text-textPrimary bg-surface overflow-auto
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-surface
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-bg
+         "
+        >
+          <div>
+            <Tabs contents={contentsData} />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

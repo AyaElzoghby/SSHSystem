@@ -11,12 +11,12 @@ export default function Sidebar({ children }) {
   // const [languageId]=useLanguage()
   return (
     <>
-      <aside className="h-screen relative">
-        <nav className="h-full flex flex-col  bg-[#1e3756] border-s shadow-sm">
-          <div  className={`${expanded ? "my-2" : "my-6"} p-4 pb-2 flex justify-between items-center`}>
+      <aside className=" relative">
+        <nav className=" h-[97svh] flex flex-col  bg-surface rounded-md   shadow-sm">
+          <div  className={`${expanded ? "my-2" : "my-6"} p-4 flex justify-between items-center`}>
             <button
               onClick={() => setExpanded((curr) => !curr)}
-              className="p-1.5 end-2 top-4 absolute rounded-full bg-navbar-bg-light dark:bg-navbar-bg-dark text-navbar-text-light dark:text-navbar-text-dark hover:bg-gray-100"
+              className={`p-1.5 ${expanded ? "end-2 ": 'mx-auto'} top-3 shadow-md absolute rounded-md bg-surfaceHover text-textSecondary`}
             >
               {expanded ? <ChevronFirst /> : <ChevronLast />}
             </button>
@@ -31,7 +31,7 @@ export default function Sidebar({ children }) {
           </div>
 
           <SidebarContext.Provider value={{ expanded }}>
-            <ul className="flex-1 ps-3">{children}</ul>
+            <ul className="flex-1 p-3">{children}</ul>
           </SidebarContext.Provider>
         </nav>
       </aside>
@@ -52,11 +52,11 @@ export function SidebarItem({ icon, text, path, alert }) {
   return (
     <li
       onClick={() => navigate(path)}
-      className={`relative flex items-center font-bold py-3  px-3 my-1 rounded-s-full cursor-pointer transition-colors group
+      className={`relative flex items-center font-bold py-3  px-3 my-1 rounded-md cursor-pointer transition-colors group
         ${
           isActive
-            ? "bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark"
-            : "hover:bg-hover-light hover:dark:bg-hover-dark text-white"
+            ? "bg-surfaceHover shadow-md text-textPrimary"
+            :"hover:bg-surfaceHover text-textSecondary hover:text-textPrimary"
         }`}
     >
       {icon}
@@ -76,7 +76,7 @@ export function SidebarItem({ icon, text, path, alert }) {
       )}
       {!expanded && (
         <div
-          className={`absolute left-full rounded-md px-2 py-1 ml-6 bg-indigo-100 text-gray-800 text-sm
+          className={`absolute start-full rounded-md px-2 py-1  bg-indigo-100 text-gray-800 text-sm
             invisible opacity-20 -translate-x-3 transition-all
             group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}
         >

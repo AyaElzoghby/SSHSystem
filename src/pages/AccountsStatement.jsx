@@ -1,113 +1,97 @@
-// import React from 'react'
 import "@fortawesome/fontawesome-free/css/all.min.css";
-
-// import AccountForm from "./AccountFormReceipt";
 import NestedTree from "../components/NestedTree";
-import InputComponent from "@/components/InputComponent";
 import { useLanguage } from "@/context/LanguageContext";
-import CustomButton from "@/components/CustomButton";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faRightFromBracket,
-  faSquarePlus,
-  faFileLines,
-  faPenToSquare,
-  faTrash,
-  faClockRotateLeft,
-  faPrint,
-  faRightLeft,
-  faFloppyDisk,
-} from "@fortawesome/free-solid-svg-icons";
-import ReceiptLang from "@/constants/Lang/Receipt";
 import Checkbox from "@/components/Checkbox";
-import DatePickerInput from "@/components/DatePicker";
-import DropdownComponent from "@/components/ui/DropDown";
+import React, { useEffect, useState } from "react";
+import AccountsChartLang from "@/constants/Lang/AccountsChart";
+import AccountFormAccountsChart from "./AccountFormAccountsChart";
 export default function AccountsStatement() {
-
   const { languageId } = useLanguage();
+  const [data, setData] = useState(null);
+  const [rawData, setRawData] = React.useState(null);
 
+  const normalizeTreeDataWithRoot = (array) => {
+    const map = {};
+
+    const traverse = (node) => {
+      map[node.dcodE2] = {
+        name: node.dname,
+        children: node.children?.map((child) => child.dcodE2) || [],
+      };
+      node.children?.forEach(traverse);
+    };
+
+    array.forEach(traverse);
+
+    // جذر وهمي
+    map["root"] = {
+      name: "Root",
+      children: array.map((node) => node.dcodE2),
+    };
+
+    return map;
+  };
+
+  useEffect(() => {
+    fetch("/api/Account/GetFullTree.json")
+      .then((res) => res.json())
+      .then((json) => {
+        setRawData(json); // خزّن النسخة الأصلية
+        const normalized = normalizeTreeDataWithRoot(json);
+        setData(normalized);
+      })
+      .catch((err) => {
+        console.error("Fetch error:", err);
+      });
+  }, []);
+
+  const hasData = data && Object.keys(data).length > 0;
   return (
     <>
       <div
         dir={languageId === 1 ? "rtl" : "ltr"}
-        className="flex-col p-4 justify-around m-auto items-center  overflow-y-auto"
+        className="flex-col justify-around m-auto items-center overflow-y-auto"
       >
-        {/* <div className="flex-wrap flex items-center justify-center gap-4">
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faSquarePlus} />}
-            title={ReceiptLang.new[languageId]}
-          />
+        {/* المحتوى الرئيسي */}
+        <div className="flex grid grid-cols-12 my-5 gap-4">
+          {/* قسم الشجرة */}
+          <div className="col-span-5 max-w-3xl text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
+            <h3 className="block mb-1 border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
+              {AccountsChartLang.UnitStructure[languageId]}
+            </h3>
 
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPenToSquare} />}
-            title={ReceiptLang.Edit[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faTrash} />}
-            title={ReceiptLang.delete[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faFloppyDisk} />}
-            title={ReceiptLang.Save[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faClockRotateLeft} />}
-            title={ReceiptLang.review[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPrint} />}
-            title={ReceiptLang.print[languageId]}
-          />
+            {/* شرط عرض الشجرة بعد تحميل البيانات */}
+            {hasData && rawData ? (
+              // <NestedTree
+              //   data={data}
+              //   initialExpanded={rawData.map((node) => node.dcodE2)}
+              // />
+              <NestedTree
+                data={data}
+                initialExpanded={["root"]} // توسيع الجذر الوهمي افتراضياً
+              />
+            ) : (
+              <div>Loading tree data...</div>
+            )}
+          </div>
 
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faRightFromBracket} />}
-            title={ReceiptLang.exit[languageId]}
-          />
-        </div> */}
-        <div className="flex justify-center  grid grid-cols-12 my-5 gap-4">
-          <div className="col-span-full flex gap-4 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark px-4 pt-4 shadow-md rounded-lg">
-            {/* <InputComponent
-              flex
-              title={ReceiptLang.BondNumber[languageId]}
-              type="number"
-            />
-            <InputComponent
-              flex
-              title={ReceiptLang.BondHistory[languageId]}
-              type="date"
-            /> */}
-          </div>
-          <div className="col-span-full grid grid-cols-12 flex gap-4 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark px-4 pt-4 shadow-md rounded-lg">
-            <div className="col-span-6 flex gap-4">
-              {/* <DropdownComponent flex label={ReceiptLang.Account[languageId]} /> */}
-              {/* <InputComponent
-                type="search"
-              /> */}
-            </div>
-            <div className="col-span-6 flex gap-4">
-              {/* <DropdownComponent flex label={ReceiptLang.Account[languageId]} /> */}
-              {/* <InputComponent
-                flex
-                title={ReceiptLang.BondHistory[languageId]}
-                type="search"
-              /> */}
-            </div>
-          </div>
-          {/* <div
-            className="col-span-full shadow-md h-fit rounded-lg max-h-[75svh] text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark overflow-y-auto
-                      [&::-webkit-scrollbar]:w-2
-                      [&::-webkit-scrollbar-track]:rounded-full
-                      [&::-webkit-scrollbar-track]:bg-navbar-bg-light
-                      [&::-webkit-scrollbar-thumb]:rounded-full
-                      [&::-webkit-scrollbar-thumb]:bg-background-light
-                      dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
-                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
+          {/* قسم النموذج */}
+          <div
+            className="col-span-7 shadow-md h-fit rounded-lg max-h-[75svh] text-textPrimary bg-surface overflow-y-auto
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+          [&::-webkit-scrollbar-track]:bg-navbar-bg-light
+          [&::-webkit-scrollbar-thumb]:rounded-full
+          [&::-webkit-scrollbar-thumb]:bg-background-light
+          dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
+          dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
           >
-            <div className="flex justify-between items-center px-10 gap-6 pt-4">
-              <InputComponent flex title={ReceiptLang.BondNumber[languageId]} type="number"/> 
-              <InputComponent flex title={ReceiptLang.BondHistory[languageId]} type="date"/> 
+            <div className="flex justify-between px-10 pt-4">
+              <Checkbox label={AccountsChartLang.general[languageId]} />
+              <Checkbox label={AccountsChartLang.partial[languageId]} />
             </div>
-          </div> */}
+            <AccountFormAccountsChart />
+          </div>
         </div>
       </div>
     </>
