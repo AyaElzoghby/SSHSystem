@@ -6,12 +6,12 @@ export default function CustomButton({
   icon,
   onClick,
   width,
-  color = "text-textPrimary bg-bg",
+  color = '',
   type = "button",
   disabled = false,
   loading = false,
   fullWidth = false,
-  className = "",
+  className = "text-textPrimary bg-surfaceHover shadow-md",
   size = "medium", // small | medium | large
   variant = "solid", // solid | outline | ghost
 }) {

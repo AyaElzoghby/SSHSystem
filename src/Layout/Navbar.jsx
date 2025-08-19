@@ -56,7 +56,7 @@ export default function Component() {
   const { token, setToken } = useUser();
 
   return (
-    <header className="shadow-md  bg-surface rounded-md   shadow-sm px-4 ">
+    <header className="shadow-md  bg-surface rounded-md z-50 px-4 ">
       <div className="flex  h-14 items-center justify-between gap-4">
         {/* Left side */}
         <div className="flex flex-1 items-center gap-2">

@@ -28,7 +28,7 @@ const Card = styled(MuiCard)(({ theme }) => ({
   flexDirection: "column",
   alignSelf: "center",
   width: "100%",
-    fontFamily:"Tajawal", 
+  fontFamily: "'Tajawal', sans-serif",
 
   padding: theme.spacing(4),
   gap: theme.spacing(2),
@@ -51,7 +51,7 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   minHeight: "100%",
   backgroundColor: "var(--bg-color)",
   color: "var(--text-primary)",
-  fontFamily:"Tajawal", 
+  fontFamily: "'Tajawal', sans-serif",
   padding: theme.spacing(2),
   [theme.breakpoints.up("sm")]: {
     padding: theme.spacing(4),
@@ -79,7 +79,7 @@ export default function SignIn(props) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const { token, setToken } = useUser();
-  const {languageId,toggleLanguage}=useLanguage();
+  const { languageId, toggleLanguage } = useLanguage();
   console.log(token, "fdufuehfuefu");
   const navigate = useNavigate();
   const mode = useSystemTheme(); // returns "light" or "dark"
@@ -136,33 +136,29 @@ export default function SignIn(props) {
 
   return (
     <SignInContainer direction="column" justifyContent="space-between">
-     <div className="flex gap-4 items-center">
+      <div className="flex gap-4 items-center">
+        <ThemeToggle />
+        {/* Language selector */}
 
-      <ThemeToggle />
-         {/* Language selector */}
-
-            <button
-              className="w-8 h-8 rounded-md shadow-md flex justify-center items-center"
-              onClick={toggleLanguage}
-            >
-              {languageId === 1 ? (
-                <p className="text-sm font-tbold font-bold text-slate-700">
-                  AR
-                </p>
-              ) : (
-                <p className="text-sm font-tbold font-bold text-slate-700">
-                  EN
-                </p>
-              )}
-            </button>
-     </div>
+        <button
+          className="w-8 h-8 rounded-md shadow-md flex justify-center items-center"
+          onClick={toggleLanguage}
+        >
+          {languageId === 1 ? (
+            <p className="text-sm font-tbold font-bold text-slate-700">AR</p>
+          ) : (
+            <p className="text-sm font-tbold font-bold text-slate-700">EN</p>
+          )}
+        </button>
+      </div>
       <Card>
         <Typography
           component="h1"
           variant="h4"
           sx={{ width: "100%", fontSize: "clamp(2rem, 10vw, 2.15rem)" }}
         >
-{layoutLang.Signin[languageId]}        </Typography>
+          {layoutLang.Signin[languageId]}{" "}
+        </Typography>
         <Box
           component="form"
           onSubmit={handleSubmit}
@@ -175,7 +171,9 @@ export default function SignIn(props) {
           }}
         >
           <FormControl>
-            <InputComponent title={layoutLang.Email[languageId]}    error={emailError}
+            <InputComponent
+              title={layoutLang.Email[languageId]}
+              error={emailError}
               helperText={emailErrorMessage}
               id="email"
               type="email"
@@ -186,11 +184,13 @@ export default function SignIn(props) {
               autoFocus
               required
               fullWidth
-              color={emailError ? "error" : "primary"}/>
-           
+              color={emailError ? "error" : "primary"}
+            />
           </FormControl>
           <FormControl>
-            <InputComponent title={layoutLang.Password[languageId]}  error={passwordError}
+            <InputComponent
+              title={layoutLang.Password[languageId]}
+              error={passwordError}
               helperText={passwordErrorMessage}
               name="password"
               placeholder="••••••"
@@ -200,14 +200,18 @@ export default function SignIn(props) {
               autoFocus
               required
               fullWidth
-              color={passwordError ? "error" : "primary"}/>
-            
+              color={passwordError ? "error" : "primary"}
+            />
           </FormControl>
-          <Checkbox className="my-6"  label={layoutLang.Rememberme[languageId]}/>
-      
+          <Checkbox
+            className="my-6"
+            label={layoutLang.Rememberme[languageId]}
+          />
+
           <ForgotPassword open={open} handleClose={handleClose} />
           <Button type="submit" fullWidth variant="contained">
-{layoutLang.Signin[languageId]}          </Button>
+            {layoutLang.Signin[languageId]}{" "}
+          </Button>
           <Link
             component="button"
             type="button"
@@ -215,9 +219,12 @@ export default function SignIn(props) {
             variant="body2"
             sx={{ alignSelf: "center" }}
           >
-{layoutLang.Forgot[languageId]}          </Link>
+            {layoutLang.Forgot[languageId]}{" "}
+          </Link>
         </Box>
-        <Divider sx={{ color: "text.secondary" }}>{layoutLang.or[languageId]}</Divider>
+        <Divider sx={{ color: "text.secondary" }}>
+          {layoutLang.or[languageId]}
+        </Divider>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
           <Button
             fullWidth
@@ -226,24 +233,27 @@ export default function SignIn(props) {
             onClick={() => alert("Sign in with Google")}
             startIcon={<GoogleIcon />}
           >
-            {layoutLang.Signinface[languageId]}          
-       </Button>
+            {layoutLang.Signinface[languageId]}
+          </Button>
           <Button
             fullWidth
             variant="outlined"
             className="flex gap-4"
             onClick={() => alert("Sign in with Facebook")}
             startIcon={<FacebookIcon />}
-          >{layoutLang.Signingoogle[languageId]}   
-</Button>
+          >
+            {layoutLang.Signingoogle[languageId]}
+          </Button>
           <Typography sx={{ textAlign: "center" }}>
-{layoutLang.Donothave[languageId]}               <Link
+            {layoutLang.Donothave[languageId]}{" "}
+            <Link
               component={RouterLink}
               to="/signup"
               variant="body2"
               sx={{ alignSelf: "center" }}
             >
-{layoutLang.SignUp[languageId]}               </Link>
+              {layoutLang.SignUp[languageId]}{" "}
+            </Link>
           </Typography>
         </Box>
       </Card>

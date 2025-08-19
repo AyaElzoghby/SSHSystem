@@ -56,6 +56,12 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary);
 }
+.MuiTypography-root,
+.MuiButton-root,
+.MuiInputBase-root,
+.MuiCard-root {
+  font-family: 'Tajawal', sans-serif !important;
+}
 
 .card {
   background-color: var(--surface-color);
