@@ -11,13 +11,13 @@ const AccountsChartLang = {
     1: "تفريع",
     2: "Branching",
   },
-  Edit: {
-    1: "تعديل",
-    2: "Edit",
+  Cancel: {
+    1: "إلغاء",
+    2: "Cancel",
   },
-  delete: {
-    1: "حذف",
-    2: "delete",
+  Sure: {
+    1: "تأكيد",
+    2: "Sure",
   },
   transfer: {
     1: "نقل",
@@ -47,9 +47,17 @@ const AccountsChartLang = {
     1: "هيكليه الوحدات",
     2: "Unit structure",
   },
+    AccountsChart: {
+    1: "شجره الحسابات",
+    2: "Accounts Chart",
+  },
   UnityElements: {
     1: "عناصر الوحده",
     2: "Elements of Unity",
+  },
+  AccountElements: {
+    1: "عناصر الحساب",
+    2: "Account Elements",
   },
   Address1: {
     1: "عنوان 1",
@@ -83,6 +91,10 @@ const AccountsChartLang = {
     1: "تفاصيل الوحده",
     2: "Unity Details",
   },
+  AccountDetails: {
+    1: "تفاصيل الحساب",
+    2: "Account Details",
+  },
   openingBalanceCurrent: {
     1: "الرصيد الافتتاحى للحساب بالعمله الاساسيه",
     2: "Opening account balance in base currency",
@@ -90,6 +102,18 @@ const AccountsChartLang = {
   debtor: {
     1: "مدين",
     2: "debtor",
+  },
+  Add: {
+    1: "إضافه",
+    2: "Add",
+  },
+  Edit: {
+    1: "تعديل",
+    2: "Edit",
+  },
+  Delete: {
+    1: "حذف",
+    2: "Delete",
   },
   creditor: {
     1: "دائن",

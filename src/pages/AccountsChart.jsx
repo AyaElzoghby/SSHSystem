@@ -59,7 +59,7 @@ export default function AccountsChart() {
 
   const contentsData = [
     {
-      tab_title: AccountsChartLang.UnityElements[languageId],
+      tab_title: AccountsChartLang.AccountElements[languageId],
       tab_contents: (
         <ul>
           {childrenToDisplay.map((child) => (
@@ -74,7 +74,7 @@ export default function AccountsChart() {
                     icon={<FontAwesomeIcon icon={faSquarePlus} />}
                     size="small"
                     className="bg-success text-gray-100"
-                    title="اضافه"
+                    title={AccountsChartLang.Add[languageId]}
                     onClick={() => {
                       setModelVisible(true);
                       setModalType("Add");
@@ -85,7 +85,7 @@ export default function AccountsChart() {
                   icon={<FontAwesomeIcon icon={faPenToSquare} />}
                   size="small"
                   className="bg-warning text-gray-100"
-                  title="تعديل"
+                  title={AccountsChartLang.Edit[languageId]}
                   onClick={() => {
                     setModelVisible(true);
                     setModalType("Edit");
@@ -95,7 +95,7 @@ export default function AccountsChart() {
                   icon={<FontAwesomeIcon icon={faTrashCan} />}
                   size="small"
                   className="bg-danger text-gray-100"
-                  title="حذف"
+                  title={AccountsChartLang.Delete[languageId]}
                   onClick={() => {
                     setModelVisible(true);
                     setModalType("Delete");
@@ -108,61 +108,71 @@ export default function AccountsChart() {
       ),
     },
     {
-      tab_title: AccountsChartLang.UnityDetails[languageId],
-      tab_contents:   <>
-            {/* toggle checkboxes */}
-            <div className="flex justify-start gap-4 mb-4">
-              <Checkbox
-                label="secondary"
-                checked={accountType === "secondary"}
-                onChange={() => setAccountType("secondary")}
-              />
-              <Checkbox
-                label="general"
-                checked={accountType === "general"}
-                onChange={() => setAccountType("general")}
-              />
-            </div>
+      tab_title: AccountsChartLang.AccountDetails[languageId],
+      tab_contents: (
+        <>
+          {/* toggle checkboxes */}
+          <div className="flex justify-start gap-4 mb-4">
+            <Checkbox
+              label="secondary"
+              checked={accountType === "secondary"}
+              onChange={() => setAccountType("secondary")}
+            />
+            <Checkbox
+              label="general"
+              checked={accountType === "general"}
+              onChange={() => setAccountType("general")}
+            />
+          </div>
 
-            <div className="flex gap-4 mb-4">
-              <DropdownComponent disabled label={"Account Type 1"} />
-              <DropdownComponent disabled label={"Account Type 2"} />
-              <DropdownComponent disabled label={"Account Type"} />
-            </div>
+          <div className="flex gap-4 mb-4">
+            <DropdownComponent disabled label={"Account Type 1"} />
+            <DropdownComponent disabled label={"Account Type 2"} />
+            <DropdownComponent disabled label={"Account Type"} />
+          </div>
 
-            <div className="flex gap-4 grid grid-cols-4 mb-4">
-              <div className="col-span-1">
-                <InputComponent disabled title={"Level"} />
+          <div className="flex gap-4 grid grid-cols-4 mb-4">
+            <div className="col-span-1">
+              <InputComponent disabled title={"Level"} />
+            </div>
+            <div className="col-span-3">
+              <InputComponent disabled title={"Account code"} />
+            </div>
+          </div>
+
+          <InputComponent
+            disabled
+            title={"Account Name (AR)"}
+            className="mb-4"
+          />
+          <InputComponent
+            disabled
+            title={"Account Name (En)"}
+            className="mb-4"
+          />
+
+          {/* extra fields لو النوع secondary */}
+          {accountType === "secondary" && (
+            <>
+              <div className="flex gap-4 mb-4">
+                <InputComponent disabled title={"phone "} />
+                <InputComponent disabled title={"fax"} />
               </div>
-              <div className="col-span-3">
-                <InputComponent disabled title={"Account code"} />
+              <InputComponent disabled title={"mobile"} className="mb-4" />
+              <div className="flex gap-4 mb-4">
+                <InputComponent disabled title={"Employee "} />
+                <InputComponent disabled title={"sales rep"} />
               </div>
-            </div>
-
-            <InputComponent disabled title={"Account Name (AR)"} className="mb-4" />
-            <InputComponent disabled title={"Account Name (En)"} className="mb-4" />
-
-            {/* extra fields لو النوع secondary */}
-            {accountType === "secondary" && (
-              <>
-                <div className="flex gap-4 mb-4">
-                  <InputComponent disabled title={"phone "} />
-                  <InputComponent disabled title={"fax"} />
-                </div>
-                <InputComponent disabled title={"mobile"} className="mb-4" />
-                <div className="flex gap-4 mb-4">
-                  <InputComponent disabled title={"Employee "} />
-                  <InputComponent disabled title={"sales rep"} />
-                </div>
-                <InputComponent disabled title={"email"} className="mb-4" />
-                <div className="flex gap-4 mb-4">
-                  <InputComponent disabled title={"creation date "} />
-                  <InputComponent disabled title={"tax number"} />
-                </div>
-                <InputComponent disabled title={"debit"} />
-              </>
-            )}
-          </>,
+              <InputComponent disabled title={"email"} className="mb-4" />
+              <div className="flex gap-4 mb-4">
+                <InputComponent disabled title={"creation date "} />
+                <InputComponent disabled title={"tax number"} />
+              </div>
+              <InputComponent disabled title={"debit"} />
+            </>
+          )}
+        </>
+      ),
     },
   ];
 
@@ -176,7 +186,7 @@ export default function AccountsChart() {
           {/* قسم الشجرة */}
           <div className="col-span-12 lg:col-span-5 text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
             <h3 className="block border-button-warning-light dark:border-button-warning-dark border-b-2 w-fit mb-4 font-bold">
-              {AccountsChartLang.UnitStructure[languageId]}
+              {AccountsChartLang.AccountsChart[languageId]}
             </h3>
 
             {rawData ? (
@@ -220,23 +230,24 @@ export default function AccountsChart() {
               <div className="flex gap-4 justify-center w-full">
                 <CustomButton
                   className="bg-danger"
-                  title={"تاكيد"}
+                  title={AccountsChartLang.Sure[languageId]}
                   onClick={() => setModelVisible(false)}
                 />
                 <CustomButton
-                  title={"الغاء"}
+                  title={AccountsChartLang.Cancel[languageId]}
                   onClick={() => setModelVisible(false)}
                 />
               </div>
             ) : (
               <div className="flex gap-4 justify-center w-full">
                 <CustomButton
-                  className="bg-success"
-                  title={"حفظ"}
+                  className="bg-success text-gray-100"
+                  title={AccountsChartLang.Save[languageId]}
                   onClick={() => setModelVisible(false)}
                 />
                 <CustomButton
-                  title={"الغاء"}
+                  className="bg-danger text-gray-100"
+                  title={AccountsChartLang.Cancel[languageId]}
                   onClick={() => setModelVisible(false)}
                 />
               </div>
