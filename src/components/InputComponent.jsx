@@ -43,7 +43,7 @@ export default function InputComponent({
           name={name}
           type={type}
           value={value}
-          onChange={onTextChange}
+          onChange={(e) => onTextChange(e.target.value)} // ✅ only the string
           placeholder={placeholder}
           disabled={disabled}
           readOnly={readOnly}

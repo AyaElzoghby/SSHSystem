@@ -308,7 +308,9 @@ export default function NestedTree({
       aria-label="nested-tree"
     >
       {/* Search */}
-      <SearchInput value={search} onChange={(e) => setSearch(e.target.value)} />
+      {/* <SearchInput value={search} onChange={(e) => setSearch(e.target.value)} /> */}
+      <SearchInput value={search} onChange={setSearch} />
+
       <div className="flex justify-between my-2">
         <CustomButton
           title={search ? "Clear" : "Expand All"}

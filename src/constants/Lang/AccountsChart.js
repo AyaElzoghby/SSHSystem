@@ -39,7 +39,7 @@ const AccountsChartLang = {
     1: "حساب جزئي",
     2: "partial account",
   },
-  general: {
+  generalAcc: {
     1: "حساب عام",
     2:"general account",
   },
@@ -218,6 +218,102 @@ const AccountsChartLang = {
   AccountType: {
     1: "نوع الحساب",
     2: "Account Type",
+  },  
+  secondary: {
+    1: "ثانوي",
+    2: "secondary",
+  },
+  general: {
+    1: "عام",
+    2: "general",
+  },
+  primaryType: {
+    1: "نوع أساسي",
+    2: "primary Type",
+  },
+  secondaryType: {
+    1: "النوع الثانوي",
+    2: "secondaryType",
+  },
+  tertiaryType: {
+    1: "النوع الثالث",
+    2: "tertiaryType",
+  },
+  level: {
+    1: "مستوى",
+    2: "level",
+  },
+  accountCode: {
+    1: "رقم الحساب",
+    2: "account Code",
+  },
+  accountNameArabic: {
+    1: "اسم الحساب عربي",
+    2: "account Name Arabic",
+  },
+  accountNameEnglish: {
+    1: "اسم الحساب انجليزي",
+    2: "account Name English",
+  },
+  phone: {
+    1: "هاتف",
+    2: "phone",
+  },
+  fax: {
+    1: "فاكس",
+    2: "fax",
+  },
+  mobile: {
+    1: "الهاتف المحمول",
+    2: "mobile",
+  },
+  Employee: {
+    1: "موظف",
+    2: "Employee",
+  },
+  creationdate: {
+    1: "تاريخ الإنشاء",
+    2: "creation date",
+  },
+  taxnumber: {
+    1: "الرقم الضريبي",
+    2: "tax number",
+  },
+  openingDebit: {
+    1: "الخصم  الابتدائي",
+    2: "opening Debit",
+  },
+  currentDebit: {
+    1: "الخصم الحالي",
+    2: "current Debit",
+  },
+  totalDebits: {
+    1: "إجمالي الخصم",
+    2: "total Debits",
+  },
+  openingCredit: {
+    1: " الائتمان الابتدائي",
+    2: "opening Credit",
+  },
+  currentCredit: {
+    1: "الائتمان الحالي",
+    2: "current Credit",
+  },
+  totalCredits: {
+    1: "إجمالي الاعتمادات",
+    2: "total Credits",
+  },
+  openingBalance: {
+    1: "الرصيد الافتتاحي",
+    2: "opening Balance",
+  },
+  notes: {
+    1: "ملحوظات",
+    2: "notes",
+  },
+  sales: {
+    1:"مندوب مبيعات",
+    2: "sales rep",
   },
  
 };

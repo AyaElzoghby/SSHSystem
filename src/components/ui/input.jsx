@@ -1,42 +1,65 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
-export default function Input({
-  label,
-  value,
-  onChange,
-  placeholder = "أدخل القيمة...",
-  type = "text",
-  rtl = false,
-  error = "",
-  className = "", // 👈 this will apply directly to the <input>
-  containerClass = "", // optional: for wrapper <div>
-}) {
-  return (
-    <div
-      className={`w-full text-sm ${
-        rtl ? "text-right" : "text-left"
-      } ${containerClass}`}
-    >
-      {label && (
-        <label className="block mb-1 font-bold text-gray-700">{label}</label>
-      )}
-
+const Input = React.forwardRef(
+  ({ className, type = "text", ...props }, ref) => {
+    return (
       <input
         type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        className={`w-full bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
-          rtl ? "text-right" : "text-left"
-        } ${
-          error ? "border border-red-500" : "border border-gray-300"
-        } ${className}`} // 👈 merged here
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm",
+          className
+        )}
+        ref={ref}
+        {...props}
       />
+    );
+  }
+);
 
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-    </div>
-  );
-}
+Input.displayName = "Input";
+
+export default Input;
+
+// import React from "react";
+
+// export default function Input({
+//   label,
+//   value,
+//   onChange,
+//   placeholder = "أدخل القيمة...",
+//   type = "text",
+//   rtl = false,
+//   error = "",
+//   className = "", // 👈 this will apply directly to the <input>
+//   containerClass = "", // optional: for wrapper <div>
+// }) {
+//   return (
+//     <div
+//       className={`w-full text-sm ${
+//         rtl ? "text-right" : "text-left"
+//       } ${containerClass}`}
+//     >
+//       {label && (
+//         <label className="block mb-1 font-bold text-gray-700">{label}</label>
+//       )}
+
+//       <input
+//         type={type}
+//         value={value}
+//         onChange={(e) => onChange(e.target.value)}
+//         placeholder={placeholder}
+//         className={`w-full bg-white py-2 px-3 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none ${
+//           rtl ? "text-right" : "text-left"
+//         } ${
+//           error ? "border border-red-500" : "border border-gray-300"
+//         } ${className}`} // 👈 merged here
+//       />
+
+//       {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+//     </div>
+//   );
+// }
 
 // import React from "react";
 
