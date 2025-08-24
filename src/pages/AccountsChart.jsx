@@ -347,7 +347,7 @@ export default function AccountsChart() {
   return (
     <>
       <div dir={languageId === 1 ? "rtl" : "ltr"} className="flex-col justify-around m-auto items-center overflow-y-auto">
-        <div className="flex-row justify-center  grid grid-cols-12 my-5 gap-4">
+        <div className="flex-row justify-center  grid grid-cols-12 my-4 gap-4">
           {/* tree */}
           <div className="col-span-12 lg:col-span-5 text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
             <h3 className="block border-b-2 w-fit mb-4 font-bold">

@@ -18,96 +18,61 @@ import {
   faRightLeft,
   faFloppyDisk,
 } from "@fortawesome/free-solid-svg-icons";
-import ReceiptLang from "@/constants/Lang/Receipt";
+import JournalEntryLang from "@/constants/Lang/JournalEntry";
 import Checkbox from "@/components/Checkbox";
 import DatePickerInput from "@/components/DatePicker";
 import DropdownComponent from "@/components/ui/DropDown";
 export default function JournalEntry() {
-  
   const { languageId } = useLanguage();
 
   return (
     <>
       <div
         dir={languageId === 1 ? "rtl" : "ltr"}
-        className="flex-col p-4 justify-around m-auto items-center  overflow-y-auto"
+        className="flex-col justify-around m-auto items-center overflow-y-auto"
       >
-        {/* <div className="flex-wrap flex items-center justify-center gap-4">
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faSquarePlus} />}
-            title={ReceiptLang.new[languageId]}
-          />
-
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPenToSquare} />}
-            title={ReceiptLang.Edit[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faTrash} />}
-            title={ReceiptLang.delete[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faFloppyDisk} />}
-            title={ReceiptLang.Save[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faClockRotateLeft} />}
-            title={ReceiptLang.review[languageId]}
-          />
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faPrint} />}
-            title={ReceiptLang.print[languageId]}
-          />
-
-          <CustomButton
-            icon={<FontAwesomeIcon icon={faRightFromBracket} />}
-            title={ReceiptLang.exit[languageId]}
-          />
-        </div> */}
-        <div className="flex justify-center  grid grid-cols-12 my-5 gap-4">
-          <div className="col-span-full flex gap-4 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark px-4 pt-4 shadow-md rounded-lg">
-            {/* <InputComponent
+        <div className="col-span-12 lg:col-span-5 text-textPrimary flex items-center my-4 gap-4 bg-surface p-4 shadow-md h-fit rounded-lg grid grid-cols-12">
+          <div className="md:col-span-9 flex gap-4">
+            <InputComponent
               flex
-              title={ReceiptLang.BondNumber[languageId]}
+              title={JournalEntryLang.BondNumber[languageId]}
               type="number"
             />
             <InputComponent
               flex
-              title={ReceiptLang.BondHistory[languageId]}
+              title={JournalEntryLang.BondHistory[languageId]}
               type="date"
-            /> */}
+            />
           </div>
-          <div className="col-span-full grid grid-cols-12 flex gap-4 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark px-4 pt-4 shadow-md rounded-lg">
-            <div className="col-span-6 flex gap-4">
-              {/* <DropdownComponent flex label={ReceiptLang.Account[languageId]} /> */}
-              {/* <InputComponent
-                type="search"
-              /> */}
-            </div>
-            <div className="col-span-6 flex gap-4">
-              {/* <DropdownComponent flex label={ReceiptLang.Account[languageId]} /> */}
-              {/* <InputComponent
+          <div className="col-span-12 h-96">
+            
+          </div>
+          <div className="col-span-12  flex-wrap gap-4 grid grid-cols-12">
+            <div className="col-span-12 lg:col-span-6  flex  gap-4">
+              <InputComponent
                 flex
-                title={ReceiptLang.BondHistory[languageId]}
-                type="search"
-              /> */}
+                title={JournalEntryLang.Totaldebit[languageId]}
+                type="number"
+              />
+              <InputComponent
+                flex
+                title={JournalEntryLang.TotalCredit[languageId]}
+                type="number"
+              />
+            </div>
+            <div className="col-span-12 lg:col-span-6  flex  gap-4">
+              <InputComponent
+                flex
+                title={JournalEntryLang.Registrationdifference[languageId]}
+                type="number"
+              />
+              <InputComponent
+                flex
+                title={JournalEntryLang.Accountbalance[languageId]}
+                type="number"
+              />
             </div>
           </div>
-          {/* <div
-            className="col-span-full shadow-md h-fit rounded-lg max-h-[75svh] text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark overflow-y-auto
-                      [&::-webkit-scrollbar]:w-2
-                      [&::-webkit-scrollbar-track]:rounded-full
-                      [&::-webkit-scrollbar-track]:bg-navbar-bg-light
-                      [&::-webkit-scrollbar-thumb]:rounded-full
-                      [&::-webkit-scrollbar-thumb]:bg-background-light
-                      dark:[&::-webkit-scrollbar-track]:bg-navbar-bg-dark
-                      dark:[&::-webkit-scrollbar-thumb]:bg-background-dark"
-          >
-            <div className="flex justify-between items-center px-10 gap-6 pt-4">
-              <InputComponent flex title={ReceiptLang.BondNumber[languageId]} type="number"/> 
-              <InputComponent flex title={ReceiptLang.BondHistory[languageId]} type="date"/> 
-            </div>
-          </div> */}
         </div>
       </div>
     </>

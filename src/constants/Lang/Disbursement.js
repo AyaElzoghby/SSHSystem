@@ -1,4 +1,4 @@
-const ReceiptLang = {
+const DisbursementLang = {
   received: {
     1: "استلمنا من السيد ",
     2: " We received from Mr.",
@@ -65,7 +65,7 @@ const ReceiptLang = {
     2: " Balance before",
   },
   Balanceafter: {
-    1: "رصيد بعد ",
+    1: "رصيد قبل ",
     2: " Balance after",
   },
   Buildingsymbol: {
@@ -76,6 +76,22 @@ const ReceiptLang = {
   Contract: {
     1: "العقد ",
     2: " Contract",
+  },
+  TaxCustomerNumber: {
+    1: "رقم عميل ضريبي ",
+    2: " Tax Customer Number",
+  },
+  Selecttax: {
+    1: "اختر الضريبه ",
+    2: " Select tax",
+  },
+  Taxamount: {
+    1: "مبلغ الضريبه ",
+    2: " Tax amount",
+  },
+  Taxamountbefore: {
+    1: "مبلغ قبل الضريبه ",
+    2: " Tax amount before",
   },
   BondNumber: {
     1: "رقم السند",
@@ -90,4 +106,4 @@ const ReceiptLang = {
     2: "Daily entry voucher",
   },
 };
-export default ReceiptLang;
+export default DisbursementLang;
