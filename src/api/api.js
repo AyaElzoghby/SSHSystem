@@ -1,7 +1,7 @@
 // src/api/api.js
 import { useUser } from "../context/UserContext";
 
-const BASE_URL = "/api"; // هيوصل للـ public/api
+const BASE_URL = "https://localhost:7014/api"; // هيوصل للـ public/api
 
 // Generic request function
 const request = async (method, endpoint, data, token) => {
@@ -52,11 +52,11 @@ export const API = () => {
 //   const api = useApi(); // auto-reads token from context
 //   const [items, setItems] = useState([]);
 
-//   useEffect(() => {
-//     api.get("/items")
-//       .then(setItems)
-//       .catch(console.error);
-//   }, []);
+  // useEffect(() => {
+  //   api.get("/items")
+  //     .then(setItems)
+  //     .catch(console.error);
+  // }, []);
 
 //   const addItem = () => {
 //     api.post("/items", { name: "New Item" })

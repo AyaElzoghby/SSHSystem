@@ -115,6 +115,10 @@ const AccountsChartLang = {
     1: "حذف",
     2: "Delete",
   },
+  DeleteAccount: {
+    1: "حذف الحساب",
+    2: "Delete Account",
+  },
   creditor: {
     1: "دائن",
     2: "creditor",

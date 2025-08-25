@@ -5,6 +5,8 @@ import { ChevronLeft } from "lucide-react";
 import folderopened from "../assets/folder opened.png";
 import folderclosed from "../assets/folder closed.png";
 import file from "../assets/file.png";
+import { useLanguage } from "@/context/LanguageContext";
+
 /**
  * NestedTree.jsx
  * - data: array of nodes, each node: { dcodE2, dname, children: [...] }
@@ -28,6 +30,8 @@ const TreeItem = ({
   const isSelected = String(selectedId) === String(node.dcodE2);
   const isFocused = String(focusId) === String(node.dcodE2);
   const ref = useRef(null);
+    const { languageId } = useLanguage();
+  
 
   useEffect(() => {
     if (isFocused && ref.current) {
@@ -109,7 +113,9 @@ const TreeItem = ({
           </span>
         )}
 
-        <div style={{ flex: 1 }}>{node.dname}</div>
+<div style={{ flex: 1 }}>
+  {languageId === 1 ? node.dname : node.dnamE2}
+</div>
       </div>
 
       {isExpanded &&

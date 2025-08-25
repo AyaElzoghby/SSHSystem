@@ -45,7 +45,7 @@ export default function DropdownComponent({
             </span>
             <span
               className={`pointer-events-none absolute inset-y-0 flex items-center ${
-                rtl ? "left-2" : "right-2"
+                rtl ? "end-2" : "start-2"
               }`}
             >
               <ChevronDownIcon
@@ -90,8 +90,8 @@ export default function DropdownComponent({
                           <span
                             className={`absolute inset-y-0 flex items-center ${
                               rtl
-                                ? "right-3 pr-1 left-auto"
-                                : "left-3 pl-1 right-auto"
+                                ? "end-3 pl-1 start-auto"
+                                : "start-3 pr-1 end-auto"
                             }`}
                           >
                             <CheckIcon
