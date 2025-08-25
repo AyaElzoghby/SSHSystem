@@ -1,7 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
-import Home from "./pages/Home/Home";
 import AccountsChart from "./pages/AccountsChart";
 import Disbursement from "./pages/Disbursement";
 import CostCenter from "./pages/CostCenter";
@@ -18,9 +17,9 @@ export default function App() {
       path: "/",
       element: <Layout />,
       children: [
-        { index: true, element: <Login /> },
-
-        { path: "Home", element: <Home /> },
+        { index: true, element: <AccountsChart /> },
+        { index: "Login", element: <Login /> },
+        { path: "Signup", element: <Signup /> },
         { path: "Receipt", element: <Receipt /> },
         { path: "Disbursement", element: <Disbursement /> },
         { path: "CostCenter", element: <CostCenter /> },
@@ -28,7 +27,6 @@ export default function App() {
         { path: "AccountsStatement", element: <AccountsStatement /> },
         { path: "JournalEntry", element: <JournalEntry /> },
         { path: "AccountsChart", element: <AccountsChart /> },
-        { path: "Signup", element: <Signup /> },
       ],
     },
   ]);

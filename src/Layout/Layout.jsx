@@ -26,7 +26,7 @@ export default function Layout({ children }) {
         dir={languageId === 1 ? "rtl" : "ltr"}
       >
         <div className="flex">
-          {token && (
+          {/* {token && ( */}
             <Sidebar>
               <SidebarItem
                 icon={<Home size={20} />}
@@ -64,14 +64,14 @@ export default function Layout({ children }) {
                 path="/CostCenter"
               />
             </Sidebar>
-          )}
+          {/* )} */}
 
           <div className={`${token && " ms-4 max-h-[98svh]"} flex-1`}>
-            {token && (
+            {/* {token && ( */}
               <div className="sticky">
                 <Navbar />
               </div>
-            )}
+            {/* )} */}
             <div
               className={`${
                 token &&

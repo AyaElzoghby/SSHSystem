@@ -52,7 +52,7 @@ export default function AccountsChart() {
     dacC_TYPE: null,
     dacC_TYPE2: null,
     dlevel: "",
-    dcodE1: "",
+    dcodE2: "",
     dname: "",
     dnamE2: "",
     dphone: "",
@@ -120,6 +120,7 @@ export default function AccountsChart() {
         // هنبعت الـ parents كـ query string ونبعت بيانات الحساب في الـ body
         await api.post(`/Account/CreateAccount`, formState);
       } else if (modalType === "Edit") {
+        console.log(formState ,'forrrrrrrrrrrrm')
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
           code: selectedChildCode,
@@ -157,7 +158,7 @@ export default function AccountsChart() {
         dacC_TYPE: selectedChild.dacC_TYPE || null,
         dacC_TYPE2: selectedChild.dacC_TYPE2 || null,
         dlevel: selectedChild.dlevel || "",
-        dcodE1: selectedChild.dcodE1 || "",
+        dcodE2: selectedChild.dcodE2 || "",
         dname: selectedChild.dname || "",
         dnamE2: selectedChild.dnamE2 || "",
         dphone: selectedChild.dphone || "",
@@ -616,13 +617,13 @@ export default function AccountsChart() {
               </div>
               <div className="col-span-3">
                 <InputComponent
-                  value={formState.dcodE1 || ""}
+                  value={formState.dcodE2 || ""}
                   title={AccountsChartLang.accountCode[languageId]}
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({
                       ...prev,
-                      dcodE1: val.replace(/[^\d]/g, ""),
+                      dcodE2: val.replace(/[^\d]/g, ""),
                     }))
                   }
                 />

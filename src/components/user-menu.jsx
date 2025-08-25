@@ -80,7 +80,7 @@ export default function UserMenu() {
         <DropdownMenuItem
           onClick={() => {
             logout();
-            navigate("/");
+            navigate("/Login");
           }}
         >
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
