@@ -18,7 +18,7 @@ export default function App() {
       element: <Layout />,
       children: [
         { index: true, element: <AccountsChart /> },
-        { index: "Login", element: <Login /> },
+        { index:"Login", element: <Login /> },
         { path: "Signup", element: <Signup /> },
         { path: "Receipt", element: <Receipt /> },
         { path: "Disbursement", element: <Disbursement /> },

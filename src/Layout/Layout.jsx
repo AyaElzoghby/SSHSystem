@@ -22,7 +22,7 @@ export default function Layout({ children }) {
   return (
     <>
       <div
-        className={`${token && "p-4"}`}
+        className={`${token && "p-4"} p-4`}
         dir={languageId === 1 ? "rtl" : "ltr"}
       >
         <div className="flex">
@@ -66,7 +66,7 @@ export default function Layout({ children }) {
             </Sidebar>
           {/* )} */}
 
-          <div className={`${token && " ms-4 max-h-[98svh]"} flex-1`}>
+          <div className={`${token && " ms-4 max-h-[98svh]"} ms-4 max-h-[98svh] flex-1`}>
             {/* {token && ( */}
               <div className="sticky">
                 <Navbar />

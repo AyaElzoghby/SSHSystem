@@ -34,10 +34,10 @@ export default function DropdownComponent({
       <Listbox value={selected} onChange={onChange} disabled={disabled}>
         <div className={`relative w-full ${flex ? "col-span-3" : ""}`}>
           <Listbox.Button
-            className={`w-full rounded-md border border-gray-300 
+            className={`w-full rounded-[4px] border border-surfaceHover
               dark:bg-inputs-dark bg-opacity-50 dark:bg-opacity-50 
-              bg-gray-100 py-2 px-3 shadow-sm focus:outline-none 
-              ${rtl ? "text-right" : "text-left"}
+              bg-opacity-50 bg-surfaceHover  py-2 px-3 shadow-sm 
+              focus:outline-none ${rtl ? "text-right" : "text-left"}
               ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
             <span className="block truncate">
@@ -62,8 +62,8 @@ export default function DropdownComponent({
             leaveTo="opacity-0"
           >
             <Listbox.Options
-              className={`absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md 
-                bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none 
+              className={`absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-[4px] border-[0.5px] border-surfaceHover 
+                bg-surface py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none 
                 ${rtl ? "text-right" : "text-left"}`}
             >
               {options?.length > 0 ? (
@@ -73,7 +73,7 @@ export default function DropdownComponent({
                     value={option}
                     className={({ active }) =>
                       `relative cursor-pointer select-none py-2 px-4 ${
-                        active ? "bg-blue-100 text-blue-900" : "text-gray-900"
+                        active ? "bg-surfaceHover bg-opacity-5 text-textPrimary" : "text-textSecondary"
                       }`
                     }
                   >

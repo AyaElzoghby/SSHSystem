@@ -107,9 +107,17 @@ const AccountsChartLang = {
     1: "إضافه",
     2: "Add",
   },
+  AddAccount: {
+    1: "إضافه حساب جديد",
+    2: "Add Account",
+  },
   Edit: {
     1: "تعديل",
     2: "Edit",
+  },
+  EditAccount: {
+    1: "تعديل الحساب",
+    2: "Edit Account",
   },
   Delete: {
     1: "حذف",

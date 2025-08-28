@@ -691,7 +691,29 @@ export default function AccountsChart() {
               />
             </>
           )}
-          <div className="flex justify-end ">
+          <div className="flex justify-center gap-4 ">
+            <CustomButton
+              icon={<FontAwesomeIcon icon={faSquarePlus} />}
+              className="bg-success text-gray-100"
+              title={AccountsChartLang.AddAccount[languageId]}
+              onClick={() => {
+                setSelectedChildCode(selectedAccount.dcodE1);
+                setModelVisible(true);
+                setModalType("Add");
+                setFormState({});
+              }}
+            />
+
+            <CustomButton
+              icon={<FontAwesomeIcon icon={faPenToSquare} />}
+              className="bg-warning text-gray-100"
+              title={AccountsChartLang.EditAccount[languageId]}
+              onClick={() => {
+                setSelectedChildCode(selectedAccount.dcodE1);
+                setModelVisible(true);
+                setModalType("Edit");
+              }}
+            />
             <CustomButton
               icon={<FontAwesomeIcon icon={faTrashCan} />}
               className="bg-danger  text-gray-100"
