@@ -341,8 +341,8 @@ export default function AccountsChart() {
     : [];
 
   // ✅ handlers
-  
-    useEffect(() => {
+
+  useEffect(() => {
     if (!selectedChildCode || modalType !== "Edit") return;
 
     let cancelled = false;
@@ -356,10 +356,7 @@ export default function AccountsChart() {
         );
 
         if (cancelled) return;
-
         setSelectedChildDetails(details);
-
-        // عبّي الفورم بالداتا الراجعة (مع تنسيق التاريخ)
         setFormState({
           ...details,
           dfdate: details?.dfdate
@@ -386,13 +383,13 @@ export default function AccountsChart() {
       } else if (modalType === "Edit") {
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
-          dcodE1: selectedChildCode, // لازم يتبعت عشان السيرفر يعرف أي حساب يعدل
+          dcodE1: selectedChildCode,
         });
-        await loadDetails()
+        setSelectedChildCode(null);
       }
 
-      await loadData(); // إعادة تحميل البيانات بعد الحفظ
-      setModelVisible(false); // قفل المودال
+      await loadData();
+      setModelVisible(false);
     } catch (error) {
       console.error("Error saving account:", error);
     }
@@ -406,6 +403,7 @@ export default function AccountsChart() {
 
       await loadData(); // refresh tree
       setModelVisible(false);
+      setSelectedChildCode(null);
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -415,7 +413,6 @@ export default function AccountsChart() {
   function handleInputChange(key, value) {
     setFormState((prev) => ({ ...prev, [key]: value }));
   }
-
 
   const contentsData = [
     {
@@ -801,11 +798,13 @@ export default function AccountsChart() {
             {/* toggle checkboxes */}
             <div className="flex justify-start gap-4 mb-4">
               <Checkbox
+                disabled={modalType === "Edit"}
                 label={AccountsChartLang.secondary[languageId]}
                 checked={formState.dsecondry}
                 onChange={() => setAccountType("secondary")}
               />
               <Checkbox
+                disabled={modalType === "Edit"}
                 label={AccountsChartLang.general[languageId]}
                 checked={!formState.dsecondry}
                 onChange={() => setAccountType("general")}
@@ -814,6 +813,7 @@ export default function AccountsChart() {
 
             <div className="flex gap-4 mb-4">
               <DropdownComponent
+                disabled={modalType === "Edit"}
                 selected={Type.find((opt) => opt.value == formState.dacC_TYPE0)}
                 options={Type}
                 label={AccountsChartLang.primaryType[languageId]}
@@ -822,6 +822,7 @@ export default function AccountsChart() {
                 }
               />
               <DropdownComponent
+                disabled={modalType === "Edit"}
                 selected={Type1.find((opt) => opt.value == formState.dacC_TYPE)}
                 options={Type1}
                 label={AccountsChartLang.secondaryType[languageId]}
@@ -830,6 +831,7 @@ export default function AccountsChart() {
                 }
               />
               <DropdownComponent
+                disabled={modalType === "Edit"}
                 selected={Type2.find(
                   (opt) => opt.value == formState.dacC_TYPE2
                 )}
@@ -844,6 +846,7 @@ export default function AccountsChart() {
             <div className="flex gap-4 grid grid-cols-4 mb-4">
               <div className="col-span-1">
                 <InputComponent
+                  disabled={modalType === "Edit"}
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({
@@ -857,6 +860,7 @@ export default function AccountsChart() {
               </div>
               <div className="col-span-3">
                 <InputComponent
+                  disabled={modalType === "Edit"}
                   value={formState.dcodE1 || ""}
                   title={AccountsChartLang.accountCode[languageId]}
                   type="number"
