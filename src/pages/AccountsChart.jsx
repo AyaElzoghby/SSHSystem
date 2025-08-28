@@ -38,8 +38,11 @@ export default function AccountsChart() {
   const [selectedId, setSelectedId] = useState(null);
   const [selectedChildCode, setSelectedChildCode] = useState(null);
   const [selectedChild, setSelectedChild] = useState(null);
+  const [selectedChildDetails, setSelectedChildDetails] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [modelVisible, setModelVisible] = useState(false);
+  const [loadingDetails, setLoadingDetails] = useState(false);
+
   const setAccountType = (type) => {
     setFormState((prev) => ({
       ...prev,
@@ -47,31 +50,251 @@ export default function AccountsChart() {
     }));
   };
   const [formState, setFormState] = useState({
-    dsecondry: false,
-    dacC_TYPE0: null,
-    dacC_TYPE: null,
-    dacC_TYPE2: null,
-    dlevel: "",
+    dcodE1: "",
     dcodE2: "",
     dname: "",
     dnamE2: "",
+    num: null,
+    doldacC1: 0,
+    doldacC2: 0,
+    doldacc: 0,
+    dcurrenT1: null,
+    dcurrenT2: null,
+    dcacc: 0,
+    ddacc: 0,
+    dcaccm: 0,
+    ddaccm: 0,
+    ddeP_AMOUNT: 0,
+    ddeP_PER: 0,
+    dacC_TYPE0: "",
+    dacC_TYPE: "",
+    dacC_TYPE2: "",
+    ddeP_CODE: null,
+    dfdate: "",
+    dtdate: null,
+    dacC_TNAME: null,
+    daddress: "",
+    daddresS2: "",
+    dcrediT_LIMT: 0,
+    dpurchase: 0,
+    dpurchasedate: "",
+    ddeP_NAME: "",
     dphone: "",
     dphonE2: "",
+    dvaluedate: "",
+    dvalue: 0,
+    dcurrency: "",
     dtelx: "",
+    dpager: "",
+    ddate: "",
+    dlevel: 0,
+    dsecondry: false,
+    remark: "",
+    doldacccurr: 0,
+    ddacccurr: 0,
+    dcacccurr: 0,
+    accumulatecode: "",
+    och_rate: 0,
+    scur: 0,
+    dstop: false,
+    email: "",
+    mor1: "",
+    mor2: "",
+    mor3: "",
+    mor4: "",
+    mor5: "",
+    acc_Rem: "",
+    accshow_Rem: false,
+    dStop_Rem: "",
+    u_date_a: null,
+    u_time_a: null,
+    dperiod_allow: 0,
+    acC_TYPE: 0,
+    dtelother: "",
     demployee: "",
     dslaes: "",
-    email: "",
-    dfdate: "",
+    emaiL_MSG: false,
+    costCRelate: false,
+    fixExclusion: false,
+    fixExclDate: null,
     accVatNo: "",
-    openingBalance: "",
-    openingDebit: "",
-    currentDebit: "",
-    totalDebits: "",
-    openingCredit: "",
-    currentCredit: "",
-    totalCredits: "",
-    remark: "",
+    monDedction: 0,
+    iqamaNo: "",
+    iqamaExp: null,
+    monDedStart: null,
+    nextDedDate: null,
+    dedInterval: 0,
+    dbAccBfPr: 0,
+    dcAccBfPr: 0,
+    dOldAcc1Pr: 0,
+    dOldAcc2Pr: 0,
+    dOldAccPr: 0,
+    dbAccDurPr: 0,
+    dcAccDurPr: 0,
+    currDbBlnc: 0,
+    currCrBlnc: 0,
+    currNetBlnc: 0,
+    depAmount: 0,
+    accumulateBalance: 0,
+    accumulateName: "",
+    dadd: 0,
+    dadD_Dep: 0,
+    dailyDep: 0,
+    ddeP_years: 0,
+    depbal: 0,
+    depByTime: 0,
+    depDayes: 0,
+    dold: 0,
+    dRem: 0,
+    dRem_Dep: 0,
+    endDate: null,
+    finalBAL: 0,
+    absCurrBlnce: 0,
+    baL1: 0,
+    baL2: 0,
+    currNetBalance: 0,
+    disp: "",
+    ilCase: "",
+    rColor: 0,
+    stB_BACK: "",
+    oriFTYPE: "",
+    ftype: "",
+    docTypeName: "",
+    codE2: "",
+    gRegNo: 0,
+    onumber: 0,
+    bookno: "",
+    fdate: null,
+    fcode: "",
+    tcode: "",
+    fname: "",
+    tname: "",
+    amount: 0,
+    paid: 0,
+    bamount: 0,
+    change: 0,
+    totdiscount: 0,
+    cost: 0,
+    paide: 0,
+    posted: 0,
+    cH_RATE: 0,
+    dutY_DAY: 0,
+    useR_NO: 0,
+    username: "",
+    seller: "",
+    sellername: "",
+    ref: "",
+    chK_NO: "",
+    chK_DATE: null,
+    banK_NAME: "",
+    name: "",
+    cost_Center: "",
+    jobNo: 0,
+    orderNo: 0,
+    dlvType: 0,
+    paymode: "",
+    paymodeno: "",
+    taxcost: 0,
+    shipcost: 0,
+    othercost: 0,
+    custAddr: "",
+    custTel: "",
+    custFax: "",
+    invoice_Date: null,
+    u_DATE_E: null,
+    estUserNo: "",
+    estUserName: "",
+    u_TIME_E: null,
+    invoicE_NO: "",
+    ncust: "",
+    codE3: "",
+    nameref1: "",
+    cash_no: "",
+    unitf: 0,
+    shifT_NO: "",
+    nameref2: "",
+    brnno: "",
+    wsname: "",
+    wsno: "",
+    bwo: 0,
+    amount2: 0,
+    ch_rate2: 0,
+    fileno: 0,
+    cmpacc: 0,
+    pantname: "",
+    remark1: "",
+    remark2: "",
+    diq: "",
+    phrdis: 0,
+    inuacc: "",
+    amount3: 0,
+    currName: "",
+    fixExcName: "",
+    landNo: "",
+    landName: "",
+    restAccName: "",
+    restAccNo: "",
+    vouArrangeNo: "",
+    vouDiscType: 0,
+    vouDiscPer: 0,
+    vouDiscAmount: 0,
+    vouTotDisc: 0,
+    itmTotDisc: 0,
+    itmTotQnt: 0,
+    invCost: 0,
+    totAmntWithoutDisc: 0,
+    totAmntBfDisc: 0,
+    totAmntAfItmDisc: 0,
+    vatAmnt: 0,
+    totAmntAfVat: 0,
+    selleR2: "",
+    sellernamE2: "",
+    cust2Accno: "",
+    cust2Name: "",
+    cust2Mobile: "",
+    cust2Address: "",
+    invCode2: "",
+    gNot01: "",
+    gNot02: "",
+    gNot03: "",
+    gNot04: "",
+    gNot05: "",
+    gNot06: "",
+    gNot07: "",
+    gNot08: "",
+    gNot09: "",
+    gNot10: "",
+    gNot11: "",
+    gNot12: "",
+    gNot13: "",
+    gNot14: "",
+    gNot15: "",
+    maturityStart: null,
+    maturityEnd: null,
+    rowBColor: 0,
+    acc_arrang: 0,
+    accGranted: false,
+    dNum: 0,
+    crNo: "",
+    cntryName: "",
+    cntryIdCode: "",
+    cntrySubentity: "",
+    postalCode: "",
+    cityName: "",
+    citySubDivsion: "",
+    plotId: "",
+    buildNo: "",
+    streetname: "",
+    addStreetname: "",
+    g_Date01: null,
+    g_Date02: null,
+    ctActive: 0,
+    curUntStr: "",
+    curUntNo: 0,
+    curAkrName: "",
+    curAkrNo: "",
   });
+
   const api = API();
 
   // load tree
@@ -88,18 +311,22 @@ export default function AccountsChart() {
     loadData();
   }, []);
 
+  // دالة مشتركة تجيب التفاصيل
+  const fetchAccountDetails = async (code, setter) => {
+    try {
+      const details = await api.get(`/Account/GetAccountDetail?code=${code}`);
+      setter(details);
+    } catch (err) {
+      console.error("Fetch error:", err);
+    }
+  };
+
+  // استخدام في useEffect الأول (عرض الحساب الأساسي)
   useEffect(() => {
     if (!selectedId) return;
-
-    api
-      .get(`/Account/GetAccountDetail?code=${selectedId}`)
-      .then((details) => {
-        setSelectedAccount(details);
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-      });
+    fetchAccountDetails(selectedId, setSelectedAccount);
   }, [selectedId]);
+
   const Type = useDropdown("/Account/GetTask0", {}, ["noOfIndx", "accTypeAR"]);
   const Type1 = useDropdown("/Account/GetTaskOne", {}, [
     "noOfIndx",
@@ -114,22 +341,60 @@ export default function AccountsChart() {
     : [];
 
   // ✅ handlers
+  
+    useEffect(() => {
+    if (!selectedChildCode || modalType !== "Edit") return;
+
+    let cancelled = false;
+
+    const loadDetails = async () => {
+      setLoadingDetails(true);
+      try {
+        // ملاحظة: استخدم نفس شكل رجوع API بتاعك (لو api.get بيرجع الداتا مباشرة)
+        const details = await api.get(
+          `/Account/GetAccountDetail?code=${selectedChildCode}`
+        );
+
+        if (cancelled) return;
+
+        setSelectedChildDetails(details);
+
+        // عبّي الفورم بالداتا الراجعة (مع تنسيق التاريخ)
+        setFormState({
+          ...details,
+          dfdate: details?.dfdate
+            ? new Date(details.dfdate).toISOString().split("T")[0]
+            : "",
+        });
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        if (!cancelled) setLoadingDetails(false);
+      }
+    };
+
+    loadDetails();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedChildCode, modalType]);
   async function handleSave() {
     try {
       if (modalType === "Add") {
-        // هنبعت الـ parents كـ query string ونبعت بيانات الحساب في الـ body
         await api.post(`/Account/CreateAccount`, formState);
       } else if (modalType === "Edit") {
-        console.log(formState ,'forrrrrrrrrrrrm')
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
-          code: selectedChildCode,
+          dcodE1: selectedChildCode, // لازم يتبعت عشان السيرفر يعرف أي حساب يعدل
         });
+        await loadDetails()
       }
-      await loadData(); // إعادة تحميل الشجرة بعد الحفظ
+
+      await loadData(); // إعادة تحميل البيانات بعد الحفظ
       setModelVisible(false); // قفل المودال
-    } catch (err) {
-      console.error("Save error:", err);
+    } catch (error) {
+      console.error("Error saving account:", error);
     }
   }
 
@@ -150,36 +415,7 @@ export default function AccountsChart() {
   function handleInputChange(key, value) {
     setFormState((prev) => ({ ...prev, [key]: value }));
   }
-  useEffect(() => {
-    if (modalType === "Edit" && selectedChild) {
-      setFormState({
-        dsecondry: selectedChild.dsecondry || false,
-        dacC_TYPE0: selectedChild.dacC_TYPE0 || null,
-        dacC_TYPE: selectedChild.dacC_TYPE || null,
-        dacC_TYPE2: selectedChild.dacC_TYPE2 || null,
-        dlevel: selectedChild.dlevel || "",
-        dcodE2: selectedChild.dcodE2 || "",
-        dname: selectedChild.dname || "",
-        dnamE2: selectedChild.dnamE2 || "",
-        dphone: selectedChild.dphone || "",
-        dphonE2: selectedChild.dphonE2 || "",
-        dtelx: selectedChild.dtelx || "",
-        demployee: selectedChild.demployee || "",
-        dslaes: selectedChild.dslaes || "",
-        email: selectedChild.email || "",
-        dfdate: selectedChild.dfdate || new Date().toISOString().split("T")[0],
-        accVatNo: selectedChild.accVatNo || "",
-        openingBalance: selectedChild.openingBalance || "",
-        openingDebit: selectedChild.openingDebit || "",
-        currentDebit: selectedChild.currentDebit || "",
-        totalDebits: selectedChild.totalDebits || "",
-        openingCredit: selectedChild.openingCredit || "",
-        currentCredit: selectedChild.currentCredit || "",
-        totalCredits: selectedChild.totalCredits || "",
-        remark: selectedChild.remark || "",
-      });
-    }
-  }, [modalType, selectedChild]);
+
 
   const contentsData = [
     {
@@ -556,7 +792,11 @@ export default function AccountsChart() {
           )
         }
       >
-        {modalType === "Edit" || modalType === "Add" ? (
+        {loadingDetails ? (
+          <div className="flex items-center justify-center p-10">
+            <span className="loader"></span> {/* ممكن تستخدم Spinner جاهز */}
+          </div>
+        ) : modalType === "Edit" || modalType === "Add" ? (
           <>
             {/* toggle checkboxes */}
             <div className="flex justify-start gap-4 mb-4">
@@ -617,13 +857,13 @@ export default function AccountsChart() {
               </div>
               <div className="col-span-3">
                 <InputComponent
-                  value={formState.dcodE2 || ""}
+                  value={formState.dcodE1 || ""}
                   title={AccountsChartLang.accountCode[languageId]}
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({
                       ...prev,
-                      dcodE2: val.replace(/[^\d]/g, ""),
+                      dcodE1: val.replace(/[^\d]/g, ""),
                     }))
                   }
                 />
@@ -714,11 +954,7 @@ export default function AccountsChart() {
                 <div className="flex gap-4 mb-4">
                   <InputComponent
                     title={AccountsChartLang.creationdate[languageId]}
-                    value={
-                      formState.dfdate
-                        ? new Date(formState.dfdate).toISOString().split("T")[0]
-                        : new Date(formState.dfdate).toISOString().split("T")[0]
-                    }
+                    value={formState.dfdate}
                     type="date"
                     onTextChange={(val) =>
                       setFormState((prev) => ({ ...prev, dfdate: val }))
