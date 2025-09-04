@@ -6,6 +6,7 @@ export default function InputComponent({
   label,
   value,
   onTextChange,
+  onBlur,
   flex = false,
   placeholder = "",
   disabled = false,
@@ -29,7 +30,7 @@ export default function InputComponent({
       {/* العنوان فوق الحقل */}
       {title && (
         <p
-          className={`text-base font-semibold ${
+          className={`text-sm font-semibold ${
             flex ? "col-span-1" : ""
           } text-textPrimary mb-1 text-start ${titleClass}`}
         >
@@ -44,6 +45,7 @@ export default function InputComponent({
           type={type}
           value={value}
           onChange={(e) => onTextChange(e.target.value)} // ✅ only the string
+          onBlur={(e) => onBlur?.(e.target.value)} // ✅ ارسال القيمة الحالية
           placeholder={placeholder}
           disabled={disabled}
           readOnly={readOnly}
@@ -55,112 +57,3 @@ export default function InputComponent({
     </div>
   );
 }
-
-// import React from "react";
-// import { Input } from "@material-tailwind/react";
-
-// export default function InputComponent({
-//   title,
-//   type = "text",
-//   label,
-//   value,
-//   onTextChange,
-//   flex = false,
-//   placeholder = "",
-//   disabled = false,
-//   error = "",
-//   required = false,
-//   readOnly = false,
-//   className = "",
-//   containerClass = "",
-//   labelClass = "",
-//   inputClass = "",
-//   titleClass = "",
-//   id,
-//   name,
-// }) {
-//   return (
-//     <div
-//       className={`w-full mb-4 ${
-//         flex ? "flex gap-4 items-center grid grid-cols-4" : ""
-//       } ${containerClass}`}
-//     >
-//       {/* العنوان فوق الحقل */}
-//       {title && (
-//         <p
-//           className={`text-sm font-semibold ${
-//             flex ? "col-span-1" : ""
-//           } text-textPrimary mb-1 text-start ${titleClass}`}
-//         >
-//           {title} {required && <span className="text-red-500">*</span>}
-//         </p>
-//       )}
-
-//       <Input
-//         id={id}
-//         name={name}
-//         type={type}
-//         label={label}
-//         value={value}
-//         onChange={onTextChange}
-//         placeholder={placeholder}
-//         disabled={disabled}
-//         readOnly={readOnly}
-//         crossOrigin="" // لإزالة التحذير
-//         className={`w-full rounded-md border ${
-//           flex ? "col-span-3" : ""
-//         } text-textPrimary bg-gray-100 bg-opacity-50 dark:bg-inputs-dark dark:bg-opacity-50 border-gray-300 ${className}`}
-//         containerProps={{
-//           className: "w-full",
-//         }}
-//         labelProps={{
-//           className: `text-textPrimary ${labelClass}`,
-//         }}
-//         inputClassName={`!border !border-gray-300 text-textPrimary placeholder:text-text-light placeholder:dark:text-text-dark focus:!border-blue-500 ${inputClass}`}
-//       />
-
-//       {/* رسالة الخطأ */}
-//       {error && (
-//         <span className="col-span-4 text-red-500 text-xs mt-1">{error}</span>
-//       )}
-//     </div>
-//   );
-// }
-
-// import { Input } from "@material-tailwind/react";
-
-// export default function InputComponent({
-//   title,
-//   type = "text",
-//   label,
-//   value,
-//   onTextChange,
-//   flex=false,
-// }) {
-//   return (
-
-//     <div className={`w-full bg-black mb-4 ${flex&&'flex gap-4 grid grid-cols-4 items-center'}`}>
-//       {/* العنوان فوق الحقل */}
-//       {title && (
-//         <p className={`text-sm font-semibold ${flex&&'col-span-1'} text-textPrimary  mb-1 text-start`}>
-//           {title}
-//         </p>
-//       )}
-//       <Input
-//         type={type}
-//         label={label}
-//         value={value}
-//         onChange={onTextChange}
-//         className={`w-full rounded-md border ${flex&&'col-span-3'} text-textPrimary dark:bg-inputs-dark bg-opacity-50 dark:bg-opacity-50 bg-gray-100  border-gray-300`}
-//         crossOrigin="" // لإزالة التحذير
-//         containerProps={{
-//           className: `w-full`,
-//         }}
-//         labelProps={{
-//           className: "text-textPrimary",
-//         }}
-//         inputClassName="!border !border-gray-300 text-textPrimary placeholder:text-text-light placeholder:dark:text-text-dark focus:!border-blue-500"
-//       />
-//     </div>
-//   );
-// }

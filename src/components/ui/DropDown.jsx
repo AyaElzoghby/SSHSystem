@@ -1,47 +1,67 @@
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
 
 export default function DropdownComponent({
-  title, // العنوان الثابت فوق الحقل
-  disabled = false, // ✅ جديد: التحكم في تعطيل الحقل
-  label, // النص بجانب الحقل في حالة flex
-  options = [], // قائمة الخيارات
-  selected, // القيمة المختارة (object فيه {label, value})
-  onChange, // الحدث عند التغيير
-  rtl = true, // دعم الكتابة من اليمين
+  label,
+  disabled = false,
+  options = [],
+  value, // ممكن يكون object أو primitive
+  initialValue = null, // ممكن يكون object أو primitive
+  onChange,
+  rtl = true,
   placeholder = rtl ? "اختر..." : "Select...",
-  flex = false, // هل الحقل في وضعية flex grid
-  className = "", // كلاس إضافي للعنصر الأساسي
+  flex = false,
+  className = "",
 }) {
+  
+  // 🛠️ Helper: يحول أي قيمة إلى object من options
+  const getOption = (val) => {
+    if (!val) return null;
+
+    // لو val بالفعل object {label, value}
+    if (typeof val === "object" && "value" in val && "label" in val) {
+      return val;
+    }
+
+    // لو val primitive → دور عليه في options
+    // return options.find((opt) => opt.value === val) || null;
+    return options.find((opt) => String(opt.value) === String(val)) || null;
+
+  };
+
+  // القيمة المختارة النهائية
+  const selectedOption = useMemo(() => {
+    return getOption(value) || getOption(initialValue);
+  }, [value, initialValue, options]);
+
   return (
     <div
       className={`w-full mb-4 ${
         flex ? "flex gap-4 grid grid-cols-4 items-center" : ""
       } ${className}`}
     >
-      {/* العنوان الثابت */}
       {label && (
         <p
           className={`text-sm font-semibold mb-1 ${
             flex ? "col-span-1" : ""
-          } text-text-light dark:text-text-dark text-start`}
+          } text-textPrimary text-start`}
         >
           {label}
         </p>
       )}
 
-      <Listbox value={selected} onChange={onChange} disabled={disabled}>
+      <Listbox value={selectedOption} onChange={onChange} disabled={disabled}>
         <div className={`relative w-full ${flex ? "col-span-3" : ""}`}>
           <Listbox.Button
             className={`w-full rounded-[4px] border border-surfaceHover
               dark:bg-inputs-dark bg-opacity-50 dark:bg-opacity-50 
-              bg-opacity-50 bg-surfaceHover  py-2 px-3 shadow-sm 
-              focus:outline-none ${rtl ? "text-right" : "text-left"}
+              bg-opacity-50 bg-surfaceHover py-2 px-3 shadow-sm 
+              focus:outline-none ${rtl ? "text-start" : "text-end"}
               ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
-            <span className="block truncate">
-              {selected?.label || placeholder}
+            <span  className={`block truncate`} >
+              {selectedOption?.label || placeholder}
             </span>
             <span
               className={`pointer-events-none absolute inset-y-0 flex items-center ${
@@ -73,7 +93,9 @@ export default function DropdownComponent({
                     value={option}
                     className={({ active }) =>
                       `relative cursor-pointer select-none py-2 px-4 ${
-                        active ? "bg-surfaceHover bg-opacity-5 text-textPrimary" : "text-textSecondary"
+                        active
+                          ? "bg-surfaceHover bg-opacity-5 text-textPrimary"
+                          : "text-textSecondary"
                       }`
                     }
                   >
@@ -116,6 +138,125 @@ export default function DropdownComponent({
     </div>
   );
 }
+
+// import { Fragment } from "react";
+// import { Listbox, Transition } from "@headlessui/react";
+// import { ChevronDownIcon, CheckIcon } from "@heroicons/react/20/solid";
+
+// export default function DropdownComponent({
+//   title, // العنوان الثابت فوق الحقل
+//   disabled = false, // ✅ جديد: التحكم في تعطيل الحقل
+//   label, // النص بجانب الحقل في حالة flex
+//   options = [], // قائمة الخيارات
+//   selected, // القيمة المختارة (object فيه {label, value})
+//   onChange, // الحدث عند التغيير
+//   rtl = true, // دعم الكتابة من اليمين
+//   placeholder = rtl ? "اختر..." : "Select...",
+//   flex = false, // هل الحقل في وضعية flex grid
+//   className = "", // كلاس إضافي للعنصر الأساسي
+// }) {
+//   return (
+//     <div
+//       className={`w-full mb-4 ${
+//         flex ? "flex gap-4 grid grid-cols-4 items-center" : ""
+//       } ${className}`}
+//     >
+//       {/* العنوان الثابت */}
+//       {label && (
+//         <p
+//           className={`text-sm font-semibold mb-1 ${
+//             flex ? "col-span-1" : ""
+//           } text-text-light dark:text-text-dark text-start`}
+//         >
+//           {label}
+//         </p>
+//       )}
+
+//       <Listbox value={selected} onChange={onChange} disabled={disabled}>
+//         <div className={`relative w-full ${flex ? "col-span-3" : ""}`}>
+//           <Listbox.Button
+//             className={`w-full rounded-[4px] border border-surfaceHover
+//               dark:bg-inputs-dark bg-opacity-50 dark:bg-opacity-50
+//               bg-opacity-50 bg-surfaceHover  py-2 px-3 shadow-sm
+//               focus:outline-none ${rtl ? "text-right" : "text-left"}
+//               ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+//           >
+//             <span className="block truncate">
+//               {selected?.label || placeholder}
+//             </span>
+//             <span
+//               className={`pointer-events-none absolute inset-y-0 flex items-center ${
+//                 rtl ? "end-2" : "start-2"
+//               }`}
+//             >
+//               <ChevronDownIcon
+//                 className="h-5 w-5 text-gray-400"
+//                 aria-hidden="true"
+//               />
+//             </span>
+//           </Listbox.Button>
+
+//           <Transition
+//             as={Fragment}
+//             leave="transition ease-in duration-100"
+//             leaveFrom="opacity-100"
+//             leaveTo="opacity-0"
+//           >
+//             <Listbox.Options
+//               className={`absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-[4px] border-[0.5px] border-surfaceHover
+//                 bg-surface py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none
+//                 ${rtl ? "text-right" : "text-left"}`}
+//             >
+//               {options?.length > 0 ? (
+//                 options.map((option, index) => (
+//                   <Listbox.Option
+//                     key={index}
+//                     value={option}
+//                     className={({ active }) =>
+//                       `relative cursor-pointer select-none py-2 px-4 ${
+//                         active ? "bg-surfaceHover bg-opacity-5 text-textPrimary" : "text-textSecondary"
+//                       }`
+//                     }
+//                   >
+//                     {({ selected }) => (
+//                       <>
+//                         <span
+//                           className={`block truncate ${
+//                             selected ? "font-bold" : "font-normal"
+//                           }`}
+//                         >
+//                           {option.label}
+//                         </span>
+//                         {selected && (
+//                           <span
+//                             className={`absolute inset-y-0 flex items-center ${
+//                               rtl
+//                                 ? "end-3 pl-1 start-auto"
+//                                 : "start-3 pr-1 end-auto"
+//                             }`}
+//                           >
+//                             <CheckIcon
+//                               className="h-5 w-5 text-blue-600"
+//                               aria-hidden="true"
+//                             />
+//                           </span>
+//                         )}
+//                       </>
+//                     )}
+//                   </Listbox.Option>
+//                 ))
+//               ) : (
+//                 <div className="px-4 py-2 text-gray-500">
+//                   {rtl ? "لا توجد خيارات" : "No options available"}
+//                 </div>
+//               )}
+//             </Listbox.Options>
+//           </Transition>
+//         </div>
+//       </Listbox>
+//     </div>
+//   );
+// }
 
 // import { Fragment } from "react";
 // import { Listbox, Transition } from "@headlessui/react";

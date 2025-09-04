@@ -82,7 +82,8 @@ export default function Checkbox({
           </span>
         )}
       </div>
-      {label && <span>{label}</span>}
+      {label && <span   className={`text-sm font-semibold mb-1 text-textPrimary text-start`}
+        >{label}</span>}
     </label>
   );
 }

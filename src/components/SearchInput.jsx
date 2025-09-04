@@ -24,7 +24,7 @@ export default function SearchInput({
 
   return (
     <div
-      className={`relative shadow-md border border-surface h-8 rounded-md w-full max-w-2xl ${className}`}
+      className={`relative shadow-md border border-surface h-8 rounded-md w-full ${className}`}
       dir={languageId == 1 ? "rtl" : "ltr"}
     >
       {/* Search Button */}

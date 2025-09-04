@@ -1,91 +1,116 @@
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar as CalendarIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
+import { format as formatDate } from "date-fns";
 
-export default function DatePickerInput({
-  label = "",
-  value, // Controlled mode
-  defaultValue = "",
+export default function DatePicker({
+  title,
+  value,
   onChange,
-  placeholder = "",
+  flex = false,
+  placeholder = "اختر تاريخ",
   disabled = false,
-  size = "medium", // small | medium | large
-  rtl = false,
-  min,
-  max,
-  shape = "rounded", // rounded | square | circle
-  color = "", // custom border/focus color
-  error = "", // error text
+  error = "",
+  required = false,
+  readOnly = false,
   className = "",
+  containerClass = "",
+  labelClass = "",
+  inputClass = "",
+  titleClass = "",
+  id,
+  name,
 }) {
-  const isControlled = value !== undefined;
-  const [internalValue, setInternalValue] = useState(defaultValue);
+  const [date, setDate] = React.useState(value || null);
+  const [open, setOpen] = React.useState(false);
+  const { languageId } = useLanguage();
 
-  useEffect(() => {
-    if (isControlled) {
-      setInternalValue(value || "");
-    }
-  }, [value, isControlled]);
+  // ✅ لو اللغة عربي نخلي RTL و format عربي
+  const isRTL = languageId === 1;
+  const dir = isRTL ? "rtl" : "ltr";
+  const dateFormat = isRTL ? "yyyy/MM/dd" : "dd/MM/yyyy";
 
-  const handleChange = (e) => {
-    const newVal = e.target.value;
-    if (!isControlled) setInternalValue(newVal);
-    onChange?.(newVal);
+  const handleSelect = (selectedDate) => {
+    if (readOnly || disabled) return;
+    setDate(selectedDate);
+    onChange?.(selectedDate);
+    setOpen(false);
   };
 
-  // Sizing like your Input component
-  const sizeClasses = {
-    small: "px-2 py-1 text-sm",
-    medium: "px-3 py-2 text-base",
-    large: "px-4 py-3 text-lg",
-  };
-
-  const shapeClasses = {
-    rounded: "rounded-md",
-    square: "rounded-none",
-    circle: "rounded-full",
-  };
-
-  // Base color system like Input/Dropdown
-  const baseColors = `
-    bg-white dark:bg-inputs-dark 
-    border border-gray-300 dark:border-gray-600 
-    focus:outline-none 
-    ${color ? `focus:ring-2 focus:ring-[${color}] border-[${color}]` : "focus:ring-2 focus:ring-blue-500"}
-  `;
+  const formattedDate = date ? formatDate(date, dateFormat) : "";
 
   return (
     <div
-      className={`flex flex-col gap-1  ${rtl ? "text-right" : "text-left"} ${className}`}
+      className={`w-full mb-4 ${
+        flex ? "flex gap-4 items-center grid grid-cols-4" : ""
+      } ${containerClass}`}
+      dir={dir}
     >
-      {label && (
-        <label
-          className="text-sm font-semibold text-text-light dark:text-text-dark"
+      {/* العنوان */}
+      {title && (
+        <p
+          className={`text-base font-semibold ${
+            flex ? "col-span-1" : ""
+          } text-textPrimary mb-1 text-start ${titleClass}`}
         >
-          {label}
-        </label>
+          {title} {required && <span className="text-red-500">*</span>}
+        </p>
       )}
 
-      <input
-        type="date"
-        value={internalValue}
-        onChange={handleChange}
-        disabled={disabled}
-        min={min}
-        max={max}
-        placeholder={placeholder}
-        className={`
-          w-full
-          ${sizeClasses[size]}
-          ${shapeClasses[shape]}
-          ${baseColors}
-          ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-          text-text-light dark:text-text-dark
-          ${error ? "border-red-500 focus:ring-red-500" : ""}
-        `}
-      />
+      {/* الحقل */}
+      <div className={`${flex ? "col-span-3" : "w-full"}`}>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <button
+              id={id}
+              name={name}
+              disabled={disabled}
+              className={`w-full rounded h-12 border-[0.5px] px-3 py-2 text-text-light 
+                bg-opacity-50 bg-surfaceHover dark:bg-opacity-50 border-surfaceHover 
+                outline-0 focus:ring-[.5px] focus:ring-blue-gray-700 
+                dark:focus:border-blue-gray-700 focus:border-blue-gray-200 
+                disabled:opacity-50 disabled:cursor-not-allowed
+                flex items-center justify-between font-normal
+                ${readOnly ? "cursor-not-allowed opacity-70" : ""}
+                ${inputClass} ${className}`}
+            >
+              <span
+                className={`${date ? "text-text-light" : "text-textSecondary"}`}
+              >
+                {date ? formattedDate : placeholder}
+              </span>
+              <CalendarIcon className="ms-2 h-5 w-5 opacity-70" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent
+            align={isRTL ? "end" : "start"}
+            className="w-auto p-2 rounded shadow-md bg-surfaceHover"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={handleSelect}
+                className="rounded"
+              />
+            </motion.div>
+          </PopoverContent>
+        </Popover>
 
-      {error && (
-        <span className="text-red-500 text-xs">{error}</span>
-      )}
+        {/* خطأ */}
+        {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ import { useLanguage } from "@/context/LanguageContext";
 
 /**
  * NestedTree.jsx
- * - data: array of nodes, each node: { dcodE2, dname, children: [...] }
+ * - data: array of nodes, each node: { dcodE1, dname, children: [...] }
  * - onItemSelected: function(id) called on double-click
  * - initialExpanded: optional array of ids to start expanded
  */
@@ -26,12 +26,11 @@ const TreeItem = ({
   setFocusId,
 }) => {
   const hasChildren = Array.isArray(node.children) && node.children.length > 0;
-  const isExpanded = expandedNodes.has(String(node.dcodE2));
-  const isSelected = String(selectedId) === String(node.dcodE2);
-  const isFocused = String(focusId) === String(node.dcodE2);
+  const isExpanded = expandedNodes.has(String(node.dcodE1));
+  const isSelected = String(selectedId) === String(node.dcodE1);
+  const isFocused = String(focusId) === String(node.dcodE1);
   const ref = useRef(null);
-    const { languageId } = useLanguage();
-  
+  const { languageId } = useLanguage();
 
   useEffect(() => {
     if (isFocused && ref.current) {
@@ -51,9 +50,9 @@ const TreeItem = ({
         }}
         onDoubleClick={(e) => {
           e.stopPropagation();
-          onDoubleClickSelect && onDoubleClickSelect(String(node.dcodE2));
+          onDoubleClickSelect && onDoubleClickSelect(String(node.dcodE1));
         }}
-        onFocus={() => setFocusId && setFocusId(String(node.dcodE2))}
+        onFocus={() => setFocusId && setFocusId(String(node.dcodE1))}
         style={{
           display: "flex",
           alignItems: "center",
@@ -74,7 +73,7 @@ const TreeItem = ({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              toggleNode(String(node.dcodE2));
+              toggleNode(String(node.dcodE1));
             }}
             aria-label={isExpanded ? "collapse" : "expand"}
             style={{
@@ -90,18 +89,25 @@ const TreeItem = ({
             }}
           >
             <div className="flex gap-1">
-
-            <ChevronLeft
-              className={
-                ("w-4 h-4 transition-transform duration-200",
-                isExpanded && "-rotate-90")
-              }
-            />
-            {isExpanded ? (
-              <img src={folderopened} alt="Opened folder" className="w-4 h-4" />
-            ) : (
-              <img src={folderclosed} alt="Closed folder" className="w-4 h-4" />
-            )}
+              <ChevronLeft
+                className={
+                  ("w-4 h-4 transition-transform duration-200",
+                  isExpanded && "-rotate-90",languageId === 1 ?"":"-rotate-180")
+                }
+              />
+              {isExpanded ? (
+                <img
+                  src={folderopened}
+                  alt="Opened folder"
+                  className="w-4 h-4"
+                />
+              ) : (
+                <img
+                  src={folderclosed}
+                  alt="Closed folder"
+                  className="w-4 h-4"
+                />
+              )}
             </div>
           </button>
         ) : (
@@ -113,16 +119,16 @@ const TreeItem = ({
           </span>
         )}
 
-<div style={{ flex: 1 }}>
-  {languageId === 1 ? node.dname : node.dnamE2}
-</div>
+        <div style={{ flex: 1 }}>
+          {languageId === 1 ? node.dname : node.dnamE2}
+        </div>
       </div>
 
       {isExpanded &&
         hasChildren &&
         node.children.map((child) => (
           <TreeItem
-            key={String(child.dcodE2)}
+            key={String(child.dcodE1)}
             node={child}
             level={level + 1}
             onClickSelect={onClickSelect}
@@ -196,7 +202,7 @@ export default function NestedTree({
     const ids = new Set();
     const walk = (arr) => {
       arr.forEach((n) => {
-        ids.add(String(n.dcodE2));
+        ids.add(String(n.dcodE1));
         if (Array.isArray(n.children) && n.children.length > 0) {
           walk(n.children);
         }
@@ -214,9 +220,9 @@ export default function NestedTree({
     const list = [];
     const walk = (arr) => {
       for (const n of arr) {
-        list.push(String(n.dcodE2));
+        list.push(String(n.dcodE1));
         if (
-          expandedNodes.has(String(n.dcodE2)) &&
+          expandedNodes.has(String(n.dcodE1)) &&
           Array.isArray(n.children) &&
           n.children.length > 0
         ) {
@@ -259,7 +265,7 @@ export default function NestedTree({
       // find node by id in filteredData
       const findNode = (nodes, idToFind) => {
         for (const n of nodes) {
-          if (String(n.dcodE2) === String(idToFind)) return n;
+          if (String(n.dcodE1) === String(idToFind)) return n;
           if (n.children) {
             const found = findNode(n.children, idToFind);
             if (found) return found;
@@ -296,22 +302,25 @@ export default function NestedTree({
 
   // Click select handler (single click)
   const handleClickSelect = (node) => {
-    setSelectedId(String(node.dcodE2));
-    setFocusId(String(node.dcodE2));
+    setSelectedId(String(node.dcodE1));
+    setFocusId(String(node.dcodE1));
   };
 
   // Double-click handler -> call parent
   const handleDoubleClick = (id) => {
+    console.log("Double click id:", id);
+
     if (onItemSelected) onItemSelected(String(id));
   };
 
   // render
   return (
     <div
-      style={{ maxWidth: 700 }}
+      // style={{ maxWidth: 700 }}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       aria-label="nested-tree"
+      className="w-full"
     >
       {/* Search */}
       {/* <SearchInput value={search} onChange={(e) => setSearch(e.target.value)} /> */}
@@ -332,13 +341,20 @@ export default function NestedTree({
       </div>
 
       {/* Tree */}
-      <div>
+      <div
+        className=" overflow-y-auto [&::-webkit-scrollbar]:w-3
+          [&::-webkit-scrollbar-track]:rounded-md
+          [&::-webkit-scrollbar-track]:bg-surface
+          [&::-webkit-scrollbar-thumb]:rounded-md
+          [&::-webkit-scrollbar-thumb]:bg-surfaceHover max-h-64 lg:max-h-[72.25svh]"
+      >
+        {" "}
         {filteredData.length === 0 ? (
           <div style={{ color: "#666", padding: 8 }}>No items</div>
         ) : (
           filteredData.map((node) => (
             <TreeItem
-              key={String(node.dcodE2)}
+              key={String(node.dcodE1)}
               node={node}
               level={0}
               onClickSelect={handleClickSelect}

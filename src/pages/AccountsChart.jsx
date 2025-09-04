@@ -17,12 +17,13 @@ import DropdownComponent from "@/components/ui/DropDown";
 import InputComponent from "@/components/InputComponent";
 import { API } from "../api/api";
 import useDropdown from "@/hooks/useDropdown";
+import DatePicker from "@/components/DatePicker";
 
 // ✅ helper: children by id
 function getChildrenById(id, data) {
   if (!Array.isArray(data)) return [];
   for (const node of data) {
-    if (String(node.dcodE2) === String(id)) return node.children || [];
+    if (String(node.dcodE1) === String(id)) return node.children || [];
     if (node.children && node.children.length) {
       const found = getChildrenById(id, node.children);
       if (found.length) return found;
@@ -42,13 +43,18 @@ export default function AccountsChart() {
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [modelVisible, setModelVisible] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
-
+  const [SelectedType, setSelectedType] = useState(null);
+  const [Code, setCode] = useState(""); // لتخزين الكتابة مؤقتاً
+  const [error, setError] = useState("");
+  const [nameAr, setnameAr] = useState("");
+  const [nameEn, setnameEn] = useState("");
   const setAccountType = (type) => {
     setFormState((prev) => ({
       ...prev,
-      dsecondry: type === "secondary",
+      dsecondry: type === "general", // true لو جنرال
     }));
   };
+
   const [formState, setFormState] = useState({
     dcodE1: "",
     dcodE2: "",
@@ -327,36 +333,73 @@ export default function AccountsChart() {
     fetchAccountDetails(selectedId, setSelectedAccount);
   }, [selectedId]);
 
-  const Type = useDropdown("/Account/GetTask0", {}, ["noOfIndx", "accTypeAR"]);
-  const Type1 = useDropdown("/Account/GetTaskOne", {}, [
+  const Type = useDropdown("/Account/GetTask0", {}, [
     "noOfIndx",
-    "accTypeAR",
+    languageId == 1 ? "accTypeAR" : "accTypeEN",
   ]);
+  const Type1 = useDropdown(
+    "/Account/GetTaskOne",
+    SelectedType ? { type0: Number(SelectedType) } : {},
+    ["noOfIndx", languageId == 1 ? "accTypeAR" : "accTypeEN"]
+  );
   const Type2 = useDropdown("/Account/GetTaskTwo", {}, [
     "noOfIndx",
-    "accTypeAR",
+    languageId == 1 ? "accTypeAR" : "accTypeEN",
   ]);
+  console.log("typyyyyyyy", Type);
+  console.log("typyyyyyyy1", Type1);
+  console.log("typyyyyyyy2", Type2);
   const childrenToDisplay = selectedId
     ? getChildrenById(selectedId, rawData)
     : [];
 
+  const reset = () => {
+    setSelectedType(null);
+    setSelectedChildCode(null);
+    setSelectedChild(null);
+    setCode(null);
+    setError(null);
+  };
+
   // ✅ handlers
 
   useEffect(() => {
-    if (!selectedChildCode || modalType !== "Edit") return;
+    if (!selectedChildCode || modalType === "Delete") return;
 
     let cancelled = false;
+
+    const GetNewAccountData = async () => {
+      setLoadingDetails(true);
+      try {
+        const NewAccountData = await api.get(
+          `/Account/GetNewAccountData?parentCode=${selectedId}`
+        );
+
+        if (cancelled) return;
+        setFormState({
+          dacC_TYPE0: NewAccountData?.accountType0,
+          dacC_TYPE: NewAccountData?.accountType1,
+          dacC_TYPE2: NewAccountData?.accountType2,
+          dcodE1: NewAccountData?.accountCode,
+          dlevel: NewAccountData?.accountLevel,
+          dcodE2: selectedId,
+        });
+        setSelectedType(NewAccountData?.accountType0);
+      } catch (err) {
+        console.error("Fetch error:", err);
+      } finally {
+        if (!cancelled) setLoadingDetails(false);
+      }
+    };
 
     const loadDetails = async () => {
       setLoadingDetails(true);
       try {
-        // ملاحظة: استخدم نفس شكل رجوع API بتاعك (لو api.get بيرجع الداتا مباشرة)
         const details = await api.get(
           `/Account/GetAccountDetail?code=${selectedChildCode}`
         );
 
         if (cancelled) return;
-        setSelectedChildDetails(details);
         setFormState({
           ...details,
           dfdate: details?.dfdate
@@ -370,12 +413,18 @@ export default function AccountsChart() {
       }
     };
 
-    loadDetails();
+    // هنا نحدد نستدعي انهي دالة حسب الـ modalType
+    if (modalType === "Add") {
+      GetNewAccountData();
+    } else {
+      loadDetails();
+    }
 
     return () => {
       cancelled = true;
     };
-  }, [selectedChildCode, modalType]);
+  }, [selectedChildCode, selectedId, modalType]);
+
   async function handleSave() {
     try {
       if (modalType === "Add") {
@@ -385,11 +434,12 @@ export default function AccountsChart() {
           ...formState,
           dcodE1: selectedChildCode,
         });
-        setSelectedChildCode(null);
+        fetchAccountDetails(selectedId, setSelectedAccount);
       }
 
       await loadData();
       setModelVisible(false);
+      reset();
     } catch (error) {
       console.error("Error saving account:", error);
     }
@@ -402,8 +452,9 @@ export default function AccountsChart() {
       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
 
       await loadData(); // refresh tree
+      setSelectedId(selectedAccount.dcodE2);
       setModelVisible(false);
-      setSelectedChildCode(null);
+      reset();
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -417,61 +468,75 @@ export default function AccountsChart() {
   const contentsData = [
     {
       tab_title: AccountsChartLang.AccountElements[languageId],
-      tab_contents: (
-        <ul>
-          {childrenToDisplay.map((child) => (
-            <li
-              key={child.dcodE2}
-              className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
-            >
-              {child.dname}
-              <div className="flex gap-2">
-                {child.secondary !== false && (
+      tab_contents: selectedId ? (
+        childrenToDisplay.length > 0 ? (
+          <ul>
+            {childrenToDisplay.map((child) => (
+              <li
+                key={child.dcodE1}
+                className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
+              >
+                {languageId == 1
+                  ? child.dname
+                  : child.dnamE2 === ""
+                  ? child.dname
+                  : child.dnamE2}
+                <div className="flex gap-2">
+                  {child.dsecondry !== false && (
+                    <CustomButton
+                      icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                      size="small"
+                      className="bg-success text-gray-100"
+                      title={AccountsChartLang.Add[languageId]}
+                      onClick={() => {
+                        setSelectedChildCode(child.dcodE1);
+                        setSelectedChild(child);
+                        setModelVisible(true);
+                        setModalType("Add");
+                        setFormState({});
+                      }}
+                    />
+                  )}
                   <CustomButton
-                    icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                    icon={<FontAwesomeIcon icon={faPenToSquare} />}
                     size="small"
-                    className="bg-success text-gray-100"
-                    title={AccountsChartLang.Add[languageId]}
+                    className="bg-warning text-gray-100"
+                    title={AccountsChartLang.Edit[languageId]}
                     onClick={() => {
-                      setSelectedChildCode(child.dcodE2);
+                      setSelectedChildCode(child.dcodE1);
                       setSelectedChild(child);
                       setModelVisible(true);
-                      setModalType("Add");
-                      setFormState({});
+                      setModalType("Edit");
+                      setFormState(selectedChild || {});
                     }}
                   />
-                )}
-                <CustomButton
-                  icon={<FontAwesomeIcon icon={faPenToSquare} />}
-                  size="small"
-                  className="bg-warning text-gray-100"
-                  title={AccountsChartLang.Edit[languageId]}
-                  onClick={() => {
-                    setSelectedChildCode(child.dcodE2);
-                    console.log(selectedChildCode);
-                    setSelectedChild(child);
-                    setModelVisible(true);
-                    setModalType("Edit");
-                    setFormState(selectedChild || {});
-                  }}
-                />
-                <CustomButton
-                  icon={<FontAwesomeIcon icon={faTrashCan} />}
-                  size="small"
-                  className="bg-danger text-gray-100"
-                  title={AccountsChartLang.Delete[languageId]}
-                  onClick={() => {
-                    setSelectedChildCode(child.dcodE2);
-                    console.log("Deleting:", selectedChildCode);
-
-                    setModelVisible(true);
-                    setModalType("Delete");
-                  }}
-                />
-              </div>
-            </li>
-          ))}
-        </ul>
+                  <CustomButton
+                    icon={<FontAwesomeIcon icon={faTrashCan} />}
+                    size="small"
+                    className="bg-danger text-gray-100"
+                    title={AccountsChartLang.Delete[languageId]}
+                    onClick={() => {
+                      setSelectedChildCode(child.dcodE1);
+                      setModelVisible(true);
+                      setModalType("Delete");
+                    }}
+                  />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <>
+            <p className="text-textPrimary text-base font-bold">
+              {AccountsChartLang.NoSubAccount[languageId]}
+            </p>
+          </>
+        )
+      ) : (
+        <p className="text-textPrimary text-base font-bold">
+          {" "}
+          {AccountsChartLang.SelelctAccount[languageId]}{" "}
+        </p>
       ),
     },
     {
@@ -482,12 +547,12 @@ export default function AccountsChart() {
           <div className="flex justify-start gap-4 mb-4">
             <Checkbox
               label={AccountsChartLang.secondary[languageId]}
-              checked={selectedAccount.dsecondry}
+              checked={!selectedAccount.dsecondry}
               onChange={() => setAccountType("secondary")}
             />
             <Checkbox
               label={AccountsChartLang.general[languageId]}
-              checked={!selectedAccount.dsecondry}
+              checked={selectedAccount.dsecondry}
               onChange={() => setAccountType("general")}
             />
           </div>
@@ -495,27 +560,23 @@ export default function AccountsChart() {
           <div className="flex gap-4 mb-4">
             <DropdownComponent
               disabled
-              selected={Type.find(
-                (opt) => opt.value == selectedAccount.dacC_TYPE0
-              )}
+              value={selectedAccount.dacC_TYPE0}
+              // initialValue={Type[0]}
               options={Type}
               label={AccountsChartLang.primaryType[languageId]}
             />
 
             <DropdownComponent
               disabled
-              selected={Type1.find(
-                (opt) => opt.value == selectedAccount.dacC_TYPE
-              )}
+              value={selectedAccount.dacC_TYPE}
+              // initialValue={Type1[0]}
               options={Type1}
               label={AccountsChartLang.secondaryType[languageId]}
             />
 
             <DropdownComponent
               disabled
-              selected={Type2.find(
-                (opt) => opt.value == selectedAccount.dacC_TYPE2
-              )}
+              value={selectedAccount.dacC_TYPE2}
               options={Type2}
               label={AccountsChartLang.tertiaryType[languageId]}
             />
@@ -560,7 +621,7 @@ export default function AccountsChart() {
           />
 
           {/* extra fields لو النوع secondary */}
-          {selectedAccount.dsecondry && (
+          {!selectedAccount.dsecondry && (
             <>
               <div className="flex gap-4 mb-4">
                 <InputComponent
@@ -612,7 +673,7 @@ export default function AccountsChart() {
                 }
               />
               <div className="flex gap-4 mb-4">
-                <InputComponent
+                <DatePicker
                   disabled
                   title={AccountsChartLang.creationdate[languageId]}
                   value={
@@ -622,11 +683,8 @@ export default function AccountsChart() {
                           .split("T")[0]
                       : ""
                   }
-                  type="date"
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({ ...prev, dfdate: val }))
-                  }
                 />
+
                 <InputComponent
                   disabled
                   title={AccountsChartLang.taxnumber[languageId]}
@@ -634,52 +692,36 @@ export default function AccountsChart() {
                   type="number"
                 />
               </div>
+
               <InputComponent
                 disabled
                 title={AccountsChartLang.openingBalance[languageId]}
-                value={selectedAccount.openingBalance}
+                value={selectedAccount.doldacc}
                 type="number"
               />
-              <div className="flex gap-4 mb-4">
+              <div className="flex gap-4">
                 <InputComponent
                   disabled
-                  title={AccountsChartLang.openingDebit[languageId]}
-                  value={selectedAccount.openingDebit}
+                  flex
+                  title={AccountsChartLang.debtor[languageId]}
+                  value={selectedAccount.doldacC1}
                   type="number"
                 />
                 <InputComponent
                   disabled
-                  title={AccountsChartLang.currentDebit[languageId]}
-                  value={selectedAccount.currentDebit}
-                  type="number"
-                />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.totalDebits[languageId]}
-                  value={selectedAccount.totalDebits}
+                  flex
+                  title={AccountsChartLang.creditor[languageId]}
+                  value={selectedAccount.doldacC2}
                   type="number"
                 />
               </div>
-              <div className="flex gap-4 mb-4">
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.openingCredit[languageId]}
-                  value={selectedAccount.openingCredit}
-                  type="number"
-                />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.currentCredit[languageId]}
-                  value={selectedAccount.currentCredit}
-                  type="number"
-                />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.totalCredits[languageId]}
-                  value={selectedAccount.totalCredits}
-                  type="number"
-                />
-              </div>
+
+              {/* <InputComponent
+                disabled
+                title={AccountsChartLang.currentCredit[languageId]}
+                value={selectedAccount.currentCredit}
+                type="number"
+              /> */}
 
               <InputComponent
                 disabled
@@ -703,7 +745,6 @@ export default function AccountsChart() {
                 setFormState({});
               }}
             />
-
             <CustomButton
               icon={<FontAwesomeIcon icon={faPenToSquare} />}
               className="bg-warning text-gray-100"
@@ -728,7 +769,9 @@ export default function AccountsChart() {
           </div>
         </>
       ) : (
-        <p>select account </p>
+        <p className="text-textPrimary text-base font-bold">
+          {AccountsChartLang.SelelctAccountDetails[languageId]}
+        </p>
       ),
     },
   ];
@@ -745,25 +788,24 @@ export default function AccountsChart() {
             <h3 className="block border-b-2 w-fit mb-4 font-bold">
               {AccountsChartLang.AccountsChart[languageId]}
             </h3>
-
-            {rawData ? (
-              <NestedTree
-                data={rawData}
-                onItemSelected={(id) => setSelectedId(id)}
-              />
-            ) : (
-              <div>Loading tree data...</div>
-            )}
+            <div className="">
+              {rawData ? (
+                <NestedTree
+                  data={rawData}
+                  onItemSelected={(id) => setSelectedId(id)}
+                />
+              ) : (
+                <div>
+                  <p className="text-textPrimary text-base">
+                    {AccountsChartLang.AccountsChart[languageId]}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* details */}
-          <div
-            className="col-span-12 lg:col-span-7 shadow-md h-fit rounded-md max-h-[88svh] text-textPrimary bg-surface overflow-y-auto  [&::-webkit-scrollbar]:w-3
-          [&::-webkit-scrollbar-track]:rounded-md
-          [&::-webkit-scrollbar-track]:bg-surface
-          [&::-webkit-scrollbar-thumb]:rounded-md
-          [&::-webkit-scrollbar-thumb]:bg-surfaceHover"
-          >
+          <div className="col-span-12 lg:col-span-7 shadow-md h-fit rounded-md  text-textPrimary bg-surface">
             <Tabs contents={contentsData} />
           </div>
         </div>
@@ -775,10 +817,10 @@ export default function AccountsChart() {
         onClose={() => setModelVisible(false)}
         title={
           modalType === "Delete"
-            ? "حذف العنصر"
+            ? `${AccountsChartLang.DeleteAccount[languageId]}`
             : modalType === "Add"
-            ? "إضافه عنصر جديد"
-            : "تعديل البيانات"
+            ? `${AccountsChartLang.AddAccount[languageId]}`
+            : `${AccountsChartLang.EditAccount[languageId]}`
         }
         footer={
           modalType === "Delete" ? (
@@ -792,7 +834,10 @@ export default function AccountsChart() {
               />
               <CustomButton
                 title={AccountsChartLang.Cancel[languageId]}
-                onClick={() => setModelVisible(false)}
+                onClick={() => {
+                  setModelVisible(false);
+                  reset();
+                }}
               />
             </div>
           ) : (
@@ -805,7 +850,10 @@ export default function AccountsChart() {
               <CustomButton
                 className="bg-danger text-gray-100"
                 title={AccountsChartLang.Cancel[languageId]}
-                onClick={() => setModelVisible(false)}
+                onClick={() => {
+                  setModelVisible(false);
+                  reset();
+                }}
               />
             </div>
           )
@@ -822,45 +870,48 @@ export default function AccountsChart() {
               <Checkbox
                 disabled={modalType === "Edit"}
                 label={AccountsChartLang.secondary[languageId]}
-                checked={formState.dsecondry}
+                checked={!formState.dsecondry}
                 onChange={() => setAccountType("secondary")}
               />
               <Checkbox
                 disabled={modalType === "Edit"}
                 label={AccountsChartLang.general[languageId]}
-                checked={!formState.dsecondry}
+                checked={formState.dsecondry}
                 onChange={() => setAccountType("general")}
               />
             </div>
 
             <div className="flex gap-4 mb-4">
               <DropdownComponent
-                disabled={modalType === "Edit"}
-                selected={Type.find((opt) => opt.value == formState.dacC_TYPE0)}
+                disabled={modalType === "Edit" || formState.dlevel > 1}
+                value={formState.dacC_TYPE0}
                 options={Type}
                 label={AccountsChartLang.primaryType[languageId]}
-                onChange={(val) =>
-                  setFormState((prev) => ({ ...prev, dacC_TYPE0: val }))
-                }
+                placeholder={AccountsChartLang.Select[languageId]}
+                onChange={(val) => {
+                  setSelectedType(val.value);
+                  console.log("SelectedType:", SelectedType);
+                  setFormState((prev) => ({ ...prev, dacC_TYPE0: val.value }));
+                }}
               />
               <DropdownComponent
-                disabled={modalType === "Edit"}
-                selected={Type1.find((opt) => opt.value == formState.dacC_TYPE)}
+                disabled={modalType === "Edit" || formState.dlevel > 2}
+                value={formState.dacC_TYPE}
                 options={Type1}
                 label={AccountsChartLang.secondaryType[languageId]}
+                placeholder={AccountsChartLang.Select[languageId]}
                 onChange={(val) =>
-                  setFormState((prev) => ({ ...prev, dacC_TYPE: val }))
+                  setFormState((prev) => ({ ...prev, dacC_TYPE: val.value }))
                 }
               />
               <DropdownComponent
-                disabled={modalType === "Edit"}
-                selected={Type2.find(
-                  (opt) => opt.value == formState.dacC_TYPE2
-                )}
+                disabled={modalType === "Edit" || formState.dlevel > 3}
+                value={formState.dacC_TYPE2}
                 options={Type2}
                 label={AccountsChartLang.tertiaryType[languageId]}
+                placeholder={AccountsChartLang.Select[languageId]}
                 onChange={(val) =>
-                  setFormState((prev) => ({ ...prev, dacC_TYPE2: val }))
+                  setFormState((prev) => ({ ...prev, dacC_TYPE2: val.value }))
                 }
               />
             </div>
@@ -868,7 +919,7 @@ export default function AccountsChart() {
             <div className="flex gap-4 grid grid-cols-4 mb-4">
               <div className="col-span-1">
                 <InputComponent
-                  disabled={modalType === "Edit"}
+                  disabled
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({
@@ -884,14 +935,40 @@ export default function AccountsChart() {
                 <InputComponent
                   disabled={modalType === "Edit"}
                   value={formState.dcodE1 || ""}
+                  error={error}
                   title={AccountsChartLang.accountCode[languageId]}
                   type="number"
-                  onTextChange={(val) =>
+                  onTextChange={(val) => {
                     setFormState((prev) => ({
                       ...prev,
-                      dcodE1: val.replace(/[^\d]/g, ""),
-                    }))
-                  }
+                      dcodE1: val.replace(/[^\d]/g),
+                    }));
+                    // setError("");
+
+                    // setCode(val.replace(/[^\d]/g));
+                  }}
+                  // onBlur={async () => {
+                  //   if (!Code) return;
+
+                  //   try {
+                  //     const res = await api.get(
+                  //       `Account/ValidateAccountCode?accountCode=${Code}`
+                  //     );
+
+                  //     if (res === "false") {
+                  //       setError("كود الحساب غير صالح"); // ✨ نظهر رسالة
+                  //     } else {
+                  //       setFormState((prev) => ({
+                  //         ...prev,
+                  //         dcodE1: Code, // ✨ نعتمد القيمة بس لو valid
+                  //       }));
+                  //       setError(""); // نمسح رسالة الخطأ
+                  //     }
+                  //   } catch (err) {
+                  //     console.error("Fetch error:", err);
+                  //     setError("حصل خطأ أثناء التحقق");
+                  //   }
+                  // }}
                 />
               </div>
             </div>
@@ -914,7 +991,7 @@ export default function AccountsChart() {
             />
 
             {/* extra fields لو النوع secondary */}
-            {formState.dsecondry && (
+            {!formState.dsecondry && (
               <>
                 <div className="flex gap-4 mb-4">
                   <InputComponent
@@ -978,14 +1055,14 @@ export default function AccountsChart() {
                   }
                 />
                 <div className="flex gap-4 mb-4">
-                  <InputComponent
+                  <DatePicker
                     title={AccountsChartLang.creationdate[languageId]}
                     value={formState.dfdate}
-                    type="date"
                     onTextChange={(val) =>
                       setFormState((prev) => ({ ...prev, dfdate: val }))
                     }
                   />
+
                   <InputComponent
                     title={AccountsChartLang.taxnumber[languageId]}
                     value={formState.accVatNo}
@@ -999,87 +1076,45 @@ export default function AccountsChart() {
                   />
                 </div>
                 <InputComponent
+                  disabled={modalType === "Edit"}
                   title={AccountsChartLang.openingBalance[languageId]}
-                  value={formState.openingBalance}
+                  value={formState.doldacc}
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({
                       ...prev,
-                      openingBalance: val.replace(/[^\d]/g, ""),
+                      doldacc: val.replace(/[^\d]/g, ""),
                     }))
                   }
                 />
-                <div className="flex gap-4 mb-4">
+                <div className="flex gap-4">
                   <InputComponent
-                    title={AccountsChartLang.openingDebit[languageId]}
-                    value={formState.openingDebit}
+                    flex
+                    title={AccountsChartLang.debtor[languageId]}
+                    value={formState.doldacC1}
                     type="number"
                     onTextChange={(val) =>
                       setFormState((prev) => ({
                         ...prev,
-                        openingDebit: val.replace(/[^\d]/g, ""),
+                        doldacC1: val.replace(/[^\d]/g, ""),
+                        doldacC2: 0,
                       }))
                     }
                   />
                   <InputComponent
-                    title={AccountsChartLang.currentDebit[languageId]}
-                    value={formState.currentDebit}
+                    flex
+                    title={AccountsChartLang.creditor[languageId]}
+                    value={formState.doldacC2}
                     type="number"
                     onTextChange={(val) =>
                       setFormState((prev) => ({
                         ...prev,
-                        currentDebit: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    title={AccountsChartLang.totalDebits[languageId]}
-                    value={formState.totalDebits}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        totalDebits: val.replace(/[^\d]/g, ""),
+                        doldacC2: val.replace(/[^\d]/g, ""),
+                        doldacC1: 0,
                       }))
                     }
                   />
                 </div>
-                <div className="flex gap-4 mb-4">
-                  <InputComponent
-                    title={AccountsChartLang.openingCredit[languageId]}
-                    value={formState.openingCredit}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        openingCredit: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    title={AccountsChartLang.currentCredit[languageId]}
-                    value={formState.currentCredit}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        currentCredit: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    title={AccountsChartLang.totalCredits[languageId]}
-                    value={formState.totalCredits}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        totalCredits: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                </div>
-
                 <InputComponent
                   title={AccountsChartLang.notes[languageId]}
                   value={formState.remark}

@@ -7,10 +7,7 @@ const AccountsChartLang = {
     1: "جديد",
     2: "new",
   },
-  Branching: {
-    1: "تفريع",
-    2: "Branching",
-  },
+
   Cancel: {
     1: "إلغاء",
     2: "Cancel",
@@ -19,21 +16,21 @@ const AccountsChartLang = {
     1: "تأكيد",
     2: "Sure",
   },
-  transfer: {
-    1: "نقل",
-    2: "transfer",
-  },
-  print: {
-    1: "طباعه",
-    2: "print",
-  },
-  tree: {
-    1: "شجره",
-    2: "tree",
-  },
   exit: {
     1: "خروج",
     2: "exit",
+  },
+  collapse: {
+    1: "إغلاق الكل",
+    2: "Collapse All",
+  },
+  Expand: {
+    1: "فتح الكل",
+    2: "Expand All",
+  },
+  loading: {
+    1: "جارٍ تحميل البيانات...",
+    2: "Loading data...",
   },
   partial: {
     1: "حساب جزئي",
@@ -109,19 +106,31 @@ const AccountsChartLang = {
   },
   AddAccount: {
     1: "إضافه حساب جديد",
-    2: "Add Account",
+    2: "Add New Account",
   },
   Edit: {
     1: "تعديل",
     2: "Edit",
   },
   EditAccount: {
-    1: "تعديل الحساب",
-    2: "Edit Account",
+    1: "تعديل بيانات الحساب",
+    2: "Edit Account Data",
   },
   Delete: {
     1: "حذف",
     2: "Delete",
+  },
+  SelelctAccount: {
+    1: "حدد الحساب لعرض الحسابات الفرعيه",
+    2: "Select an account to view Sub-Accounts",
+  },
+  SelelctAccountDetails: {
+    1: "حدد الحساب لعرض التفاصيل",
+    2: "Select an account to view Details",
+  },
+  NoSubAccount: {
+    1: "لا توجد حسابات فرعية لعرضها لهذا الحساب.",
+    2: "There are no sub-accounts for this account to display.",
   },
   DeleteAccount: {
     1: "حذف الحساب",
@@ -232,28 +241,32 @@ const AccountsChartLang = {
     2: "Account Type",
   },  
   secondary: {
-    1: "ثانوي",
+    1: "تحليلي",
     2: "secondary",
   },
   general: {
     1: "عام",
     2: "general",
   },
+  Select: {
+    1: "إختر .....",
+    2: "Select ...",
+  },
   primaryType: {
-    1: "نوع أساسي",
-    2: "primary Type",
+    1: "نوع الحساب 1",
+    2:"Account Type 1",
   },
   secondaryType: {
-    1: "النوع الثانوي",
-    2: "secondaryType",
+    1: "نوع الحساب 2",
+    2: "Account Type 2",
   },
   tertiaryType: {
-    1: "النوع الثالث",
-    2: "tertiaryType",
+    1: "نوع الحساب 3",
+    2: "Account Type 3",
   },
   level: {
-    1: "مستوى",
-    2: "level",
+    1: "مستوى الحساب",
+    2: "Account level",
   },
   accountCode: {
     1: "رقم الحساب",
@@ -308,19 +321,19 @@ const AccountsChartLang = {
     2: "opening Credit",
   },
   currentCredit: {
-    1: "الائتمان الحالي",
+    1: " حد الائتمان",
     2: "current Credit",
   },
   totalCredits: {
     1: "إجمالي الاعتمادات",
-    2: "total Credits",
+    2: "Credit limit",
   },
   openingBalance: {
     1: "الرصيد الافتتاحي",
     2: "opening Balance",
   },
   notes: {
-    1: "ملحوظات",
+    1: "ملاحظات",
     2: "notes",
   },
   sales: {

@@ -18,7 +18,7 @@ export default function CustomButton({
   // تحديد حجم الزر
   const sizeClasses = {
     small: "px-2 py-1 text-sm",
-    medium: "px-4 py-2 text-base",
+    medium: "px-4 py-2 text-base md:px-3",
     large: "px-6 py-3 text-lg",
   };
 
@@ -35,7 +35,7 @@ export default function CustomButton({
       onClick={!disabled && !loading ? onClick : undefined}
       disabled={disabled || loading}
       className={`
-        flex items-center justify-center gap-2 rounded-md font-medium transition-all
+        flex items-center justify-center gap-2 rounded font-medium transition-all
         ${sizeClasses[size]}
         ${variantClasses[variant]}
         ${fullWidth ? "w-full" : width ? `w-[${width}]` : "w-fit"}
@@ -46,7 +46,7 @@ export default function CustomButton({
       {loading ? (
         <Loader2 className="animate-spin" size={16} />
       ) : (
-        icon && <span className="flex-shrink-0">{icon}</span>
+        icon && <span className="flex">{icon}</span>
       )}
       {title && <span>{title}</span>}
     </button>
