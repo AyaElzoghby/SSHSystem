@@ -91,8 +91,8 @@ const TreeItem = ({
             <div className="flex gap-1">
               <ChevronLeft
                 className={
-                  ("w-4 h-4 transition-transform duration-200",
-                  isExpanded && "-rotate-90",languageId === 1 ?"":"-rotate-180")
+                  (`w-4 h-4 transition-transform duration-200
+                  ${isExpanded && "-rotate-90"} ${languageId === 1 ?"":"-rotate-180"}`)
                 }
               />
               {isExpanded ? (

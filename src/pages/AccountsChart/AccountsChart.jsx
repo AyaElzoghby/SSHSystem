@@ -134,14 +134,15 @@ export default function AccountsChart() {
 
         if (cancelled) return;
         setFormState(() => ({
-          dacC_TYPE0: NewAccountData?.accountType0,
-          dacC_TYPE: NewAccountData?.accountType1,
-          dacC_TYPE2: NewAccountData?.accountType2,
-          dcodE1: NewAccountData?.accountCode,
-          dlevel: NewAccountData?.accountLevel,
-          dcodE2: selectedId,
+          // ...initialFormState,
+          dacC_TYPE0: NewAccountData?.accountType0 ?? "",
+          dacC_TYPE: NewAccountData?.accountType1 ?? "",
+          dacC_TYPE2: NewAccountData?.accountType2 ?? "",
+          dcodE1: NewAccountData?.accountCode ?? "",
+          dlevel: NewAccountData?.accountLevel ?? 0,
+          dcodE2: selectedId ?? "",
         }));
-        setSelectedType(NewAccountData?.accountType0);
+        setSelectedType(NewAccountData?.accountType0 ?? "");
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
