@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Signup from "./pages/Signup/Signup";
 import Login from "./pages/Login/Login";
-import AccountsChart from "./pages/AccountsChart";
+import AccountsChart from "./pages/AccountsChart/AccountsChart";
 import Disbursement from "./pages/Disbursement";
 import CostCenter from "./pages/CostCenter";
 import ServicBill from "./pages/ServicBill";

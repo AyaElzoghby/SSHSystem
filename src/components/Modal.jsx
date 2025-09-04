@@ -12,7 +12,7 @@ const Modal = ({ isOpen, onClose, title, children, footer }) => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="bg-surface rounded-md shadow-xl w-full max-w-[80svw] px-2 py-6"
+            className="bg-surface rounded-md shadow-xl md:w-[60svw] lg:w-[50svw] w-[85svw] px-2 py-6"
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}

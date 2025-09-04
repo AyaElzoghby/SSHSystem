@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import NestedTree from "../components/NestedTree";
-import Tabs from "../components/Tabs";
+import NestedTree from "../../components/NestedTree";
+import Tabs from "../../components/Tabs";
 import CustomButton from "@/components/CustomButton";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -15,9 +15,10 @@ import Checkbox from "@/components/Checkbox";
 import Modal from "@/components/Modal";
 import DropdownComponent from "@/components/ui/DropDown";
 import InputComponent from "@/components/InputComponent";
-import { API } from "../api/api";
+import { API } from "../../api/api";
 import useDropdown from "@/hooks/useDropdown";
 import DatePicker from "@/components/DatePicker";
+import { initialFormState } from "./initialFormState";
 
 // ✅ helper: children by id
 function getChildrenById(id, data) {
@@ -55,251 +56,7 @@ export default function AccountsChart() {
     }));
   };
 
-  const [formState, setFormState] = useState({
-    dcodE1: "",
-    dcodE2: "",
-    dname: "",
-    dnamE2: "",
-    num: null,
-    doldacC1: 0,
-    doldacC2: 0,
-    doldacc: 0,
-    dcurrenT1: null,
-    dcurrenT2: null,
-    dcacc: 0,
-    ddacc: 0,
-    dcaccm: 0,
-    ddaccm: 0,
-    ddeP_AMOUNT: 0,
-    ddeP_PER: 0,
-    dacC_TYPE0: "",
-    dacC_TYPE: "",
-    dacC_TYPE2: "",
-    ddeP_CODE: null,
-    dfdate: "",
-    dtdate: null,
-    dacC_TNAME: null,
-    daddress: "",
-    daddresS2: "",
-    dcrediT_LIMT: 0,
-    dpurchase: 0,
-    dpurchasedate: "",
-    ddeP_NAME: "",
-    dphone: "",
-    dphonE2: "",
-    dvaluedate: "",
-    dvalue: 0,
-    dcurrency: "",
-    dtelx: "",
-    dpager: "",
-    ddate: "",
-    dlevel: 0,
-    dsecondry: false,
-    remark: "",
-    doldacccurr: 0,
-    ddacccurr: 0,
-    dcacccurr: 0,
-    accumulatecode: "",
-    och_rate: 0,
-    scur: 0,
-    dstop: false,
-    email: "",
-    mor1: "",
-    mor2: "",
-    mor3: "",
-    mor4: "",
-    mor5: "",
-    acc_Rem: "",
-    accshow_Rem: false,
-    dStop_Rem: "",
-    u_date_a: null,
-    u_time_a: null,
-    dperiod_allow: 0,
-    acC_TYPE: 0,
-    dtelother: "",
-    demployee: "",
-    dslaes: "",
-    emaiL_MSG: false,
-    costCRelate: false,
-    fixExclusion: false,
-    fixExclDate: null,
-    accVatNo: "",
-    monDedction: 0,
-    iqamaNo: "",
-    iqamaExp: null,
-    monDedStart: null,
-    nextDedDate: null,
-    dedInterval: 0,
-    dbAccBfPr: 0,
-    dcAccBfPr: 0,
-    dOldAcc1Pr: 0,
-    dOldAcc2Pr: 0,
-    dOldAccPr: 0,
-    dbAccDurPr: 0,
-    dcAccDurPr: 0,
-    currDbBlnc: 0,
-    currCrBlnc: 0,
-    currNetBlnc: 0,
-    depAmount: 0,
-    accumulateBalance: 0,
-    accumulateName: "",
-    dadd: 0,
-    dadD_Dep: 0,
-    dailyDep: 0,
-    ddeP_years: 0,
-    depbal: 0,
-    depByTime: 0,
-    depDayes: 0,
-    dold: 0,
-    dRem: 0,
-    dRem_Dep: 0,
-    endDate: null,
-    finalBAL: 0,
-    absCurrBlnce: 0,
-    baL1: 0,
-    baL2: 0,
-    currNetBalance: 0,
-    disp: "",
-    ilCase: "",
-    rColor: 0,
-    stB_BACK: "",
-    oriFTYPE: "",
-    ftype: "",
-    docTypeName: "",
-    codE2: "",
-    gRegNo: 0,
-    onumber: 0,
-    bookno: "",
-    fdate: null,
-    fcode: "",
-    tcode: "",
-    fname: "",
-    tname: "",
-    amount: 0,
-    paid: 0,
-    bamount: 0,
-    change: 0,
-    totdiscount: 0,
-    cost: 0,
-    paide: 0,
-    posted: 0,
-    cH_RATE: 0,
-    dutY_DAY: 0,
-    useR_NO: 0,
-    username: "",
-    seller: "",
-    sellername: "",
-    ref: "",
-    chK_NO: "",
-    chK_DATE: null,
-    banK_NAME: "",
-    name: "",
-    cost_Center: "",
-    jobNo: 0,
-    orderNo: 0,
-    dlvType: 0,
-    paymode: "",
-    paymodeno: "",
-    taxcost: 0,
-    shipcost: 0,
-    othercost: 0,
-    custAddr: "",
-    custTel: "",
-    custFax: "",
-    invoice_Date: null,
-    u_DATE_E: null,
-    estUserNo: "",
-    estUserName: "",
-    u_TIME_E: null,
-    invoicE_NO: "",
-    ncust: "",
-    codE3: "",
-    nameref1: "",
-    cash_no: "",
-    unitf: 0,
-    shifT_NO: "",
-    nameref2: "",
-    brnno: "",
-    wsname: "",
-    wsno: "",
-    bwo: 0,
-    amount2: 0,
-    ch_rate2: 0,
-    fileno: 0,
-    cmpacc: 0,
-    pantname: "",
-    remark1: "",
-    remark2: "",
-    diq: "",
-    phrdis: 0,
-    inuacc: "",
-    amount3: 0,
-    currName: "",
-    fixExcName: "",
-    landNo: "",
-    landName: "",
-    restAccName: "",
-    restAccNo: "",
-    vouArrangeNo: "",
-    vouDiscType: 0,
-    vouDiscPer: 0,
-    vouDiscAmount: 0,
-    vouTotDisc: 0,
-    itmTotDisc: 0,
-    itmTotQnt: 0,
-    invCost: 0,
-    totAmntWithoutDisc: 0,
-    totAmntBfDisc: 0,
-    totAmntAfItmDisc: 0,
-    vatAmnt: 0,
-    totAmntAfVat: 0,
-    selleR2: "",
-    sellernamE2: "",
-    cust2Accno: "",
-    cust2Name: "",
-    cust2Mobile: "",
-    cust2Address: "",
-    invCode2: "",
-    gNot01: "",
-    gNot02: "",
-    gNot03: "",
-    gNot04: "",
-    gNot05: "",
-    gNot06: "",
-    gNot07: "",
-    gNot08: "",
-    gNot09: "",
-    gNot10: "",
-    gNot11: "",
-    gNot12: "",
-    gNot13: "",
-    gNot14: "",
-    gNot15: "",
-    maturityStart: null,
-    maturityEnd: null,
-    rowBColor: 0,
-    acc_arrang: 0,
-    accGranted: false,
-    dNum: 0,
-    crNo: "",
-    cntryName: "",
-    cntryIdCode: "",
-    cntrySubentity: "",
-    postalCode: "",
-    cityName: "",
-    citySubDivsion: "",
-    plotId: "",
-    buildNo: "",
-    streetname: "",
-    addStreetname: "",
-    g_Date01: null,
-    g_Date02: null,
-    ctActive: 0,
-    curUntStr: "",
-    curUntNo: 0,
-    curAkrName: "",
-    curAkrNo: "",
-  });
+  const [formState, setFormState] = useState(initialFormState);
 
   const api = API();
 
@@ -357,8 +114,8 @@ export default function AccountsChart() {
     setSelectedType(null);
     setSelectedChildCode(null);
     setSelectedChild(null);
-    setCode(null);
-    setError(null);
+    // setCode(null);
+    // setError(null);
   };
 
   // ✅ handlers
@@ -376,14 +133,14 @@ export default function AccountsChart() {
         );
 
         if (cancelled) return;
-        setFormState({
+        setFormState(() => ({
           dacC_TYPE0: NewAccountData?.accountType0,
           dacC_TYPE: NewAccountData?.accountType1,
           dacC_TYPE2: NewAccountData?.accountType2,
           dcodE1: NewAccountData?.accountCode,
           dlevel: NewAccountData?.accountLevel,
           dcodE2: selectedId,
-        });
+        }));
         setSelectedType(NewAccountData?.accountType0);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -428,6 +185,7 @@ export default function AccountsChart() {
   async function handleSave() {
     try {
       if (modalType === "Add") {
+        console.log("Adddddd Dataaaaaaaaaa", formState);
         await api.post(`/Account/CreateAccount`, formState);
       } else if (modalType === "Edit") {
         await api.put(`/Account/UpdateAccount`, {
@@ -493,7 +251,7 @@ export default function AccountsChart() {
                         setSelectedChild(child);
                         setModelVisible(true);
                         setModalType("Add");
-                        setFormState({});
+                        setFormState(initialFormState);
                       }}
                     />
                   )}
@@ -742,7 +500,7 @@ export default function AccountsChart() {
                 setSelectedChildCode(selectedAccount.dcodE1);
                 setModelVisible(true);
                 setModalType("Add");
-                setFormState({});
+                setFormState(initialFormState);
               }}
             />
             <CustomButton
@@ -841,7 +599,7 @@ export default function AccountsChart() {
               />
             </div>
           ) : (
-            <div className="flex gap-4 justify-center w-full">
+            <div className="flex gap-4 justify-center w-full ">
               <CustomButton
                 className="bg-success text-gray-100"
                 title={AccountsChartLang.Save[languageId]}
