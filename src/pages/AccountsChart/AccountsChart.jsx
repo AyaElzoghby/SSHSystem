@@ -18,7 +18,7 @@ import InputComponent from "@/components/InputComponent";
 import { API } from "../../api/api";
 import useDropdown from "@/hooks/useDropdown";
 import DatePicker from "@/components/DatePicker";
-import { initialFormState } from "./initialFormState";
+import { initialFormState, processFormData } from "./initialFormState";
 
 // ✅ helper: children by id
 function getChildrenById(id, data) {
@@ -134,7 +134,7 @@ export default function AccountsChart() {
 
         if (cancelled) return;
         setFormState(() => ({
-          // ...initialFormState,
+          ...initialFormState,
           dacC_TYPE0: NewAccountData?.accountType0 ?? "",
           dacC_TYPE: NewAccountData?.accountType1 ?? "",
           dacC_TYPE2: NewAccountData?.accountType2 ?? "",
@@ -185,9 +185,17 @@ export default function AccountsChart() {
 
   async function handleSave() {
     try {
+      // if (modalType === "Add") {
+      //   console.log("Adddddd Dataaaaaaaaaa", formState);
+      //   await api.post(`/Account/CreateAccount`, formState);
       if (modalType === "Add") {
-        console.log("Adddddd Dataaaaaaaaaa", formState);
-        await api.post(`/Account/CreateAccount`, formState);
+        // const processedForm = processFormData(formState);
+        // console.log("Processed Add Data", processedForm);
+        // await api.post(`/Account/CreateAccount`, processedForm);
+        const body = processFormData(formState);
+        console.log("Final Body:", JSON.stringify(body, null, 2));
+        const response = await api.post("/Account/CreateAccount", body);
+        console.log("Created Account Response:", response);
       } else if (modalType === "Edit") {
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
