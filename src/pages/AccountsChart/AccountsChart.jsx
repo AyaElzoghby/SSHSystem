@@ -162,7 +162,7 @@ export default function AccountsChart() {
           ...details,
           dfdate: details?.dfdate
             ? new Date(details.dfdate).toISOString().split("T")[0]
-            : "",
+            : null,
         });
       } catch (err) {
         console.error("Fetch error:", err);
@@ -197,6 +197,7 @@ export default function AccountsChart() {
         const response = await api.post("/Account/CreateAccount", body);
         console.log("Created Account Response:", response);
       } else if (modalType === "Edit") {
+        console.log('editttttttttttt', JSON.stringify(formState, null, 2));
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
           dcodE1: selectedChildCode,
