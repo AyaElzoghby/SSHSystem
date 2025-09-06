@@ -118,6 +118,13 @@ export default function AccountsChart() {
     // setError(null);
   };
 
+  function getAccountName(account, languageId) {
+  if (!account) return "";
+  if (languageId == 1) return account.dname;
+  return account.dnamE2 && account.dnamE2.trim() !== "" 
+    ? account.dnamE2 
+    : account.dname;
+}
   // ✅ handlers
 
   useEffect(() => {
@@ -234,7 +241,7 @@ export default function AccountsChart() {
 
   const contentsData = [
     {
-      tab_title: `${AccountsChartLang.AccountElements[languageId]} ${languageId==1? selectedAccount?.dname :selectedAccount?.dnamE2}`,
+      tab_title: `${AccountsChartLang.AccountElements[languageId]} ${getAccountName(selectedAccount, languageId)}`,
       tab_contents: selectedId ? (
         childrenToDisplay.length > 0 ? (
           <ul>
@@ -307,7 +314,7 @@ export default function AccountsChart() {
       ),
     },
     {
-      tab_title: `${AccountsChartLang.AccountDetails[languageId]} ${languageId==1? selectedAccount?.dname :selectedAccount?.dnamE2}`,
+      tab_title: `${AccountsChartLang.AccountDetails[languageId]} ${getAccountName(selectedAccount, languageId)}`,
       tab_contents: selectedAccount ? (
         <>
           {/* toggle checkboxes */}

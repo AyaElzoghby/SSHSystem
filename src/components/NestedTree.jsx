@@ -90,10 +90,10 @@ const TreeItem = ({
           >
             <div className="flex gap-1">
               <ChevronLeft
-                className={
-                  (`w-4 h-4 transition-transform duration-200
-                  ${isExpanded && "-rotate-90"} ${languageId === 1 ?"":"-rotate-180"}`)
-                }
+                className={`w-4 h-4 transition-transform duration-200
+                  ${isExpanded && "-rotate-90"} ${
+                  languageId === 1 ? "" : "-rotate-180"
+                }`}
               />
               {isExpanded ? (
                 <img
@@ -120,7 +120,11 @@ const TreeItem = ({
         )}
 
         <div style={{ flex: 1 }}>
-          {languageId === 1 ? node.dname : node.dnamE2}
+          {languageId === 1
+            ? node.dname
+            : node.dnamE2 && node.dnamE2.trim() !== ""
+            ? node.dnamE2
+            : node.dname}
         </div>
       </div>
 
@@ -157,14 +161,23 @@ export default function NestedTree({
   const [focusId, setFocusId] = useState(null);
 
   // Filter tree by search (returns pruned tree keeping parents of matches)
+  const normalize = (str) =>
+    String(str || "")
+      .toLowerCase()
+      .replace(/\s+/g, ""); // يشيل أي مسافات
+
   const filterTree = (nodes, query) => {
     if (!query) return nodes;
-    const q = query.trim().toLowerCase();
+    const q = normalize(query);
     const out = [];
 
     for (const n of nodes) {
-      const name = String(n.dname || "").toLowerCase();
-      let matched = name.includes(q);
+      const name1 = normalize(n.dname);
+      const name2 = normalize(n.dnamE2);
+      const code = normalize(n.dcodE1);
+
+      let matched = name1.includes(q) || name2.includes(q) || code.includes(q);
+
       let children = [];
 
       if (Array.isArray(n.children) && n.children.length > 0) {
@@ -175,7 +188,6 @@ export default function NestedTree({
       if (matched) {
         out.push({
           ...n,
-          // if children were filtered, use them; otherwise keep original children to allow expand behavior
           children: children.length > 0 ? children : n.children || [],
         });
       }
@@ -183,6 +195,33 @@ export default function NestedTree({
 
     return out;
   };
+
+  // const filterTree = (nodes, query) => {
+  //   if (!query) return nodes;
+  //   const q = query.trim().toLowerCase();
+  //   const out = [];
+
+  //   for (const n of nodes) {
+  //     const name = String(n.dname || "").toLowerCase();
+  //     let matched = name.includes(q);
+  //     let children = [];
+
+  //     if (Array.isArray(n.children) && n.children.length > 0) {
+  //       children = filterTree(n.children, query);
+  //       if (children.length > 0) matched = true;
+  //     }
+
+  //     if (matched) {
+  //       out.push({
+  //         ...n,
+  //         // if children were filtered, use them; otherwise keep original children to allow expand behavior
+  //         children: children.length > 0 ? children : n.children || [],
+  //       });
+  //     }
+  //   }
+
+  //   return out;
+  // };
 
   const filteredData = useMemo(() => filterTree(data, search), [data, search]);
 
