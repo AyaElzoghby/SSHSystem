@@ -197,7 +197,7 @@ export default function AccountsChart() {
         const response = await api.post("/Account/CreateAccount", body);
         console.log("Created Account Response:", response);
       } else if (modalType === "Edit") {
-        console.log('editttttttttttt', JSON.stringify(formState, null, 2));
+        console.log("editttttttttttt", JSON.stringify(formState, null, 2));
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
           dcodE1: selectedChildCode,
@@ -220,7 +220,6 @@ export default function AccountsChart() {
       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
 
       await loadData(); // refresh tree
-      setSelectedId(selectedAccount.dcodE2);
       setModelVisible(false);
       reset();
     } catch (err) {
@@ -235,7 +234,7 @@ export default function AccountsChart() {
 
   const contentsData = [
     {
-      tab_title: AccountsChartLang.AccountElements[languageId],
+      tab_title: `${AccountsChartLang.AccountElements[languageId]} ${languageId==1? selectedAccount?.dname :selectedAccount?.dnamE2}`,
       tab_contents: selectedId ? (
         childrenToDisplay.length > 0 ? (
           <ul>
@@ -308,7 +307,7 @@ export default function AccountsChart() {
       ),
     },
     {
-      tab_title: AccountsChartLang.AccountDetails[languageId],
+      tab_title: `${AccountsChartLang.AccountDetails[languageId]} ${languageId==1? selectedAccount?.dname :selectedAccount?.dnamE2}`,
       tab_contents: selectedAccount ? (
         <>
           {/* toggle checkboxes */}
@@ -452,7 +451,6 @@ export default function AccountsChart() {
                       : ""
                   }
                 />
-
                 <InputComponent
                   disabled
                   title={AccountsChartLang.taxnumber[languageId]}
@@ -502,17 +500,19 @@ export default function AccountsChart() {
             </>
           )}
           <div className="flex justify-center gap-4 ">
-            <CustomButton
-              icon={<FontAwesomeIcon icon={faSquarePlus} />}
-              className="bg-success text-gray-100"
-              title={AccountsChartLang.AddAccount[languageId]}
-              onClick={() => {
-                setSelectedChildCode(selectedAccount.dcodE1);
-                setModelVisible(true);
-                setModalType("Add");
-                setFormState(initialFormState);
-              }}
-            />
+            {selectedAccount.dsecondry && (
+              <CustomButton
+                icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                className="bg-success text-gray-100"
+                title={AccountsChartLang.AddAccount[languageId]}
+                onClick={() => {
+                  setSelectedChildCode(selectedAccount.dcodE1);
+                  setModelVisible(true);
+                  setModalType("Add");
+                  setFormState(initialFormState);
+                }}
+              />
+            )}
             <CustomButton
               icon={<FontAwesomeIcon icon={faPenToSquare} />}
               className="bg-warning text-gray-100"
@@ -530,6 +530,7 @@ export default function AccountsChart() {
               onClick={() => {
                 setSelectedChildCode(selectedAccount.dcodE1);
                 console.log("Deleting:", selectedChildCode);
+                setSelectedId(selectedAccount.dcodE2);
                 setModelVisible(true);
                 setModalType("Delete");
               }}
@@ -663,7 +664,7 @@ export default function AccountsChart() {
                 }}
               />
               <DropdownComponent
-                disabled={modalType === "Edit" || formState.dlevel > 2}
+                disabled={modalType === "Edit" || formState.dlevel >= 2}
                 value={formState.dacC_TYPE}
                 options={Type1}
                 label={AccountsChartLang.secondaryType[languageId]}
@@ -826,8 +827,11 @@ export default function AccountsChart() {
                   <DatePicker
                     title={AccountsChartLang.creationdate[languageId]}
                     value={formState.dfdate}
-                     onChange={(val) =>
-                      setFormState((prev) => ({ ...prev, dfdate: val.toISOString() }))
+                    onChange={(val) =>
+                      setFormState((prev) => ({
+                        ...prev,
+                        dfdate: val.toISOString(),
+                      }))
                     }
                   />
 

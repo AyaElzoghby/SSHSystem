@@ -21,7 +21,7 @@ export default function Tabs({ contents }) {
           </button>
         ))}
       </div>
-      <div className="p-4 me-4 pe-2 dark:bg-opacity-40 border-opacity-80 border-background-light dark:border-background-dark border-t-0 my-5 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark  max-h-80 lg:max-h-[72.25svh] overflow-y-auto  [&::-webkit-scrollbar]:w-3
+      <div className="p-4 me-4 pe-2 dark:bg-opacity-40 border-opacity-80 border-background-light dark:border-background-dark border-t-0 my-5 text-text-light dark:text-text-dark bg-navbar-bg-light dark:bg-navbar-bg-dark  max-h-80 lg:max-h-[80svh] overflow-y-auto  [&::-webkit-scrollbar]:w-3
                 [&::-webkit-scrollbar-track]:rounded-md
                 [&::-webkit-scrollbar-track]:bg-surface
                 [&::-webkit-scrollbar-thumb]:rounded-md

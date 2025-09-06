@@ -54,7 +54,7 @@ const AccountsChartLang = {
   },
   AccountElements: {
     1: "عناصر الحساب",
-    2: "Account Elements",
+    2: "Account Elements of",
   },
   Address1: {
     1: "عنوان 1",
@@ -90,7 +90,7 @@ const AccountsChartLang = {
   },
   AccountDetails: {
     1: "تفاصيل الحساب",
-    2: "Account Details",
+    2: "Account Details of",
   },
   openingBalanceCurrent: {
     1: "الرصيد الافتتاحى للحساب بالعمله الاساسيه",
