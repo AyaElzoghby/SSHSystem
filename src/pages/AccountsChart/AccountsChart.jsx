@@ -826,8 +826,8 @@ export default function AccountsChart() {
                   <DatePicker
                     title={AccountsChartLang.creationdate[languageId]}
                     value={formState.dfdate}
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({ ...prev, dfdate: val }))
+                     onChange={(val) =>
+                      setFormState((prev) => ({ ...prev, dfdate: val.toISOString() }))
                     }
                   />
 

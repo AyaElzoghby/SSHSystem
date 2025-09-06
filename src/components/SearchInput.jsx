@@ -47,7 +47,7 @@ export default function SearchInput({
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={languageId == 1 ? placeholderAr : placeholderEn}
-        className={`h-8 border-none focus:border-none ps-14 focus:outline-none rounded-md outline-none
+        className={`h-8 border-none text-gray-800 text-base font-medium focus:border-none ps-14 focus:outline-none rounded-md outline-none
           ${languageId == 1 ? "text-right " : "text-left"}`}
       />
     </div>
