@@ -49,7 +49,6 @@ export default function Checkbox({
     <label
       className={`flex items-center gap-2 my-2 text-base font-semibold text-textPrimary
         ${rtl ? "flex-row-reverse" : ""}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         ${className}`}
     >
       <div
@@ -62,7 +61,13 @@ export default function Checkbox({
           border ${shapeClasses}
           bg-surfaceHover 
           border-surfaceHover
-           ${isChecked && 'dark:border-blue-gray-700 border-blue-gray-300'} 
+                  ${
+                    disabled
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }
+
+           ${isChecked && "dark:border-blue-gray-700 border-blue-gray-300"} 
         `}
         style={{
           backgroundColor: isChecked && color ? color : "",
@@ -82,8 +87,13 @@ export default function Checkbox({
           </span>
         )}
       </div>
-      {label && <span   className={`text-sm font-semibold mb-1 text-textPrimary text-start`}
-        >{label}</span>}
+      {label && (
+        <span
+          className={`text-sm font-semibold mb-1 text-textPrimary text-start`}
+        >
+          {label}
+        </span>
+      )}
     </label>
   );
 }

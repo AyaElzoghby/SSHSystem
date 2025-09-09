@@ -1,32 +1,44 @@
 import { ChevronFirst, ChevronLast, MoreVertical } from "lucide-react";
 import logo from "../assets/logo.png";
-import profile from "../assets/profile.png";
-import { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import "../index.css";
-// import { useLanguage } from "@/context/LanguageContext";
 const SidebarContext = createContext();
 
 export default function Sidebar({ children }) {
   const [expanded, setExpanded] = useState(true);
-  // const [languageId]=useLanguage()
   return (
     <>
       <aside className=" relative">
         <nav className=" h-[97svh] flex flex-col  bg-surface rounded-md   shadow-sm">
-          <div  className={`${expanded ? "my-2" : "my-6"} p-4 flex justify-between items-center`}>
+          <div
+            className={`${
+              expanded ? "my-2" : "my-6"
+            } p-4 flex justify-between items-center`}
+          >
             <button
+              aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
               onClick={() => setExpanded((curr) => !curr)}
-              className={`p-1.5 ${expanded ? "end-2 ": 'mx-auto'} top-3 shadow-md absolute rounded-md bg-surfaceHover text-textSecondary`}
+              className={`p-1.5 ${
+                expanded ? "end-2 " : "mx-auto"
+              } top-3 shadow-md absolute rounded-md bg-surfaceHover text-textSecondary`}
             >
               {expanded ? <ChevronFirst /> : <ChevronLast />}
             </button>
           </div>
           <div className="p-4 pb-2 flex justify-center items-center">
-            <img
+            {/* <img
               src={logo}
               className={`overflow-hidden h-32 transition-all ${
                 expanded ? "w-32" : "w-0"
               }  `}
+            /> */}
+            <img
+              src={logo}
+              loading="lazy" // Lazy load
+              width={expanded ? 128 : 0} // ضبط الحجم بدقة
+              height={128}
+              className="transition-all"
+              alt="Logo" // accessibility
             />
           </div>
 
@@ -42,7 +54,7 @@ export default function Sidebar({ children }) {
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 
-export function SidebarItem({ icon, text, path, alert }) {
+const SidebarItemComponent=({ icon, text, path, alert })=> {
   const { expanded } = useContext(SidebarContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,7 +68,7 @@ export function SidebarItem({ icon, text, path, alert }) {
         ${
           isActive
             ? "bg-surfaceHover shadow-md text-textPrimary"
-            :"hover:bg-surfaceHover text-textSecondary hover:text-textPrimary"
+            : "hover:bg-surfaceHover text-textSecondary hover:text-textPrimary"
         }`}
     >
       {icon}
@@ -86,6 +98,7 @@ export function SidebarItem({ icon, text, path, alert }) {
     </li>
   );
 }
+export const SidebarItem = React.memo(SidebarItemComponent);
 
 // export function SidebarItem({ icon, text, active, alert }) {
 //   const { expanded } = useContext(SidebarContext);

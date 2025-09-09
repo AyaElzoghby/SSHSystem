@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import NestedTree from "../../components/NestedTree";
 import Tabs from "../../components/Tabs";
@@ -11,15 +11,19 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import AccountsChartLang from "@/constants/Lang/AccountsChart";
 import { useLanguage } from "@/context/LanguageContext";
-import Checkbox from "@/components/Checkbox";
 import Modal from "@/components/Modal";
-import DropdownComponent from "@/components/ui/DropDown";
-import InputComponent from "@/components/InputComponent";
 import { API } from "../../api/api";
 import useDropdown from "@/hooks/useDropdown";
-import DatePicker from "@/components/DatePicker";
 import { initialFormState, processFormData } from "./initialFormState";
-
+import {
+  AccountControl,
+  AccountDetails,
+  Information,
+  Information1,
+  Openingbalance,
+} from "./TabsData";
+import { GetAccountName } from "../../utils/GetAccountName";
+import AccountModal from "./AccountModal";
 // ✅ helper: children by id
 function getChildrenById(id, data) {
   if (!Array.isArray(data)) return [];
@@ -32,7 +36,6 @@ function getChildrenById(id, data) {
   }
   return [];
 }
-
 export default function AccountsChart() {
   const { languageId } = useLanguage();
   const [rawData, setRawData] = useState(null);
@@ -45,18 +48,15 @@ export default function AccountsChart() {
   const [modelVisible, setModelVisible] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
   const [SelectedType, setSelectedType] = useState(null);
-  const [Code, setCode] = useState(""); // لتخزين الكتابة مؤقتاً
-  const [error, setError] = useState("");
-  const [nameAr, setnameAr] = useState("");
-  const [nameEn, setnameEn] = useState("");
+  const [formState, setFormState] = useState(initialFormState);
+  // const [DetailedTabs, setDetailedTabs] = useState([]);
+
   const setAccountType = (type) => {
     setFormState((prev) => ({
       ...prev,
       dsecondry: type === "general", // true لو جنرال
     }));
   };
-
-  const [formState, setFormState] = useState(initialFormState);
 
   const api = API();
 
@@ -90,45 +90,40 @@ export default function AccountsChart() {
     fetchAccountDetails(selectedId, setSelectedAccount);
   }, [selectedId]);
 
+  const ViewOf = useDropdown("/Account/GetCombScureAccount", {}, [
+    "value",
+    languageId == 1 ? "nameAR" : "nameEn",
+  ]);
   const Type = useDropdown("/Account/GetTask0", {}, [
     "noOfIndx",
     languageId == 1 ? "accTypeAR" : "accTypeEN",
   ]);
-  const Type1 = useDropdown(
-    "/Account/GetTaskOne",
-    SelectedType ? { type0: Number(SelectedType) } : {},
-    ["noOfIndx", languageId == 1 ? "accTypeAR" : "accTypeEN"]
+  const memoParams1 = useMemo(
+    () => (SelectedType ? { type0: Number(SelectedType) } : {}),
+    [SelectedType]
   );
+  const Type1 = useDropdown("/Account/GetTaskOne", memoParams1, [
+    "noOfIndx",
+    languageId == 1 ? "accTypeAR" : "accTypeEN",
+  ]);
   const Type2 = useDropdown("/Account/GetTaskTwo", {}, [
     "noOfIndx",
     languageId == 1 ? "accTypeAR" : "accTypeEN",
   ]);
-  console.log("typyyyyyyy", Type);
-  console.log("typyyyyyyy1", Type1);
-  console.log("typyyyyyyy2", Type2);
-  const childrenToDisplay = selectedId
-    ? getChildrenById(selectedId, rawData)
-    : [];
 
   const reset = () => {
     setSelectedType(null);
-    setSelectedChildCode(null);
+    // setSelectedChildCode(null);
     setSelectedChild(null);
-    // setCode(null);
-    // setError(null);
   };
 
-  function getAccountName(account, languageId) {
-  if (!account) return "";
-  if (languageId == 1) return account.dname;
-  return account.dnamE2 && account.dnamE2.trim() !== "" 
-    ? account.dnamE2 
-    : account.dname;
-}
+  const handleItemSelected = useCallback((id) => {
+    setSelectedId(id);
+  }, []);
   // ✅ handlers
 
   useEffect(() => {
-    if (!selectedChildCode || modalType === "Delete") return;
+    if (!selectedId || modalType !== "Add") return;
 
     let cancelled = false;
 
@@ -157,6 +152,18 @@ export default function AccountsChart() {
       }
     };
 
+    GetNewAccountData();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId, modalType]);
+
+  useEffect(() => {
+    if (!selectedChildCode || modalType !== "Edit") return;
+
+    let cancelled = false;
+
     const loadDetails = async () => {
       setLoadingDetails(true);
       try {
@@ -178,40 +185,24 @@ export default function AccountsChart() {
       }
     };
 
-    // هنا نحدد نستدعي انهي دالة حسب الـ modalType
-    if (modalType === "Add") {
-      GetNewAccountData();
-    } else {
-      loadDetails();
-    }
-
+    loadDetails();
     return () => {
       cancelled = true;
     };
-  }, [selectedChildCode, selectedId, modalType]);
+  }, [selectedChildCode, modalType]);
 
   async function handleSave() {
     try {
-      // if (modalType === "Add") {
-      //   console.log("Adddddd Dataaaaaaaaaa", formState);
-      //   await api.post(`/Account/CreateAccount`, formState);
       if (modalType === "Add") {
-        // const processedForm = processFormData(formState);
-        // console.log("Processed Add Data", processedForm);
-        // await api.post(`/Account/CreateAccount`, processedForm);
         const body = processFormData(formState);
-        console.log("Final Body:", JSON.stringify(body, null, 2));
         const response = await api.post("/Account/CreateAccount", body);
-        console.log("Created Account Response:", response);
       } else if (modalType === "Edit") {
-        console.log("editttttttttttt", JSON.stringify(formState, null, 2));
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
           dcodE1: selectedChildCode,
         });
         fetchAccountDetails(selectedId, setSelectedAccount);
       }
-
       await loadData();
       setModelVisible(false);
       reset();
@@ -222,10 +213,7 @@ export default function AccountsChart() {
 
   async function handleDelete() {
     try {
-      console.log("Deleting:", selectedChildCode);
-
       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
-
       await loadData(); // refresh tree
       setModelVisible(false);
       reset();
@@ -234,320 +222,215 @@ export default function AccountsChart() {
     }
   }
 
+  // للأطفال
+  const handleAddChild = useCallback((child) => {
+    setSelectedChildCode(child.dcodE1);
+    setSelectedChild(child);
+    setModelVisible(true);
+    setModalType("Add");
+    setFormState(initialFormState);
+  }, []);
+
+  const handleEditChild = useCallback((child) => {
+    setSelectedChildCode(child.dcodE1);
+    setSelectedChild(child);
+    setModelVisible(true);
+    setModalType("Edit");
+    setFormState(child || {});
+  }, []);
+
+  const handleDeleteChild = useCallback((child) => {
+    setSelectedChildCode(child.dcodE1);
+    setModelVisible(true);
+    setModalType("Delete");
+  }, []);
+
+  // للأكاونت المحدد
+  const handleAddAccount = useCallback(() => {
+    if (!selectedAccount) return;
+    setSelectedChildCode(selectedAccount.dcodE1);
+    setModelVisible(true);
+    setModalType("Add");
+    setFormState(initialFormState);
+  }, [selectedAccount]);
+
+  const handleEditAccount = useCallback(() => {
+    if (!selectedAccount) return;
+    setSelectedChildCode(selectedAccount.dcodE1);
+    setModelVisible(true);
+    setModalType("Edit");
+  }, [selectedAccount]);
+
+  const handleDeleteAccount = useCallback(() => {
+    if (!selectedAccount) return;
+    setSelectedChildCode(selectedAccount.dcodE1);
+    setSelectedId(selectedAccount.dcodE2);
+    setModelVisible(true);
+    setModalType("Delete");
+  }, [selectedAccount]);
+
   // input change helper
-  function handleInputChange(key, value) {
+  const handleInputChange = useCallback((key, value) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
-  }
+  }, []);
+
+  const childrenToDisplay = useMemo(() => {
+    return selectedId ? getChildrenById(selectedId, rawData) : [];
+  }, [selectedId, rawData]);
+
+  const DetailedTabs = useMemo(
+    () => [
+      {
+        tab_title: `${
+          AccountsChartLang.Information[languageId]
+        } ${GetAccountName(selectedAccount, languageId)}`,
+        tab_contents: (
+          <Information
+            key={`info-${selectedAccount?.dcodE1}`}
+            selectedAccount={selectedAccount}
+          />
+        ),
+      },
+      {
+        tab_title: `${
+          AccountsChartLang.Openingbalance[languageId]
+        } ${GetAccountName(selectedAccount, languageId)}`,
+        tab_contents: (
+          <Openingbalance
+            key={`open-${selectedAccount?.dcodE1}`}
+            selectedAccount={selectedAccount}
+          />
+        ),
+      },
+      {
+        tab_title: `${
+          AccountsChartLang.AccountControl[languageId]
+        } ${GetAccountName(selectedAccount, languageId)}`,
+        tab_contents: (
+          <AccountControl
+            key={`control-${selectedAccount?.dcodE1}`}
+            selectedAccount={selectedAccount}
+            ViewOf={ViewOf}
+          />
+        ),
+      },
+      {
+        tab_title: `${
+          AccountsChartLang.Information1[languageId]
+        } ${GetAccountName(selectedAccount, languageId)}`,
+        tab_contents: (
+          <Information1
+            key={`info1-${selectedAccount?.dcodE1}`}
+            selectedAccount={selectedAccount}
+          />
+        ),
+      },
+    ],
+    [selectedAccount, languageId]
+  );
 
   const contentsData = [
     {
-      tab_title: `${AccountsChartLang.AccountElements[languageId]} ${getAccountName(selectedAccount, languageId)}`,
-      tab_contents: selectedId ? (
-        childrenToDisplay.length > 0 ? (
-          <ul>
-            {childrenToDisplay.map((child) => (
-              <li
-                key={child.dcodE1}
-                className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
-              >
-                {languageId == 1
-                  ? child.dname
-                  : child.dnamE2 === ""
-                  ? child.dname
-                  : child.dnamE2}
-                <div className="flex gap-2">
-                  {child.dsecondry !== false && (
-                    <CustomButton
-                      icon={<FontAwesomeIcon icon={faSquarePlus} />}
-                      size="small"
-                      className="bg-success text-gray-100"
-                      title={AccountsChartLang.Add[languageId]}
-                      onClick={() => {
-                        setSelectedChildCode(child.dcodE1);
-                        setSelectedChild(child);
-                        setModelVisible(true);
-                        setModalType("Add");
-                        setFormState(initialFormState);
-                      }}
-                    />
-                  )}
-                  <CustomButton
-                    icon={<FontAwesomeIcon icon={faPenToSquare} />}
-                    size="small"
-                    className="bg-warning text-gray-100"
-                    title={AccountsChartLang.Edit[languageId]}
-                    onClick={() => {
-                      setSelectedChildCode(child.dcodE1);
-                      setSelectedChild(child);
-                      setModelVisible(true);
-                      setModalType("Edit");
-                      setFormState(selectedChild || {});
-                    }}
-                  />
-                  <CustomButton
-                    icon={<FontAwesomeIcon icon={faTrashCan} />}
-                    size="small"
-                    className="bg-danger text-gray-100"
-                    title={AccountsChartLang.Delete[languageId]}
-                    onClick={() => {
-                      setSelectedChildCode(child.dcodE1);
-                      setModelVisible(true);
-                      setModalType("Delete");
-                    }}
-                  />
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <>
+      tab_title: `${
+        AccountsChartLang.AccountElements[languageId]
+      } ${GetAccountName(selectedAccount, languageId)}`,
+      tab_contents: (
+        <>
+          {selectedId ? (
+            childrenToDisplay.length > 0 ? (
+              <ul>
+                {childrenToDisplay.map((child) => (
+                  <li
+                    key={child.dcodE1}
+                    className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
+                  >
+                    {languageId == 1
+                      ? child.dname
+                      : child.dnamE2 === ""
+                      ? child.dname
+                      : child.dnamE2}
+                    <div className="flex gap-2">
+                      {child.dsecondry && (
+                        <CustomButton
+                          icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                          size="small"
+                          className="bg-success text-gray-100"
+                          title={AccountsChartLang.Add[languageId]}
+                          onClick={() => handleAddChild(child)}
+                        />
+                      )}
+                      <CustomButton
+                        icon={<FontAwesomeIcon icon={faPenToSquare} />}
+                        size="small"
+                        className="bg-warning text-gray-100"
+                        title={AccountsChartLang.Edit[languageId]}
+                        onClick={() => handleEditChild(child)}
+                      />
+                      <CustomButton
+                        icon={<FontAwesomeIcon icon={faTrashCan} />}
+                        size="small"
+                        className="bg-danger text-gray-100"
+                        title={AccountsChartLang.Delete[languageId]}
+                        onClick={() => handleDeleteChild(child)}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <>
+                <p className="text-textPrimary text-base font-bold">
+                  {AccountsChartLang.NoSubAccount[languageId]}
+                </p>
+              </>
+            )
+          ) : (
             <p className="text-textPrimary text-base font-bold">
-              {AccountsChartLang.NoSubAccount[languageId]}
+              {" "}
+              {AccountsChartLang.SelelctAccount[languageId]}{" "}
             </p>
-          </>
-        )
-      ) : (
-        <p className="text-textPrimary text-base font-bold">
-          {" "}
-          {AccountsChartLang.SelelctAccount[languageId]}{" "}
-        </p>
+          )}
+        </>
       ),
     },
     {
-      tab_title: `${AccountsChartLang.AccountDetails[languageId]} ${getAccountName(selectedAccount, languageId)}`,
-      tab_contents: selectedAccount ? (
+      tab_title: `${
+        AccountsChartLang.AccountDetails[languageId]
+      } ${GetAccountName(selectedAccount, languageId)}`,
+      tab_contents: (
         <>
-          {/* toggle checkboxes */}
-          <div className="flex justify-start gap-4 mb-4">
-            <Checkbox
-              label={AccountsChartLang.secondary[languageId]}
-              checked={!selectedAccount.dsecondry}
-              onChange={() => setAccountType("secondary")}
-            />
-            <Checkbox
-              label={AccountsChartLang.general[languageId]}
-              checked={selectedAccount.dsecondry}
-              onChange={() => setAccountType("general")}
-            />
-          </div>
-
-          <div className="flex gap-4 mb-4">
-            <DropdownComponent
-              disabled
-              value={selectedAccount.dacC_TYPE0}
-              // initialValue={Type[0]}
-              options={Type}
-              label={AccountsChartLang.primaryType[languageId]}
-            />
-
-            <DropdownComponent
-              disabled
-              value={selectedAccount.dacC_TYPE}
-              // initialValue={Type1[0]}
-              options={Type1}
-              label={AccountsChartLang.secondaryType[languageId]}
-            />
-
-            <DropdownComponent
-              disabled
-              value={selectedAccount.dacC_TYPE2}
-              options={Type2}
-              label={AccountsChartLang.tertiaryType[languageId]}
-            />
-          </div>
-
-          <div className="flex gap-4 grid grid-cols-4 mb-4">
-            <div className="col-span-1">
-              <InputComponent
-                disabled
-                type="number"
-                value={selectedAccount.dlevel}
-                title={AccountsChartLang.level[languageId]}
-              />
-            </div>
-            <div className="col-span-3">
-              <InputComponent
-                disabled
-                value={selectedAccount.dcodE1}
-                title={AccountsChartLang.accountCode[languageId]}
-                type="number"
-              />
-            </div>
-          </div>
-
-          <InputComponent
-            disabled
-            title={AccountsChartLang.accountNameArabic[languageId]}
-            className="mb-4"
-            value={selectedAccount.dname}
-            onTextChange={(val) =>
-              setFormState((prev) => ({ ...prev, dname: val }))
-            }
+          <AccountDetails
+            Type={Type}
+            Type1={Type1}
+            Type2={Type2}
+            DetailedTabs={DetailedTabs}
+            selectedAccount={selectedAccount}
           />
-          <InputComponent
-            disabled
-            title={AccountsChartLang.accountNameEnglish[languageId]}
-            className="mb-4"
-            value={selectedAccount.dnamE2}
-            onTextChange={(val) =>
-              setFormState((prev) => ({ ...prev, dnamE2: val }))
-            }
-          />
-
-          {/* extra fields لو النوع secondary */}
-          {!selectedAccount.dsecondry && (
-            <>
-              <div className="flex gap-4 mb-4">
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.phone[languageId]}
-                  value={selectedAccount.dphone}
-                  type="number"
+          {selectedAccount && (
+            <div className="flex justify-center gap-4 ">
+              {selectedAccount?.dsecondry && (
+                <CustomButton
+                  icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                  className="bg-success text-gray-100"
+                  title={AccountsChartLang.AddAccount[languageId]}
+                  onClick={handleAddAccount}
                 />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.fax[languageId]}
-                  value={selectedAccount.dphonE2}
-                  type="number"
-                />
-              </div>
-              <InputComponent
-                disabled
-                title={AccountsChartLang.mobile[languageId]}
-                className="mb-4"
-                value={selectedAccount.dtelx}
-                type="number"
-              />
-              <div className="flex gap-4 mb-4">
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.Employee[languageId]}
-                  value={selectedAccount.demployee}
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({ ...prev, demployee: val }))
-                  }
-                />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.sales[languageId]}
-                  value={selectedAccount.dslaes}
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({ ...prev, dslaes: val }))
-                  }
-                />
-              </div>
-              <InputComponent
-                disabled
-                title={AccountsChartLang.email[languageId]}
-                className="mb-4"
-                value={selectedAccount.email}
-                type="email"
-                onTextChange={(val) =>
-                  setFormState((prev) => ({ ...prev, email: val }))
-                }
-              />
-              <div className="flex gap-4 mb-4">
-                <DatePicker
-                  disabled
-                  title={AccountsChartLang.creationdate[languageId]}
-                  value={
-                    selectedAccount.dfdate
-                      ? new Date(selectedAccount.dfdate)
-                          .toISOString()
-                          .split("T")[0]
-                      : ""
-                  }
-                />
-                <InputComponent
-                  disabled
-                  title={AccountsChartLang.taxnumber[languageId]}
-                  value={selectedAccount.accVatNo}
-                  type="number"
-                />
-              </div>
-
-              <InputComponent
-                disabled
-                title={AccountsChartLang.openingBalance[languageId]}
-                value={selectedAccount.doldacc}
-                type="number"
-              />
-              <div className="flex gap-4">
-                <InputComponent
-                  disabled
-                  flex
-                  title={AccountsChartLang.debtor[languageId]}
-                  value={selectedAccount.doldacC1}
-                  type="number"
-                />
-                <InputComponent
-                  disabled
-                  flex
-                  title={AccountsChartLang.creditor[languageId]}
-                  value={selectedAccount.doldacC2}
-                  type="number"
-                />
-              </div>
-
-              {/* <InputComponent
-                disabled
-                title={AccountsChartLang.currentCredit[languageId]}
-                value={selectedAccount.currentCredit}
-                type="number"
-              /> */}
-
-              <InputComponent
-                disabled
-                title={AccountsChartLang.notes[languageId]}
-                value={selectedAccount.remark}
-                onTextChange={(val) =>
-                  setFormState((prev) => ({ ...prev, remark: val }))
-                }
-              />
-            </>
-          )}
-          <div className="flex justify-center gap-4 ">
-            {selectedAccount.dsecondry && (
+              )}
               <CustomButton
-                icon={<FontAwesomeIcon icon={faSquarePlus} />}
-                className="bg-success text-gray-100"
-                title={AccountsChartLang.AddAccount[languageId]}
-                onClick={() => {
-                  setSelectedChildCode(selectedAccount.dcodE1);
-                  setModelVisible(true);
-                  setModalType("Add");
-                  setFormState(initialFormState);
-                }}
+                icon={<FontAwesomeIcon icon={faPenToSquare} />}
+                className="bg-warning text-gray-100"
+                title={AccountsChartLang.EditAccount[languageId]}
+                onClick={handleEditAccount}
               />
-            )}
-            <CustomButton
-              icon={<FontAwesomeIcon icon={faPenToSquare} />}
-              className="bg-warning text-gray-100"
-              title={AccountsChartLang.EditAccount[languageId]}
-              onClick={() => {
-                setSelectedChildCode(selectedAccount.dcodE1);
-                setModelVisible(true);
-                setModalType("Edit");
-              }}
-            />
-            <CustomButton
-              icon={<FontAwesomeIcon icon={faTrashCan} />}
-              className="bg-danger  text-gray-100"
-              title={AccountsChartLang.DeleteAccount[languageId]}
-              onClick={() => {
-                setSelectedChildCode(selectedAccount.dcodE1);
-                console.log("Deleting:", selectedChildCode);
-                setSelectedId(selectedAccount.dcodE2);
-                setModelVisible(true);
-                setModalType("Delete");
-              }}
-            />
-          </div>
+              <CustomButton
+                icon={<FontAwesomeIcon icon={faTrashCan} />}
+                className="bg-danger  text-gray-100"
+                title={AccountsChartLang.DeleteAccount[languageId]}
+                onClick={handleDeleteAccount}
+              />
+            </div>
+          )}
         </>
-      ) : (
-        <p className="text-textPrimary text-base font-bold">
-          {AccountsChartLang.SelelctAccountDetails[languageId]}
-        </p>
       ),
     },
   ];
@@ -568,12 +451,14 @@ export default function AccountsChart() {
               {rawData ? (
                 <NestedTree
                   data={rawData}
-                  onItemSelected={(id) => setSelectedId(id)}
+                  selectedId={selectedId} // 👈 يتحكم من عندك
+                  onSelectedChange={setSelectedId} // 👈 يحدث الأب
+                  onItemSelected={handleItemSelected} // 👈 لو عايزة تبني لوجيك تاني
                 />
               ) : (
                 <div>
                   <p className="text-textPrimary text-base">
-                    {AccountsChartLang.AccountsChart[languageId]}
+                    {AccountsChartLang.loading[languageId]}
                   </p>
                 </div>
               )}
@@ -635,280 +520,17 @@ export default function AccountsChart() {
           )
         }
       >
-        {loadingDetails ? (
-          <div className="flex items-center justify-center p-10">
-            <span className="loader"></span> {/* ممكن تستخدم Spinner جاهز */}
-          </div>
-        ) : modalType === "Edit" || modalType === "Add" ? (
-          <>
-            {/* toggle checkboxes */}
-            <div className="flex justify-start gap-4 mb-4">
-              <Checkbox
-                disabled={modalType === "Edit"}
-                label={AccountsChartLang.secondary[languageId]}
-                checked={!formState.dsecondry}
-                onChange={() => setAccountType("secondary")}
-              />
-              <Checkbox
-                disabled={modalType === "Edit"}
-                label={AccountsChartLang.general[languageId]}
-                checked={formState.dsecondry}
-                onChange={() => setAccountType("general")}
-              />
-            </div>
-
-            <div className="flex gap-4 mb-4">
-              <DropdownComponent
-                disabled={modalType === "Edit" || formState.dlevel > 1}
-                value={formState.dacC_TYPE0}
-                options={Type}
-                label={AccountsChartLang.primaryType[languageId]}
-                placeholder={AccountsChartLang.Select[languageId]}
-                onChange={(val) => {
-                  setSelectedType(val.value);
-                  console.log("SelectedType:", SelectedType);
-                  setFormState((prev) => ({ ...prev, dacC_TYPE0: val.value }));
-                }}
-              />
-              <DropdownComponent
-                disabled={modalType === "Edit" || formState.dlevel >= 2}
-                value={formState.dacC_TYPE}
-                options={Type1}
-                label={AccountsChartLang.secondaryType[languageId]}
-                placeholder={AccountsChartLang.Select[languageId]}
-                onChange={(val) =>
-                  setFormState((prev) => ({ ...prev, dacC_TYPE: val.value }))
-                }
-              />
-              <DropdownComponent
-                disabled={modalType === "Edit" || formState.dlevel > 3}
-                value={formState.dacC_TYPE2}
-                options={Type2}
-                label={AccountsChartLang.tertiaryType[languageId]}
-                placeholder={AccountsChartLang.Select[languageId]}
-                onChange={(val) =>
-                  setFormState((prev) => ({ ...prev, dacC_TYPE2: val.value }))
-                }
-              />
-            </div>
-
-            <div className="flex gap-4 grid grid-cols-4 mb-4">
-              <div className="col-span-1">
-                <InputComponent
-                  disabled
-                  type="number"
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      dlevel: val.replace(/[^\d]/g, ""),
-                    }))
-                  }
-                  value={formState.dlevel || ""}
-                  title={AccountsChartLang.level[languageId]}
-                />
-              </div>
-              <div className="col-span-3">
-                <InputComponent
-                  disabled={modalType === "Edit"}
-                  value={formState.dcodE1 || ""}
-                  error={error}
-                  title={AccountsChartLang.accountCode[languageId]}
-                  type="number"
-                  onTextChange={(val) => {
-                    setFormState((prev) => ({
-                      ...prev,
-                      dcodE1: val.replace(/[^\d]/g),
-                    }));
-                    // setError("");
-
-                    // setCode(val.replace(/[^\d]/g));
-                  }}
-                  // onBlur={async () => {
-                  //   if (!Code) return;
-
-                  //   try {
-                  //     const res = await api.get(
-                  //       `Account/ValidateAccountCode?accountCode=${Code}`
-                  //     );
-
-                  //     if (res === "false") {
-                  //       setError("كود الحساب غير صالح"); // ✨ نظهر رسالة
-                  //     } else {
-                  //       setFormState((prev) => ({
-                  //         ...prev,
-                  //         dcodE1: Code, // ✨ نعتمد القيمة بس لو valid
-                  //       }));
-                  //       setError(""); // نمسح رسالة الخطأ
-                  //     }
-                  //   } catch (err) {
-                  //     console.error("Fetch error:", err);
-                  //     setError("حصل خطأ أثناء التحقق");
-                  //   }
-                  // }}
-                />
-              </div>
-            </div>
-
-            <InputComponent
-              title={AccountsChartLang.accountNameArabic[languageId]}
-              className="mb-4"
-              value={formState.dname || ""}
-              onTextChange={(val) =>
-                setFormState((prev) => ({ ...prev, dname: val }))
-              }
-            />
-            <InputComponent
-              title={AccountsChartLang.accountNameEnglish[languageId]}
-              className="mb-4"
-              value={formState.dnamE2 || ""}
-              onTextChange={(val) =>
-                setFormState((prev) => ({ ...prev, dnamE2: val }))
-              }
-            />
-
-            {/* extra fields لو النوع secondary */}
-            {!formState.dsecondry && (
-              <>
-                <div className="flex gap-4 mb-4">
-                  <InputComponent
-                    title={AccountsChartLang.phone[languageId]}
-                    value={formState.dphone}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        dphone: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    title={AccountsChartLang.fax[languageId]}
-                    value={formState.dphonE2}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        dphonE2: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                </div>
-                <InputComponent
-                  title={AccountsChartLang.mobile[languageId]}
-                  className="mb-4"
-                  value={formState.dtelx}
-                  type="number"
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      dtelx: val.replace(/[^\d]/g, ""),
-                    }))
-                  }
-                />
-                <div className="flex gap-4 mb-4">
-                  <InputComponent
-                    title={AccountsChartLang.Employee[languageId]}
-                    value={formState.demployee}
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({ ...prev, demployee: val }))
-                    }
-                  />
-                  <InputComponent
-                    title={AccountsChartLang.sales[languageId]}
-                    value={formState.dslaes}
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({ ...prev, dslaes: val }))
-                    }
-                  />
-                </div>
-                <InputComponent
-                  title={AccountsChartLang.email[languageId]}
-                  className="mb-4"
-                  value={formState.email}
-                  type="email"
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({ ...prev, email: val }))
-                  }
-                />
-                <div className="flex gap-4 mb-4">
-                  <DatePicker
-                    title={AccountsChartLang.creationdate[languageId]}
-                    value={formState.dfdate}
-                    onChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        dfdate: val.toISOString(),
-                      }))
-                    }
-                  />
-
-                  <InputComponent
-                    title={AccountsChartLang.taxnumber[languageId]}
-                    value={formState.accVatNo}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        accVatNo: val.replace(/[^\d]/g, ""),
-                      }))
-                    }
-                  />
-                </div>
-                <InputComponent
-                  disabled={modalType === "Edit"}
-                  title={AccountsChartLang.openingBalance[languageId]}
-                  value={formState.doldacc}
-                  type="number"
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({
-                      ...prev,
-                      doldacc: val.replace(/[^\d]/g, ""),
-                    }))
-                  }
-                />
-                <div className="flex gap-4">
-                  <InputComponent
-                    flex
-                    title={AccountsChartLang.debtor[languageId]}
-                    value={formState.doldacC1}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        doldacC1: val.replace(/[^\d]/g, ""),
-                        doldacC2: 0,
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    flex
-                    title={AccountsChartLang.creditor[languageId]}
-                    value={formState.doldacC2}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        doldacC2: val.replace(/[^\d]/g, ""),
-                        doldacC1: 0,
-                      }))
-                    }
-                  />
-                </div>
-                <InputComponent
-                  title={AccountsChartLang.notes[languageId]}
-                  value={formState.remark}
-                  onTextChange={(val) =>
-                    setFormState((prev) => ({ ...prev, remark: val }))
-                  }
-                />
-              </>
-            )}
-          </>
-        ) : (
-          <p className="text-base font-bold text-center">
-            هل انت متاكد من اتمام عمليه الحذف؟
-          </p>
-        )}
+        <AccountModal
+          Type={Type}
+          Type1={Type1}
+          Type2={Type2}
+          formState={formState}
+          modalType={modalType}
+          setFormState={setFormState}
+          loadingDetails={loadingDetails}
+          setAccountType={setAccountType}
+          setSelectedType={setSelectedType}
+        />
       </Modal>
     </>
   );

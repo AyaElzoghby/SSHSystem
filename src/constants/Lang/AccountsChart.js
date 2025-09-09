@@ -96,6 +96,14 @@ const AccountsChartLang = {
     1: "الرصيد الافتتاحى للحساب بالعمله الاساسيه",
     2: "Opening account balance in base currency",
   },
+  CreditAmount: {
+    1: "مبلغ الائتمان",
+    2: "Credit Amount",
+  },
+  creditdays: {
+    1: "ايام الائتمان",
+    2: "credit days",
+  },
   debtor: {
     1: "مدين",
     2: "debtor",
@@ -140,6 +148,10 @@ const AccountsChartLang = {
     1: "دائن",
     2: "creditor",
   },
+  Openingbalance: {
+    1: " الرصيد الافتتاحى",
+    2: " opening balance",
+  },
   ForeignCurrencies: {
     1: "العملات الاجنبيه و الرصيد الافتتاحى بها",
     2: "Foreign currencies and their opening balance",
@@ -180,6 +192,10 @@ const AccountsChartLang = {
     1: "يلزم ربط الحساب مع مركز التكلفه",
     2: "The account must be linked to the cost center.",
   },
+  Information: {
+    1: "معلومات",
+    2: "Information",
+  },
   Information1: {
     1: "معلومات#1",
     2: "Information #1",
@@ -192,9 +208,9 @@ const AccountsChartLang = {
     1: "منطقه/محافظه",
     2: "Region/Governorate",
   },
-  ZipCode: {
-    1: "  رقم بريدى",
-    2: "Zip code",
+  PostalCode: {
+    1: "رقم بريدى",
+    2: "Postal code",
   },
   buildingNumber: {
     1: "رقم المبنى",
@@ -203,6 +219,10 @@ const AccountsChartLang = {
   city: {
     1: "المدينه",
     2: "city",
+  },
+  PlotID: {
+    1: "Plot ID",
+    2: "Plot ID",
   },
   neighborhood: {
     1: "الحي",

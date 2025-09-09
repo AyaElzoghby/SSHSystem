@@ -68,6 +68,7 @@ const TreeItem = ({
           outline: "none",
           userSelect: "none",
         }}
+        className="hover:bg-secondaryHover"
       >
         {hasChildren ? (
           <button
@@ -150,11 +151,13 @@ const TreeItem = ({
 
 export default function NestedTree({
   data = [], // array of root nodes (as returned by API)
+  selectedId,
   onItemSelected, // called with id (string) on double click
+  onSelectedChange,
   initialExpanded = [], // optional array of ids to start expanded
 }) {
   const [search, setSearch] = useState("");
-  const [selectedId, setSelectedId] = useState(null);
+  // const [selectedId, setSelectedId] = useState(null);
   const [expandedNodes, setExpandedNodes] = useState(
     new Set(initialExpanded.map(String))
   );
@@ -297,7 +300,7 @@ export default function NestedTree({
       if (idx > 0) setFocusId(visibleList[idx - 1]);
     } else if (e.key === "Enter") {
       // Enter selects
-      setSelectedId(focusId);
+      onSelectedChange(focusId);
     } else if (e.key === "ArrowRight") {
       // expand focused node (if it has children)
       const id = focusId;
@@ -341,8 +344,9 @@ export default function NestedTree({
 
   // Click select handler (single click)
   const handleClickSelect = (node) => {
-    setSelectedId(String(node.dcodE1));
     setFocusId(String(node.dcodE1));
+    if (onSelectedChange) onSelectedChange(String(node.dcodE1));
+    if (onItemSelected) onItemSelected(node);
   };
 
   // Double-click handler -> call parent
