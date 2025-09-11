@@ -108,13 +108,11 @@ export function Information({ selectedAccount }) {
             disabled
             title={AccountsChartLang.Address1[languageId]}
             value={selectedAccount.daddress}
-            type="number"
           />
           <InputComponent
             disabled
             title={AccountsChartLang.Address2[languageId]}
             value={selectedAccount.daddresS2}
-            type="number"
           />
           <InputComponent
             disabled
@@ -172,7 +170,7 @@ export function Information({ selectedAccount }) {
     </>
   );
 }
-export function Openingbalance({ selectedAccount }) {
+export function Openingbalance({ selectedAccount, Currencies }) {
   const { languageId } = useLanguage();
 
   return (
@@ -182,7 +180,7 @@ export function Openingbalance({ selectedAccount }) {
           {" "}
           <InputComponent
             disabled
-            title={AccountsChartLang.openingBalanceCurrent[languageId]}
+                  title={`${AccountsChartLang.openingBalanceCurrent[languageId]} ${selectedAccount.doldacC2==0?AccountsChartLang.debt[languageId]:selectedAccount.doldacC1==0?AccountsChartLang.credit[languageId] :""}`}
             value={selectedAccount.doldacc}
             type="number"
           />
@@ -206,7 +204,10 @@ export function Openingbalance({ selectedAccount }) {
             {AccountsChartLang.ForeignCurrencies[languageId]}{" "}
           </p>
           <DropdownComponent
+            disabled
             label={AccountsChartLang.ChooseCurrency[languageId]}
+            value={selectedAccount.dcurrency}
+            options={Currencies}
           />
           <div className="flex gap-4">
             <InputComponent
@@ -240,10 +241,9 @@ export function AccountControl({ selectedAccount, ViewOf }) {
     <>
       {selectedAccount ? (
         <>
-         
           <p className="text-textPrimary mb-4 border-b-2 w-fit text-base font-bold">
-          {AccountsChartLang.CreditLimit[languageId]}
-        </p>
+            {AccountsChartLang.CreditLimit[languageId]}
+          </p>
           <div className="flex gap-4">
             <InputComponent
               flex

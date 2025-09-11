@@ -94,6 +94,10 @@ export default function AccountsChart() {
     "value",
     languageId == 1 ? "nameAR" : "nameEn",
   ]);
+  const Currencies = useDropdown("/Account/GetCurrencies", {}, [
+    "dNum",
+    "curr",
+  ]);
   const Type = useDropdown("/Account/GetTask0", {}, [
     "noOfIndx",
     languageId == 1 ? "accTypeAR" : "accTypeEN",
@@ -111,19 +115,13 @@ export default function AccountsChart() {
     languageId == 1 ? "accTypeAR" : "accTypeEN",
   ]);
 
-  const reset = () => {
-    setSelectedType(null);
-    // setSelectedChildCode(null);
-    setSelectedChild(null);
-  };
-
   const handleItemSelected = useCallback((id) => {
     setSelectedId(id);
   }, []);
   // ✅ handlers
 
   useEffect(() => {
-    if (!selectedId || modalType !== "Add") return;
+    if (!selectedId || modalType !== "Add" || !modelVisible) return;
 
     let cancelled = false;
 
@@ -157,7 +155,7 @@ export default function AccountsChart() {
     return () => {
       cancelled = true;
     };
-  }, [selectedId, modalType]);
+  }, [selectedId, modalType, modelVisible]);
 
   useEffect(() => {
     if (!selectedChildCode || modalType !== "Edit") return;
@@ -195,8 +193,11 @@ export default function AccountsChart() {
     try {
       if (modalType === "Add") {
         const body = processFormData(formState);
+        console.log("Addddddd body", body);
+
         const response = await api.post("/Account/CreateAccount", body);
       } else if (modalType === "Edit") {
+        console.log("edit body", formState);
         await api.put(`/Account/UpdateAccount`, {
           ...formState,
           dcodE1: selectedChildCode,
@@ -205,7 +206,7 @@ export default function AccountsChart() {
       }
       await loadData();
       setModelVisible(false);
-      reset();
+      // reset();
     } catch (error) {
       console.error("Error saving account:", error);
     }
@@ -216,7 +217,7 @@ export default function AccountsChart() {
       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
       await loadData(); // refresh tree
       setModelVisible(false);
-      reset();
+      // reset();
     } catch (err) {
       console.error("Delete error:", err);
     }
@@ -299,6 +300,7 @@ export default function AccountsChart() {
           <Openingbalance
             key={`open-${selectedAccount?.dcodE1}`}
             selectedAccount={selectedAccount}
+            Currencies={Currencies}
           />
         ),
       },
@@ -486,8 +488,6 @@ export default function AccountsChart() {
         footer={
           modalType === "Delete" ? (
             <div className="flex gap-4 justify-center w-full">
-              {/* <button onClick={() => handleDelete(selectedChildCode)}>Sure</button> */}
-
               <CustomButton
                 className="bg-danger"
                 title={AccountsChartLang.Sure[languageId]}
@@ -497,7 +497,7 @@ export default function AccountsChart() {
                 title={AccountsChartLang.Cancel[languageId]}
                 onClick={() => {
                   setModelVisible(false);
-                  reset();
+                  // reset();
                 }}
               />
             </div>
@@ -513,7 +513,7 @@ export default function AccountsChart() {
                 title={AccountsChartLang.Cancel[languageId]}
                 onClick={() => {
                   setModelVisible(false);
-                  reset();
+                  // reset();
                 }}
               />
             </div>
@@ -524,6 +524,8 @@ export default function AccountsChart() {
           Type={Type}
           Type1={Type1}
           Type2={Type2}
+          Currencies={Currencies}
+          ViewOf={ViewOf}
           formState={formState}
           modalType={modalType}
           setFormState={setFormState}

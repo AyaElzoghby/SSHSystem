@@ -12,6 +12,34 @@ const AccountsChartLang = {
     1: "إلغاء",
     2: "Cancel",
   },
+  Arabicnamenotvalid: {
+    1: "الاسم العربي غير صالح",
+    2: "Arabic name not valid",
+  },
+  ErrorvalidatingArabicname: {
+    1: "خطأ في التحقق من الاسم العربي",
+    2: "Error validating Arabic name",
+  },
+  Englishnamenotvalid: {
+    1: "الاسم الانجليزي غير صالح",
+    2: "English name not valid",
+  },
+  ErrorvalidatingEnglishname: {
+    1: "خطأ في التحقق من الاسم الإنجليزي",
+    2: "Error validating English name",
+  },
+  Codenotvalid: {
+    1: "الكود غير صالح",
+    2: "Code not valid",
+  },
+  Errorvalidatingcode: {
+    1: "خطأ في التحقق من صحة الكود",
+    2: "Error validating code",
+  },
+  deletion: {
+    1: " هل انت متاكد من اتمام عمليه الحذف؟",
+    2: "Are you sure you want to complete the deletion process?",
+  },
   Sure: {
     1: "تأكيد",
     2: "Sure",
@@ -38,13 +66,13 @@ const AccountsChartLang = {
   },
   generalAcc: {
     1: "حساب عام",
-    2:"general account",
+    2: "general account",
   },
   UnitStructure: {
     1: "هيكليه الوحدات",
     2: "Unit structure",
   },
-    AccountsChart: {
+  AccountsChart: {
     1: "شجره الحسابات",
     2: "Accounts Chart",
   },
@@ -104,6 +132,10 @@ const AccountsChartLang = {
     1: "ايام الائتمان",
     2: "credit days",
   },
+  debt: {
+    1: "م/",
+    2: "debt/",
+  },
   debtor: {
     1: "مدين",
     2: "debtor",
@@ -143,6 +175,10 @@ const AccountsChartLang = {
   DeleteAccount: {
     1: "حذف الحساب",
     2: "Delete Account",
+  },
+  credit: {
+    1: "د/",
+    2: "credit/",
   },
   creditor: {
     1: "دائن",
@@ -244,22 +280,22 @@ const AccountsChartLang = {
     1: " رقم الحساب",
     2: "Account number",
   },
-   AccountNameAr: {
+  AccountNameAr: {
     1: " عربي / اسم الحساب",
     2: "Arabic / Account Name",
   },
-   AccountNameEn: {
-    1:"انجليزى / اسم الحساب",
+  AccountNameEn: {
+    1: "انجليزى / اسم الحساب",
     2: "English / Account Name",
   },
   MainAccount: {
-    1:"الحساب الرئيسي",
+    1: "الحساب الرئيسي",
     2: "Main Account",
   },
   AccountType: {
     1: "نوع الحساب",
     2: "Account Type",
-  },  
+  },
   secondary: {
     1: "تحليلي",
     2: "secondary",
@@ -274,7 +310,7 @@ const AccountsChartLang = {
   },
   primaryType: {
     1: "نوع الحساب 1",
-    2:"Account Type 1",
+    2: "Account Type 1",
   },
   secondaryType: {
     1: "نوع الحساب 2",
@@ -357,9 +393,8 @@ const AccountsChartLang = {
     2: "notes",
   },
   sales: {
-    1:"مندوب مبيعات",
+    1: "مندوب مبيعات",
     2: "sales rep",
   },
- 
 };
 export default AccountsChartLang;
