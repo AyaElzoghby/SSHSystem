@@ -42,8 +42,6 @@ export default function AccountsChart() {
   const [modalType, setModalType] = useState(null); // Add | Edit | Delete
   const [selectedId, setSelectedId] = useState(null);
   const [selectedChildCode, setSelectedChildCode] = useState(null);
-  const [selectedChild, setSelectedChild] = useState(null);
-  const [selectedChildDetails, setSelectedChildDetails] = useState(null);
   const [selectedAccount, setSelectedAccount] = useState(null);
   const [modelVisible, setModelVisible] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
@@ -193,7 +191,10 @@ export default function AccountsChart() {
     try {
       if (modalType === "Add") {
         const body = processFormData(formState);
-        console.log("Addddddd body", body);
+        console.log(
+          "Addddddd body",
+          console.log("Addddddd body", JSON.stringify(body))
+        );
 
         const response = await api.post("/Account/CreateAccount", body);
       } else if (modalType === "Edit") {
@@ -226,7 +227,6 @@ export default function AccountsChart() {
   // للأطفال
   const handleAddChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
-    setSelectedChild(child);
     setModelVisible(true);
     setModalType("Add");
     setFormState(initialFormState);
@@ -234,7 +234,6 @@ export default function AccountsChart() {
 
   const handleEditChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
-    setSelectedChild(child);
     setModelVisible(true);
     setModalType("Edit");
     setFormState(child || {});
