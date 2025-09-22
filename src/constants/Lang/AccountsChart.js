@@ -7,6 +7,30 @@ const AccountsChartLang = {
     1: "جديد",
     2: "new",
   },
+  AddingAccount: {
+    1: "جارى اضافه الحساب ....",
+    2: "Adding Account ....",
+  },
+  DeletingAccount: {
+    1: "جارى حذف الحساب ....",
+    2: "Deleting Account ....",
+  },
+  EdittingAccount: {
+    1: "جارى تعديل الحساب ....",
+    2: "Editting Account ....",
+  },
+  AddDone: {
+    1: "تم اضافه الحساب",
+    2: "Account Added",
+  },
+  EditDone: {
+    1: "تم تعديل الحساب",
+    2: "Edit Done",
+  },
+  DeleteDone: {
+    1: "تم حذف الحساب",
+    2: "Delete Done",
+  },
 
   Cancel: {
     1: "إلغاء",

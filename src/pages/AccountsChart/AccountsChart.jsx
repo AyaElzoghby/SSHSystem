@@ -24,6 +24,7 @@ import {
 } from "./TabsData";
 import { GetAccountName } from "../../utils/GetAccountName";
 import AccountModal from "./AccountModal";
+import toast from "react-hot-toast";
 // ✅ helper: children by id
 function getChildrenById(id, data) {
   if (!Array.isArray(data)) return [];
@@ -188,6 +189,11 @@ export default function AccountsChart() {
   }, [selectedChildCode, modalType]);
 
   async function handleSave() {
+    const toastId = toast.loading(
+      modalType === "Add"
+        ? AccountsChartLang.AddingAccount[languageId]
+        : AccountsChartLang.EdittingAccount[languageId]
+    );
     try {
       if (modalType === "Add") {
         const body = processFormData(formState);
@@ -195,7 +201,6 @@ export default function AccountsChart() {
           "Addddddd body",
           console.log("Addddddd body", JSON.stringify(body))
         );
-
         const response = await api.post("/Account/CreateAccount", body);
       } else if (modalType === "Edit") {
         console.log("edit body", formState);
@@ -205,24 +210,51 @@ export default function AccountsChart() {
         });
         fetchAccountDetails(selectedId, setSelectedAccount);
       }
+      toast.success( modalType === "Add"
+        ? AccountsChartLang.AddDone[languageId]
+        : AccountsChartLang.EditDone[languageId]
+   );
       await loadData();
       setModelVisible(false);
       // reset();
     } catch (error) {
       console.error("Error saving account:", error);
+    }finally{
+      toast.dismiss(toastId)
     }
   }
 
   async function handleDelete() {
+    const toastId = toast.loading(
+      AccountsChartLang.DeletingAccount[languageId]
+    );
+    console.log("Deleting with code:", selectedChildCode);
     try {
       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
       await loadData(); // refresh tree
       setModelVisible(false);
-      // reset();
+      toast.success(AccountsChartLang.DeleteDone[languageId]);
     } catch (err) {
-      console.error("Delete error:", err);
+      toast.error("Delete failed");
+      console.error("Delete error:", err.response?.data || err.message);
+    } finally {
+      toast.dismiss(toastId);
     }
   }
+
+  //   async function handleDelete() {
+  //     toastId =toast.loading(AccountsChartLang.DeletingAccount[languageId])
+  //     try {
+  //       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
+  //       await loadData(); // refresh tree
+  //       setModelVisible(false);
+  // toast.success("deleting Done")    } catch (err) {
+  //       toast.error(err)
+  //       console.error("Delete error:", err);
+  //     }finally{
+  //       toast.dismiss(toastId)
+  //     }
+  //   }
 
   // للأطفال
   const handleAddChild = useCallback((child) => {
