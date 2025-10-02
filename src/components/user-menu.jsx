@@ -77,7 +77,9 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
+        <DropdownMenuItem onClick={()=>{logout()
+          navigate("/")
+        }}
         >
           <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
           <span>Logout</span>

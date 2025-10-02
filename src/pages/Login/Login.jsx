@@ -151,6 +151,8 @@ export default function SignIn(props) {
           )}
         </button>
       </div>
+      <div className="flex m-auto p-2 sm:max-w-[95%] lg:max-w-[75%]">
+        <img className="sm:hidden md:flex" src="src\assets\istockphoto-1276593908-612x612-removebg-preview.png"/>
       <Card>
         <Typography
           component="h1"
@@ -203,60 +205,12 @@ export default function SignIn(props) {
               color={passwordError ? "error" : "primary"}
             />
           </FormControl>
-          <Checkbox
-            className="my-6"
-            label={layoutLang.Rememberme[languageId]}
-          />
-
-          <ForgotPassword open={open} handleClose={handleClose} />
-          <Button type="submit" fullWidth variant="contained">
+         <Button type="submit" fullWidth variant="contained">
             {layoutLang.Signin[languageId]}{" "}
           </Button>
-          <Link
-            component="button"
-            type="button"
-            onClick={handleClickOpen}
-            variant="body2"
-            sx={{ alignSelf: "center" }}
-          >
-            {layoutLang.Forgot[languageId]}{" "}
-          </Link>
-        </Box>
-        <Divider sx={{ color: "text.secondary" }}>
-          {layoutLang.or[languageId]}
-        </Divider>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-          <Button
-            fullWidth
-            className="flex gap-4"
-            variant="outlined"
-            onClick={() => alert("Sign in with Google")}
-            startIcon={<GoogleIcon />}
-          >
-            {layoutLang.Signinface[languageId]}
-          </Button>
-          <Button
-            fullWidth
-            variant="outlined"
-            className="flex gap-4"
-            onClick={() => alert("Sign in with Facebook")}
-            startIcon={<FacebookIcon />}
-          >
-            {layoutLang.Signingoogle[languageId]}
-          </Button>
-          <Typography sx={{ textAlign: "center" }}>
-            {layoutLang.Donothave[languageId]}{" "}
-            <Link
-              component={RouterLink}
-              to="/signup"
-              variant="body2"
-              sx={{ alignSelf: "center" }}
-            >
-              {layoutLang.SignUp[languageId]}{" "}
-            </Link>
-          </Typography>
         </Box>
       </Card>
+      </div>
     </SignInContainer>
   );
 }

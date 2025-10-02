@@ -22,11 +22,11 @@ export default function Layout({ children }) {
   return (
     <>
       <div
-        className={`${token && "p-4"} p-4`}
+        className={`${token && "p-4"}`}
         dir={languageId === 1 ? "rtl" : "ltr"}
       >
         <div className="flex">
-          {/* {token && ( */}
+          {token && (
             <Sidebar>
               <SidebarItem
                 icon={<Home size={20} />}
@@ -37,6 +37,11 @@ export default function Layout({ children }) {
                 icon={<LayoutDashboard size={20} />}
                 text={layoutLang.AccountsChart[languageId]}
                 path="/AccountsChart"
+              />
+              <SidebarItem
+                icon={<LifeBuoy size={20} />}
+                text={layoutLang.OpeningEntry[languageId]}
+                path="/OpeningEntry"
               />
               <SidebarItem
                 icon={<LifeBuoy size={20} />}
@@ -64,14 +69,14 @@ export default function Layout({ children }) {
                 path="/CostCenter"
               />
             </Sidebar>
-          {/* )} */}
+           )} 
 
-          <div className={`${token && " ms-4 max-h-[98svh]"} ms-4 max-h-[98svh] flex-1`}>
-            {/* {token && ( */}
+          <div className={`${token && " ms-4 max-h-[98svh]"}  flex-1`}>
+            {token && (
               <div className="sticky">
                 <Navbar />
               </div>
-            {/* )} */}
+             )} 
             <div
               className={`${
                 token &&

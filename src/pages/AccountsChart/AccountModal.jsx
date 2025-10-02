@@ -33,6 +33,8 @@ export default function AccountModal({
   const api = API();
   // 1- Validate Code
   useEffect(() => {
+    if (!Code) return;
+
     const validateAccountCode = async () => {
       try {
         const res = await api.get(
@@ -165,7 +167,6 @@ export default function AccountModal({
               }
             />
             <DropdownComponent
-              // disabled={modalType === "Edit" || formState.dlevel > 3}
               value={formState.dacC_TYPE2}
               options={Type2}
               label={AccountsChartLang.tertiaryType[languageId]}
@@ -187,14 +188,14 @@ export default function AccountModal({
                     dlevel: val.replace(/[^\d]/g, ""),
                   }))
                 }
-                value={formState.dlevel || ""}
+                value={formState.dlevel}
                 title={AccountsChartLang.level[languageId]}
               />
             </div>
             <div className="col-span-3">
               <InputComponent
                 disabled={modalType === "Edit"}
-                value={Code ? Code : formState.dcodE1 || ""}
+                value={Code ? Code : formState.dcodE1 ? formState.dcodE1: ""}
                 error={codeError}
                 title={AccountsChartLang.accountCode[languageId]}
                 type="number"
@@ -207,7 +208,7 @@ export default function AccountModal({
             title={AccountsChartLang.accountNameArabic[languageId]}
             className="mb-4"
             error={nameArError}
-            value={nameAr ? nameAr : formState.dname || ""}
+            value={nameAr ? nameAr : formState.dname ?  formState.dname:""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameAr(val)
@@ -222,7 +223,7 @@ export default function AccountModal({
             title={AccountsChartLang.accountNameEnglish[languageId]}
             className="mb-4"
             error={nameEnError}
-            value={nameEn ? nameEn : formState.dnamE2 || ""}
+            value={nameEn ? nameEn : formState.dnamE2 ?formState.dnamE2 :""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameEn(val)

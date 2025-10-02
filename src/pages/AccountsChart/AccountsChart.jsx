@@ -210,17 +210,18 @@ export default function AccountsChart() {
         });
         fetchAccountDetails(selectedId, setSelectedAccount);
       }
-      toast.success( modalType === "Add"
-        ? AccountsChartLang.AddDone[languageId]
-        : AccountsChartLang.EditDone[languageId]
-   );
+      toast.success(
+        modalType === "Add"
+          ? AccountsChartLang.AddDone[languageId]
+          : AccountsChartLang.EditDone[languageId]
+      );
       await loadData();
       setModelVisible(false);
       // reset();
     } catch (error) {
       console.error("Error saving account:", error);
-    }finally{
-      toast.dismiss(toastId)
+    } finally {
+      toast.dismiss(toastId);
     }
   }
 
@@ -259,46 +260,46 @@ export default function AccountsChart() {
   // للأطفال
   const handleAddChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
-    setModelVisible(true);
     setModalType("Add");
     setFormState(initialFormState);
+    setModelVisible(true);
   }, []);
 
   const handleEditChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
-    setModelVisible(true);
     setModalType("Edit");
     setFormState(child || {});
+    setModelVisible(true);
   }, []);
 
   const handleDeleteChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
-    setModelVisible(true);
     setModalType("Delete");
+    setModelVisible(true);
   }, []);
 
   // للأكاونت المحدد
   const handleAddAccount = useCallback(() => {
     if (!selectedAccount) return;
     setSelectedChildCode(selectedAccount.dcodE1);
-    setModelVisible(true);
     setModalType("Add");
     setFormState(initialFormState);
+    setModelVisible(true);
   }, [selectedAccount]);
 
   const handleEditAccount = useCallback(() => {
     if (!selectedAccount) return;
     setSelectedChildCode(selectedAccount.dcodE1);
-    setModelVisible(true);
     setModalType("Edit");
+    setModelVisible(true);
   }, [selectedAccount]);
 
   const handleDeleteAccount = useCallback(() => {
     if (!selectedAccount) return;
     setSelectedChildCode(selectedAccount.dcodE1);
     setSelectedId(selectedAccount.dcodE2);
-    setModelVisible(true);
     setModalType("Delete");
+    setModelVisible(true);
   }, [selectedAccount]);
 
   // input change helper
@@ -507,7 +508,8 @@ export default function AccountsChart() {
 
       {/* Modal */}
       <Modal
-        isOpen={modelVisible}
+        key={`${modalType}-${selectedChildCode}`} // كل مرة المودال يتفتح يتم عمل re-mount
+        isOpen={modelVisible && !loadingDetails}
         onClose={() => setModelVisible(false)}
         title={
           modalType === "Delete"
@@ -551,19 +553,23 @@ export default function AccountsChart() {
           )
         }
       >
-        <AccountModal
-          Type={Type}
-          Type1={Type1}
-          Type2={Type2}
-          Currencies={Currencies}
-          ViewOf={ViewOf}
-          formState={formState}
-          modalType={modalType}
-          setFormState={setFormState}
-          loadingDetails={loadingDetails}
-          setAccountType={setAccountType}
-          setSelectedType={setSelectedType}
-        />
+        {!loadingDetails ? (
+          <AccountModal
+            Type={Type}
+            Type1={Type1}
+            Type2={Type2}
+            Currencies={Currencies}
+            ViewOf={ViewOf}
+            formState={formState}
+            modalType={modalType}
+            setFormState={setFormState}
+            loadingDetails={loadingDetails}
+            setAccountType={setAccountType}
+            setSelectedType={setSelectedType}
+          />
+        ) : (
+          <p>looooooooding</p>
+        )}
       </Modal>
     </>
   );

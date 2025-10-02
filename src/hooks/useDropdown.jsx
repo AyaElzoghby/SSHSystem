@@ -1,41 +1,50 @@
 import { API } from "@/api/api";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 
-// ✅ cache خارجي بسيط للاحتفاظ بالـ dropdown data
+// ✅ cache خارجي
 const dropdownCache = {};
 
-export default function useDropdown(
-  url,
-  params = {},
-  mapping = ["id", "name"]
-) {
-  const [options, setOptions] = useState([]);
-  const api = API();
+// 🔹 function بسيطة تقارن objects
+function isEqual(obj1, obj2) {
+  return JSON.stringify(obj1) === JSON.stringify(obj2);
+}
 
-  // cleanParams ثابت لتقليل fetch غير الضروري
+export default function useDropdown(url, params = {}, mapping = ["id", "name"]) {
+  const [options, setOptions] = useState([]);
+  const [stableParams, setStableParams] = useState(params);
+  const api = useRef(API()).current;
+
+  // 🔹 update stableParams بس لو فعلاً اتغير
+  useEffect(() => {
+    if (!isEqual(params, stableParams)) {
+      setStableParams(params);
+    }
+  }, [params, stableParams]);
+
+  // cleanParams
   const cleanParams = useMemo(() => {
-    if (!params || Object.keys(params).length === 0) return null;
+    if (!stableParams || Object.keys(stableParams).length === 0) return null;
     return Object.fromEntries(
-      Object.entries(params).filter(
+      Object.entries(stableParams).filter(
         ([, v]) => v !== null && v !== undefined && v !== ""
       )
     );
-  }, [JSON.stringify(params)]);
+  }, [stableParams]);
 
-  // key فريد للـ cache
+  // cache key
   const cacheKey = useMemo(() => {
     return `${url}?${JSON.stringify(cleanParams)}`;
   }, [url, cleanParams]);
 
   useEffect(() => {
-    // ✅ إذا البيانات موجودة في الكاش، نستخدمها فورًا
+    let isMounted = true;
+
     if (dropdownCache[cacheKey]) {
       setOptions(dropdownCache[cacheKey]);
       return;
     }
 
     const fetchData = async () => {
-
       try {
         const res = await api.get(
           url,
@@ -44,31 +53,106 @@ export default function useDropdown(
         const data = res?.data || res;
 
         if (Array.isArray(data)) {
-
           const mappedOptions = data.map((item) => ({
             value: item[mapping[0]],
             label: item[mapping[1]],
             raw: item,
           }));
 
-        
-
-          setOptions(mappedOptions);
-          dropdownCache[cacheKey] = mappedOptions; // ✅ تخزين النتائج في الكاش
+          if (isMounted) {
+            setOptions(mappedOptions);
+            dropdownCache[cacheKey] = mappedOptions;
+          }
         } else {
-          setOptions([]);
+          if (isMounted) setOptions([]);
         }
       } catch (error) {
         console.error("useDropdown error:", error);
-        setOptions([]);
+        if (isMounted) setOptions([]);
       }
     };
 
     fetchData();
-  }, [cacheKey, mapping[0], mapping[1], url, params, cleanParams]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [cacheKey, mapping[0], mapping[1], url]);
 
   return options;
 }
+
+// import { API } from "@/api/api";
+// import { useEffect, useState, useMemo } from "react";
+
+// // ✅ cache خارجي بسيط للاحتفاظ بالـ dropdown data
+// const dropdownCache = {};
+
+// export default function useDropdown(
+//   url,
+//   params = {},
+//   mapping = ["id", "name"]
+// ) {
+//   const [options, setOptions] = useState([]);
+//   const api = API();
+
+//   // cleanParams ثابت لتقليل fetch غير الضروري
+//   const cleanParams = useMemo(() => {
+//     if (!params || Object.keys(params).length === 0) return null;
+//     return Object.fromEntries(
+//       Object.entries(params).filter(
+//         ([, v]) => v !== null && v !== undefined && v !== ""
+//       )
+//     );
+//   }, [JSON.stringify(params)]);
+
+//   // key فريد للـ cache
+//   const cacheKey = useMemo(() => {
+//     return `${url}?${JSON.stringify(cleanParams)}`;
+//   }, [url, cleanParams]);
+
+//   useEffect(() => {
+//     // ✅ إذا البيانات موجودة في الكاش، نستخدمها فورًا
+//     if (dropdownCache[cacheKey]) {
+//       setOptions(dropdownCache[cacheKey]);
+//       return;
+//     }
+
+//     const fetchData = async () => {
+
+//       try {
+//         const res = await api.get(
+//           url,
+//           cleanParams ? { params: cleanParams } : {}
+//         );
+//         const data = res?.data || res;
+
+//         if (Array.isArray(data)) {
+
+//           const mappedOptions = data.map((item) => ({
+//             value: item[mapping[0]],
+//             label: item[mapping[1]],
+//             raw: item,
+//           }));
+
+        
+
+//           setOptions(mappedOptions);
+//           dropdownCache[cacheKey] = mappedOptions; // ✅ تخزين النتائج في الكاش
+//         } else {
+//           setOptions([]);
+//         }
+//       } catch (error) {
+//         console.error("useDropdown error:", error);
+//         setOptions([]);
+//       }
+//     };
+
+//     fetchData();
+//   }, [cacheKey, mapping[0], mapping[1], url, params, cleanParams]);
+
+//   return options;
+// }
 
 // import { API } from "@/api/api";
 // import { useEffect, useState } from "react";

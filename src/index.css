@@ -94,4 +94,17 @@ body {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+/* دعم RTL كامل للجدول */
+.rtl-grid {
+  direction: rtl;
+  text-align: center;
+}
+
+.rtl-grid .ag-header-cell-label {
+  justify-content: center;
+}
+
+.rtl-grid .ag-cell {
+  text-align: center;
+}
 

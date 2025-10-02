@@ -12,6 +12,10 @@ const layoutLang = {
     1: "قيد  اليومية",
     2: "Journal entry ",
   },
+  OpeningEntry: {
+    1: "القيد الافتتاحي",
+    2: "Opening entry ",
+  },
 
   AccountsChart: {
     1: "شجره الحسابات",
