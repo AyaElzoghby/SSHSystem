@@ -2,12 +2,14 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import { useLanguage } from "@/context/LanguageContext";
 import { AllCommunityModule, ModuleRegistry } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { useState, useRef, useCallback, useMemo } from "react";
+import { useState, useRef, useCallback, useMemo, useEffect } from "react";
 import DropdownComponent from "@/components/ui/DropDown";
 import InputComponent from "@/components/InputComponent";
+import useDropdown from "@/hooks/useDropdown";
+import { API } from "@/api/api";
+import toast from "react-hot-toast";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
-
 // ترجمة AG Grid
 const localeAr = {
   page: "صفحة",
@@ -36,64 +38,105 @@ const localeEn = {
 
 export default function OpeningEntry() {
   const { languageId } = useLanguage();
+  const [rowData, setRowData] = useState([]);
+  const [totals, setTotals] = useState({ acc1: 0, acc2: 0, doldAcc: 0 });
+  const [editedRows, setEditedRows] = useState([]);
+  const [SelectedAccountType, setSelectedAccountType] = useState(null);
   const gridRef = useRef();
-
-  // بيانات مبدئية
-  const [rowData, setRowData] = useState([
-    { id: 1, make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { id: 2, make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { id: 3, make: "Toyota", model: "Corolla", price: 29600, electric: false },
-    { id: 4, make: "Mercedes", model: "EQA", price: 48890, electric: true },
-    { id: 5, make: "Fiat", model: "500", price: 15774, electric: false },
-    { id: 6, make: "Nissan", model: "Juke", price: 20675, electric: false },
-    { id: 7, make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { id: 8, make: "Ford", model: "F-Series", price: 33850, electric: false },
-    { id: 9, make: "Toyota", model: "Corolla", price: 29600, electric: false },
-    { id: 10, make: "Mercedes", model: "EQA", price: 48890, electric: true },
-    { id: 11, make: "Fiat", model: "500", price: 15774, electric: false },
-    { id: 12, make: "Nissan", model: "Juke", price: 20675, electric: false },
-    { id: 13, make: "Tesla", model: "Model Y", price: 64950, electric: true },
-    { id: 14, make: "Ford", model: "F-Series", price: 33850, electric: false },
+  const AccountType = useDropdown("/OpeningEntry/GetComboAccountOption", {}, [
+    "value",
+    languageId == 1 ? "nameAR" : "nameEn",
   ]);
-
+  const api = API();
+  useEffect(() => {
+    if (AccountType.length > 0 && !SelectedAccountType) {
+      setSelectedAccountType(AccountType[0].value);
+    }
+  }, [AccountType]);
+  // load tableData
+  async function loadData() {
+    try {
+      const tableData = await api.get(
+        `/OpeningEntry/GetOpenningEntry?value=${SelectedAccountType}`
+      );
+      setRowData(tableData);
+    } catch (err) {
+      console.error("Fetch error (tableData):", err);
+    }
+  }
+  useEffect(() => {
+    loadData();
+  }, [SelectedAccountType]);
+  // حساب المجموعات كل ما rowData يتغير
+  useEffect(() => {
+    const sum1 = rowData.reduce(
+      (sum, row) => sum + (Number(row.doldAcc1) || 0),
+      0
+    );
+    const sum2 = rowData.reduce(
+      (sum, row) => sum + (Number(row.doldAcc2) || 0),
+      0
+    );
+    const sum3 = sum2 - sum1;
+    setTotals({ acc1: sum1, acc2: sum2, doldAcc: sum3 });
+  }, [rowData]);
   // تعريف الأعمدة (ديناميك حسب اللغة)
   const colDefs = useMemo(() => {
     const columns = [
       {
-        field: "make",
-        headerName: languageId === 1 ? "الشركة المصنعة" : "Make",
+        field: "dnum",
+        headerName: languageId === 1 ? " الكود" : "dnum",
         editable: true,
       },
       {
-        field: "model",
-        headerName: languageId === 1 ? "الموديل" : "Model",
+        field: "dCode01",
+        headerName: languageId === 1 ? "كود الحساب" : "dCode01",
         editable: true,
       },
       {
-        field: "price",
-        headerName: languageId === 1 ? "السعر" : "Price",
+        field: "dName",
+        headerName: languageId === 1 ? "الاسم عربي" : "dName",
         editable: true,
       },
       {
-        field: "electric",
-        headerName: languageId === 1 ? "كهربائي" : "Electric",
+        field: "dName2",
+        headerName: languageId === 1 ? "الاسم انجليزى" : "dName2",
         editable: true,
       },
       {
-        headerName: languageId === 1 ? "إجراءات" : "Actions",
-        cellRenderer: (params) => {
-          return (
-            <button
-              onClick={() => handleDelete(params.data.id)}
-              className="bg-red-500 text-white px-2 py-1 rounded"
-            >
-              {languageId === 1 ? "حذف" : "Delete"}
-            </button>
-          );
-        },
+        field: "doldAcc1",
+        headerName: languageId === 1 ? "دائن" : "doldAcc1",
+        valueParser: (params) => parseFloat(params.newValue) || 0,
+        valueFormatter: (params) => params.value?.toFixed(2), // يعرض برقمين عشريين
+        editable: true,
+      },
+      {
+        field: "doldAcc2",
+        headerName: languageId === 1 ? "مدين" : "doldAcc2",
+        editable: true,
+        valueParser: (params) => parseFloat(params.newValue) || 0,
+        valueFormatter: (params) => params.value?.toFixed(2), // يعرض برقمين عشريين
+      },
+      {
+        field: "doldAcc",
+        headerName: languageId === 1 ? "الفرق" : "doldAcc",
+        editable: false, // ❌ ممنوع يتعدل
+        valueGetter: (params) =>
+          (parseFloat(params.data.doldAcc2) || 0) -
+          (parseFloat(params.data.doldAcc1) || 0),
+        valueFormatter: (params) => params.value?.toFixed(2),
+      },
+      {
+        field: "notes",
+        headerName: languageId === 1 ? "ملاحظات" : "notes",
+        editable: true,
+      },
+      {
+        field: "remark",
+        headerName: languageId === 1 ? "تعليق" : "remark",
+        editable: true,
       },
     ];
-    
     // عكس ترتيب الأعمدة في حالة العربي
     return languageId === 1 ? [...columns].reverse() : columns;
   }, [languageId]);
@@ -105,41 +148,210 @@ export default function OpeningEntry() {
     resizable: true,
   };
 
-  // إضافة صف جديد
-  const handleAdd = () => {
-    const newId = rowData.length
-      ? Math.max(...rowData.map((r) => r.id)) + 1
-      : 1;
-    const newRow = {
-      id: newId,
-      make: languageId === 1 ? "شركة جديدة" : "New Make",
-      model: languageId === 1 ? "موديل جديد" : "New Model",
-      price: 0,
-      electric: false,
-    };
-    setRowData((prev) => [...prev, newRow]);
-  };
+  // لما خلية تتغير → نعمل logic التصفير
+  const onCellValueChanged = (params) => {
+    let updatedRow = { ...params.data };
 
-  // تعديل (بيتم بعد ما المستخدم يخلص تعديل الصف)
-  const onRowValueChanged = useCallback((params) => {
-    const updatedRow = params.data;
+    if (params.colDef.field === "doldAcc1" && Number(updatedRow.doldAcc1) > 0) {
+      updatedRow.doldAcc2 = 0;
+    }
+
+    if (params.colDef.field === "doldAcc2" && Number(updatedRow.doldAcc2) > 0) {
+      updatedRow.doldAcc1 = 0;
+    }
+
     setRowData((prev) =>
-      prev.map((row) => (row.id === updatedRow.id ? updatedRow : row))
+      prev.map((row) => (row.dnum === updatedRow.dnum ? updatedRow : row))
     );
-  }, []);
-
-  // حذف
-  const handleDelete = (id) => {
-    setRowData((prev) => prev.filter((row) => row.id !== id));
   };
 
-  // اختيار الترجمة
-  const localeText = languageId === 1 ? localeAr : localeEn ;
+  // لما الصف كله يتغير → نحدث قائمة الصفوف المعدلة
+  const onRowValueChanged = (params) => {
+    const updatedRow = { ...params.data };
+
+    setEditedRows((prev) => {
+      const exists = prev.find((r) => r.dnum === updatedRow.dnum);
+      if (exists) {
+        return prev.map((r) => (r.dnum === updatedRow.dnum ? updatedRow : r));
+      }
+      return [...prev, updatedRow];
+    });
+  };
+
+  // إرسال التعديلات
+  const handleSave = async () => {
+    if (editedRows.length === 0) {
+      toast.error("لا توجد تعديلات للحفظ");
+      return;
+    }
+
+    if (Math.abs(totals.doldAcc) > 0.01) {
+      toast.error(
+        "الشرط غير متحقق: يجب أن يكون مجموع المدين - مجموع الدائن = 0"
+      );
+      return;
+    }
+
+    const cleanedData = editedRows
+      .map((editedRow) => {
+        const originalRow = rowData.find((r) => r.dnum === editedRow.dnum);
+
+        if (!originalRow) {
+          console.error("Row not found:", editedRow.dnum);
+          return null;
+        }
+
+        const acc1 = parseFloat(editedRow.doldAcc1) || 0;
+        const acc2 = parseFloat(editedRow.doldAcc2) || 0;
+        const diff = acc2 - acc1;
+
+        return {
+          ...originalRow, // ✅ خد كل الحقول من الصف الأصلي
+          doldAcc1: parseFloat(acc1.toFixed(2)),
+          doldAcc2: parseFloat(acc2.toFixed(2)),
+          doldAcc: parseFloat(diff.toFixed(2)),
+          // ✅ احتفظ بـ null لو مفيش قيمة
+          notes:
+            editedRow.notes !== undefined && editedRow.notes !== ""
+              ? editedRow.notes
+              : originalRow.notes || "", // ✅ null أو القيمة الأصلية
+          remark:
+            editedRow.remark !== undefined && editedRow.remark !== ""
+              ? editedRow.remark
+              : originalRow.remark || "", // ✅ null أو القيمة الأصلية
+        };
+      })
+      .filter((row) => row !== null);
+
+    console.log("Sending data:", cleanedData);
+
+    try {
+      await api.put("/OpeningEntry/UpdateAccountGrid", cleanedData);
+      toast.success("تم الحفظ بنجاح");
+      setEditedRows([]);
+      loadData();
+    } catch (err) {
+      console.error("Save error:", err);
+      toast.error(err.response?.data?.message || "فشل الحفظ");
+    }
+  };
+  // const handleSave = async () => {
+  //   if (editedRows.length === 0) {
+  //     toast.error("لا توجد تعديلات للحفظ");
+  //     return;
+  //   }
+
+  //   if (Math.abs(totals.doldAcc) > 0.01) {
+  //     toast.error(
+  //       "الشرط غير متحقق: يجب أن يكون مجموع المدين - مجموع الدائن = 0"
+  //     );
+  //     return;
+  //   }
+
+  //   // ✅ ابعت كل الحقول من rowData مع التعديلات
+  //   const cleanedData = editedRows
+  //     .map((editedRow) => {
+  //       // جيب الصف الأصلي من rowData
+  //       const originalRow = rowData.find((r) => r.dnum === editedRow.dnum);
+
+  //       if (!originalRow) {
+  //         console.error("Row not found:", editedRow.dnum);
+  //         return null;
+  //       }
+
+  //       const acc1 = parseFloat(editedRow.doldAcc1) || 0;
+  //       const acc2 = parseFloat(editedRow.doldAcc2) || 0;
+  //       const diff = acc2 - acc1;
+
+  //       return {
+  //         ...originalRow, // ✅ خد كل الحقول من الصف الأصلي (ID, timestamps, etc.)
+  //         // ✅ override بالقيم المعدلة بس
+  //         doldAcc1: parseFloat(acc1.toFixed(2)),
+  //         doldAcc2: parseFloat(acc2.toFixed(2)),
+  //         doldAcc: parseFloat(diff.toFixed(2)),
+  //         notes: editedRow.notes || originalRow.notes || "",
+  //         remark: editedRow.remark || originalRow.remark || "",
+  //       };
+  //     })
+  //     .filter((row) => row !== null); // ✅ امسح أي null values
+
+  //   console.log("Sending data:", cleanedData);
+  //   console.log("Original row sample:", rowData[0]); // ✅ شوف كل الحقول الموجودة
+
+  //   try {
+  //     await api.put("/OpeningEntry/UpdateAccountGrid", cleanedData);
+  //     toast.success("تم الحفظ بنجاح");
+  //     setEditedRows([]);
+  //     loadData();
+  //   } catch (err) {
+  //     console.error("Save error:", err);
+  //     toast.error(err.response?.data?.message || "فشل الحفظ");
+  //   }
+  // };
+  //   const handleSave = async () => {
+  //   // ✅ تحقق من وجود تعديلات
+  //   if (editedRows.length === 0) {
+  //     toast.error("لا توجد تعديلات للحفظ");
+  //     return;
+  //   }
+
+  //   // ✅ تحقق من الشرط
+  //   if (totals.doldAcc !== 0) {
+  //     toast.error("الشرط غير متحقق: يجب أن يكون مجموع المدين - مجموع الدائن = 0");
+  //     return;
+  //   }
+
+  //   // ✅ تنظيف البيانات قبل الإرسال
+  //   const cleanedData = editedRows.map(row => ({
+  //     dnum: row.dnum,
+  //     dCode01: row.dCode01 || "",
+  //     dName: row.dName || "",
+  //     dName2: row.dName2 || "",
+  //     doldAcc1: parseFloat(row.doldAcc1) || 0,  // ✅ تحويل لرقم
+  //     doldAcc2: parseFloat(row.doldAcc2) || 0,  // ✅ تحويل لرقم
+  //     doldAcc: 0,
+  //     notes: row.notes || "",
+  //     remark: row.remark || "",
+  //     // أضف أي حقول تانية الـ Backend محتاجها
+  //   }));
+
+  //   console.log("Sending data:", cleanedData); // ✅ للتأكد من الداتا
+
+  //   try {
+  //     await api.put("/OpeningEntry/UpdateAccountGrid", cleanedData);
+  //     toast.success("تم الحفظ بنجاح");
+  //     setEditedRows([]); // ✅ مهم: تفريغ الصفوف المعدلة بعد الحفظ
+  //     loadData();
+  //   } catch (err) {
+  //     console.error("Save error:", err);
+  //     // ✅ عرض رسالة الخطأ من الـ Backend
+  //     toast.error(err.response?.data?.message || "فشل الحفظ");
+  //   }
+  // };
+  // const handleSave = async () => {
+  //   if (totals.doldAcc !== 0) {
+  //     alert("⚠️ الشرط غير متحقق: يجب أن يكون مجموع الدائن - مجموع المدين = 0");
+  //     toast.error(
+  //       " الشرط غير متحقق: يجب أن يكون مجموع المدين - مجموع الدائن = 0"
+  //     );
+  //     return;
+  //   }
+  //   console.log("editedRows",editedRows)
+  //   try {
+  //     await api.put("/OpeningEntry/UpdateAccountGrid", editedRows);
+
+  //     toast.success(" تم الحفظ بنجاح");
+  //     loadData();
+  //   } catch (err) {
+  //     console.error("Save error:", err.message);
+  //     toast.error("فشل الحفظ");
+  //   }
+  // };
 
   return (
     <div
       dir={languageId === 1 ? "rtl" : "ltr"}
-      className="flex-col justify-around m-auto items-center overflow-y-auto"
+      className="flex-col justify-around m-auto items-center"
     >
       <style>{`
         /* تحريك أيقونة الفلتر في RTL */
@@ -165,20 +377,18 @@ export default function OpeningEntry() {
           text-align: right !important;
         }
       `}</style>
-      
-      <div className="grid grid-cols-12 my-5 gap-4">
-          <div className="col-span-12 text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
-            <div className="max-w-96">
-              <DropdownComponent label={"ytr"} flex/>
-            </div>
-          {/* زر إضافة */}
-          <div className="mb-3">
-            <button
-              onClick={handleAdd}
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              {languageId === 1 ? "إضافة صف" : "Add Row"}
-            </button>
+
+      <div className="grid grid-cols-12 gap-4">
+        <div className="col-span-12 text-textPrimary mt-4 bg-surface p-4 shadow-md rounded-lg">
+          <div className="max-w-96">
+            <DropdownComponent
+              initialValue={AccountType[0]}
+              value={SelectedAccountType}
+              onChange={(v) => setSelectedAccountType(v.value)}
+              options={AccountType}
+              label={"نوع الحساب"}
+              flex
+            />
           </div>
 
           {/* الجدول */}
@@ -186,7 +396,7 @@ export default function OpeningEntry() {
             className={`rtl-grid `}
             style={{
               width: "100%",
-              height: 400,
+              height: 660,
               direction: languageId === 1 ? "rtl" : "ltr",
             }}
           >
@@ -196,17 +406,44 @@ export default function OpeningEntry() {
               columnDefs={colDefs}
               defaultColDef={defaultColDef}
               editType="fullRow"
+              onCellValueChanged={onCellValueChanged} // ✅ للتصفير
               onRowValueChanged={onRowValueChanged}
-              getRowId={(params) => params.data.id}
+              getRowId={(params) => params.data.dnum}
               localeText={localeEn}
               pagination={true}
-              paginationPageSize={5}
+              paginationPageSize={20}
             />
           </div>
-          <div className="flex gap-4 mt-4 max-w-[700px]">
-            <InputComponent flex title={'gh'}/>
-            <InputComponent flex title={'fg'}/>
-            <InputComponent flex title={'ghj'}/>
+          <div className="flex justify-between">
+            <div className="flex gap-4 mt-4 max-w-[700px]">
+              <InputComponent
+                disabled
+                flex
+                value={parseFloat(totals.acc1).toFixed(2)}
+                title={"مجموع الدائن:"}
+              />
+              <InputComponent
+                disabled
+                flex
+                value={parseFloat(totals.acc2).toFixed(2)}
+                title={"مجموع المدين:"}
+              />
+              <InputComponent
+                disabled
+                flex
+                value={parseFloat(totals.doldAcc)}
+                title={"الفرق:"}
+              />
+            </div>
+            {/* زر الحفظ */}
+            <div className="mt-4">
+              <button
+                onClick={handleSave}
+                className="bg-green-600 text-white px-4 py-2 rounded"
+              >
+                حفظ
+              </button>
+            </div>
           </div>
         </div>
       </div>
