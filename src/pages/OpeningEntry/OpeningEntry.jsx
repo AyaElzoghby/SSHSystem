@@ -85,41 +85,41 @@ export default function OpeningEntry() {
     const columns = [
       {
         field: "dnum",
-        headerName: languageId === 1 ? " الكود" : "dnum",
-        editable: true,
+        headerName: languageId === 1 ? " الكود" : "code",
+        editable: false,
       },
       {
         field: "dCode01",
-        headerName: languageId === 1 ? "كود الحساب" : "dCode01",
-        editable: true,
+        headerName: languageId === 1 ? "كود الحساب" : "Acccount Code",
+        editable: false,
       },
       {
         field: "dName",
-        headerName: languageId === 1 ? "الاسم عربي" : "dName",
-        editable: true,
+        headerName: languageId === 1 ? "الاسم عربي" : "Name (ar)",
+        editable: false,
       },
       {
         field: "dName2",
-        headerName: languageId === 1 ? "الاسم انجليزى" : "dName2",
-        editable: true,
+        headerName: languageId === 1 ? "الاسم انجليزى" : "Name (en)",
+        editable: false,
       },
       {
         field: "doldAcc1",
-        headerName: languageId === 1 ? "دائن" : "doldAcc1",
+        headerName: languageId === 1 ? "دائن" : "creditor",
         valueParser: (params) => parseFloat(params.newValue) || 0,
         valueFormatter: (params) => params.value?.toFixed(2), // يعرض برقمين عشريين
         editable: true,
       },
       {
         field: "doldAcc2",
-        headerName: languageId === 1 ? "مدين" : "doldAcc2",
+        headerName: languageId === 1 ? "مدين" : "debtor",
         editable: true,
         valueParser: (params) => parseFloat(params.newValue) || 0,
         valueFormatter: (params) => params.value?.toFixed(2), // يعرض برقمين عشريين
       },
       {
         field: "doldAcc",
-        headerName: languageId === 1 ? "الفرق" : "doldAcc",
+        headerName: languageId === 1 ? "الفرق" : "difference",
         editable: false, // ❌ ممنوع يتعدل
         valueGetter: (params) =>
           (parseFloat(params.data.doldAcc2) || 0) -

@@ -88,30 +88,17 @@ export default function CostCenter() {
     fetchCostCenterDetails(selectedId, setSelectedCostCenter);
   }, [selectedId]);
 
-  const ViewOf = useDropdown("/CostCenter/GetCombScureCostCenter", {}, [
-    "value",
-    languageId == 1 ? "nameAR" : "nameEn",
-  ]);
+  
   const Currencies = useDropdown("/Account/GetCurrencies", {}, [
     "dNum",
     "curr",
   ]);
-  const Type = useDropdown("/CostCenter/GetTask0", {}, [
-    "noOfIndx",
-    languageId == 1 ? "accTypeAR" : "accTypeEN",
-  ]);
+
   const memoParams1 = useMemo(
     () => (SelectedType ? { type0: Number(SelectedType) } : {}),
     [SelectedType]
   );
-  const Type1 = useDropdown("/CostCenter/GetTaskOne", memoParams1, [
-    "noOfIndx",
-    languageId == 1 ? "accTypeAR" : "accTypeEN",
-  ]);
-  const Type2 = useDropdown("/CostCenter/GetTaskTwo", {}, [
-    "noOfIndx",
-    languageId == 1 ? "accTypeAR" : "accTypeEN",
-  ]);
+
 
   const handleItemSelected = useCallback((id) => {
     setSelectedId(id);
@@ -170,6 +157,9 @@ export default function CostCenter() {
           ...details,
           dfdate: details?.dfdate
             ? new Date(details.dfdate).toISOString().split("T")[0]
+            : null,
+          edDate: details?.edDate
+            ? new Date(details.edDate).toISOString().split("T")[0]
             : null,
         });
       } catch (err) {
@@ -238,21 +228,6 @@ export default function CostCenter() {
       toast.dismiss(toastId);
     }
   }
-
-  //   async function handleDelete() {
-  //     toastId =toast.loading(CostCenterLang.DeletingCostCenter[languageId])
-  //     try {
-  //       await api.delete(`/CostCenter/DeleteCostCenter?code=${selectedChildCode}`);
-  //       await loadData(); // refresh tree
-  //       setModelVisible(false);
-  // toast.success("deleting Done")    } catch (err) {
-  //       toast.error(err)
-  //       console.error("Delete error:", err);
-  //     }finally{
-  //       toast.dismiss(toastId)
-  //     }
-  //   }
-
   // للأطفال
   const handleAddChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
@@ -340,7 +315,6 @@ export default function CostCenter() {
           <CostCenterControl
             key={`control-${selectedCostCenter?.dcodE1}`}
             selectedCostCenter={selectedCostCenter}
-            ViewOf={ViewOf}
           />
         ),
       },
@@ -420,9 +394,7 @@ export default function CostCenter() {
       tab_contents: (
         <>
           <CostCenterDetails
-            Type={Type}
-            Type1={Type1}
-            Type2={Type2}
+          
             DetailedTabs={DetailedTabs}
             selectedCostCenter={selectedCostCenter}
           />
@@ -539,11 +511,8 @@ export default function CostCenter() {
         }
       >
         <CostCenterModal
-          Type={Type}
-          Type1={Type1}
-          Type2={Type2}
+        
           Currencies={Currencies}
-          ViewOf={ViewOf}
           formState={formState}
           modalType={modalType}
           setFormState={setFormState}

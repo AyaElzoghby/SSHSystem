@@ -11,8 +11,6 @@ import { API } from "@/api/api";
 import { Dna } from "lucide-react";
 export default function CostCenterModal({
   modalType,
-  Currencies,
-  ViewOf,
   setCostCenterType,
   setFormState,
   formState,
@@ -125,7 +123,6 @@ export default function CostCenterModal({
       ) : modalType === "Edit" || modalType === "Add" ? (
         <>
           {/* toggle checkboxes */}
-
           <div className="flex justify-start gap-4 mb-4">
             <Checkbox
               disabled={modalType === "Edit"}
@@ -148,7 +145,7 @@ export default function CostCenterModal({
                 onTextChange={(val) =>
                   setFormState((prev) => ({
                     ...prev,
-                    dlevel: val.replace(/[^\d]/g, ""),
+                    dlevel: val,
                   }))
                 }
                 value={formState.dlevel}
@@ -158,7 +155,7 @@ export default function CostCenterModal({
             <div className="col-span-3">
               <InputComponent
                 disabled={modalType === "Edit"}
-                value={Code ? Code : formState.dcodE1 ? formState.dcodE1: ""}
+                value={Code ? Code : formState.dcodE1 ? formState.dcodE1 : ""}
                 error={codeError}
                 title={CostCenterLang.CostCenterCode[languageId]}
                 type="number"
@@ -166,12 +163,11 @@ export default function CostCenterModal({
               />
             </div>
           </div>
-
           <InputComponent
             title={CostCenterLang.CostCenterNameArabic[languageId]}
             className="mb-4"
             error={nameArError}
-            value={nameAr ? nameAr : formState.dname? formState.dname: ""}
+            value={nameAr ? nameAr : formState.dname ? formState.dname : ""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameAr(val)
@@ -186,7 +182,7 @@ export default function CostCenterModal({
             title={CostCenterLang.CostCenterNameEnglish[languageId]}
             className="mb-4"
             error={nameEnError}
-            value={nameEn ? nameEn : formState.dnamE2 ? formState.dnamE2 :  ""}
+            value={nameEn ? nameEn : formState.dnamE2 ? formState.dnamE2 : ""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameEn(val)
@@ -197,6 +193,61 @@ export default function CostCenterModal({
                     }))
             }
           />
+          <InputComponent
+            disabled={modalType === "Edit"}
+            title={CostCenterLang.usercreate[languageId]}
+            value={formState.userName}
+            onTextChange={(val) =>
+              setFormState((prev) => ({ ...prev, userName: val }))
+            }
+          />
+          <InputComponent
+            disabled={modalType === "Edit"}
+            title={CostCenterLang.codecreate[languageId]}
+            value={formState.userNo}
+            type="number"
+            onTextChange={(val) =>
+              setFormState((prev) => ({ ...prev, userNo: val }))
+            }
+          />{" "}
+          <DatePicker
+            disabled={modalType === "Edit"}
+            title={CostCenterLang.datecreate[languageId]}
+            value={formState.es_Date ?? new Date().toISOString().split("T")[0]}
+            type="date"
+            onTextChange={(val) =>
+              setFormState((prev) => ({ ...prev, es_Date: val }))
+            }
+          />{" "}
+          {modalType === "Edit" && (
+            <>
+              <InputComponent
+                title={CostCenterLang.useredit[languageId]}
+                value={formState.eUserName}
+                onTextChange={(val) =>
+                  setFormState((prev) => ({ ...prev, eUserName: val }))
+                }
+              />
+              <InputComponent
+                title={CostCenterLang.codeeditor[languageId]}
+                value={formState.eUserNo}
+                type="number"
+                onTextChange={(val) =>
+                  setFormState((prev) => ({ ...prev, eUserNo: val }))
+                }
+              />
+              <DatePicker
+                title={CostCenterLang.editdate[languageId]}
+                value={
+                  formState.edDate ?? new Date().toISOString().split("T")[0]
+                }
+                type="date"
+                onTextChange={(val) =>
+                  setFormState((prev) => ({ ...prev, edDate: val }))
+                }
+              />
+            </>
+          )}
           {/* extra fields لو النوع secondary */}
           {!formState.dsecondry && (
             <>
@@ -277,9 +328,9 @@ export default function CostCenterModal({
                 />
                 <DatePicker
                   title={CostCenterLang.creationdate[languageId]}
-                  value={formState.dfdate ?? new Date()}
+                  value={formState.dvaluedate ?? new Date()}
                   onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, dfdate: val }))
+                    setFormState((prev) => ({ ...prev, dvaluedate: val }))
                   }
                 />
               </>
@@ -290,9 +341,7 @@ export default function CostCenterModal({
                 </p>{" "}
                 <InputComponent
                   disabled
-                  title={`${
-                    CostCenterLang.openingBalanceCurrent[languageId]
-                  } ${
+                  title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
                     formState.doldacC2 == 0
                       ? CostCenterLang.debt[languageId]
                       : formState.doldacC1 == 0
@@ -329,45 +378,6 @@ export default function CostCenterModal({
                         ...prev,
                         doldacC2: val,
                         doldacC1: 0,
-                      }))
-                    }
-                  />
-                </div>
-                <p className="text-textPrimary text-base font-bold">
-                  {CostCenterLang.ForeignCurrencies[languageId]}{" "}
-                </p>
-                <DropdownComponent
-                  label={CostCenterLang.ChooseCurrency[languageId]}
-                  value={formState.dcurrency}
-                  options={Currencies}
-                  onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, dcurrency: val.value }))
-                  }
-                />
-                <div className="flex gap-4">
-                  <InputComponent
-                    flex
-                    title={CostCenterLang.debtor[languageId]}
-                    value={formState.dcurrenT1}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        dcurrenT1: val,
-                        dcurrenT2: 0,
-                      }))
-                    }
-                  />
-                  <InputComponent
-                    flex
-                    title={CostCenterLang.creditor[languageId]}
-                    value={formState.dcurrenT2}
-                    type="number"
-                    onTextChange={(val) =>
-                      setFormState((prev) => ({
-                        ...prev,
-                        dcurrenT2: val,
-                        dcurrenT1: 0,
                       }))
                     }
                   />
@@ -414,15 +424,13 @@ export default function CostCenterModal({
                     }
                   />
                 )}
-               
               </>
-           
             </>
           )}
         </>
       ) : (
         <p className="text-base font-bold text-center">
-         {CostCenterLang.deletion[languageId]}
+          {CostCenterLang.deletion[languageId]}
         </p>
       )}
     </>

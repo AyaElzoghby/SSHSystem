@@ -425,13 +425,37 @@ const CostCenterLang = {
     1: "فاكس",
     2: "fax",
   },
+  usercreate: {
+    1: "تم إنشاؤه بواسطة",
+    2: "created by",
+  },
+  datecreate: {
+    1:"تاريخ الإنشاء",
+    2: "date of create",
+  },
+  codecreate: {
+    1: "كود المنشئ",
+    2: "creator code",
+  },
+  useredit: {
+    1:"تم التعديل بواسطة",
+    2: "edited by",
+  },
+  editdate: {
+    1:"تاريخ آخر تعديل",
+    2: "date of last edit",
+  },
+  codeeditor: {
+    1: "كود من قام بالتعديل",
+    2: "editor code",
+  },
   mobile: {
     1: "الهاتف المحمول",
     2: "mobile",
   },
   creationdate: {
-    1: "تاريخ الإنشاء",
-    2: "creation date",
+    1: "تاريخ مركز التكلفه",
+    2: "cost center date",
   },
   taxnumber: {
     1: "الرقم الضريبي",

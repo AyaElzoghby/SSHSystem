@@ -185,7 +185,7 @@ export default function AccountModal({
                 onTextChange={(val) =>
                   setFormState((prev) => ({
                     ...prev,
-                    dlevel: val.replace(/[^\d]/g, ""),
+                    dlevel: val,
                   }))
                 }
                 value={formState.dlevel}

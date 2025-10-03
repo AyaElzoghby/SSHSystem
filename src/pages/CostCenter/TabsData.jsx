@@ -6,13 +6,7 @@ import DropdownComponent from "@/components/ui/DropDown";
 import InputComponent from "@/components/InputComponent";
 import DatePicker from "@/components/DatePicker";
 
-export function CostCenterDetails({
-  DetailedTabs,
-  selectedCostCenter,
-  Type,
-  Type1,
-  Type2,
-}) {
+export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
   const { languageId } = useLanguage();
 
   return (
@@ -30,32 +24,6 @@ export function CostCenterDetails({
               checked={selectedCostCenter.dsecondry}
             />
           </div>
-
-          <div className="flex gap-4 mb-4">
-            <DropdownComponent
-              disabled
-              value={selectedCostCenter.dacC_TYPE0}
-              // initialValue={Type[0]}
-              options={Type}
-              label={CostCenterLang.primaryType[languageId]}
-            />
-
-            <DropdownComponent
-              disabled
-              value={selectedCostCenter.dacC_TYPE}
-              // initialValue={Type1[0]}
-              options={Type1}
-              label={CostCenterLang.secondaryType[languageId]}
-            />
-
-            <DropdownComponent
-              disabled
-              value={selectedCostCenter.dacC_TYPE2}
-              options={Type2}
-              label={CostCenterLang.tertiaryType[languageId]}
-            />
-          </div>
-
           <div className="flex gap-4 grid grid-cols-4 mb-4">
             <div className="col-span-1">
               <InputComponent
@@ -74,7 +42,6 @@ export function CostCenterDetails({
               />
             </div>
           </div>
-
           <InputComponent
             disabled
             title={CostCenterLang.CostCenterNameArabic[languageId]}
@@ -86,6 +53,46 @@ export function CostCenterDetails({
             title={CostCenterLang.CostCenterNameEnglish[languageId]}
             className="mb-4"
             value={selectedCostCenter.dnamE2}
+          />
+          <InputComponent
+            disabled
+            title={CostCenterLang.usercreate[languageId]}
+            value={selectedCostCenter.userName}
+          />
+          <InputComponent
+            disabled
+            title={CostCenterLang.codecreate[languageId]}
+            value={selectedCostCenter.userNo}
+            type="number"
+          />{" "}
+          <DatePicker
+            disabled
+            title={CostCenterLang.datecreate[languageId]}
+            value={
+              selectedCostCenter.es_Date ??
+              new Date().toISOString().split("T")[0]
+            }
+            type="date"
+          />{" "}
+          <InputComponent
+            disabled
+            title={CostCenterLang.useredit[languageId]}
+            value={selectedCostCenter.eUserName}
+          />
+          <InputComponent
+            disabled
+            title={CostCenterLang.codeeditor[languageId]}
+            value={selectedCostCenter.eUserNo}
+            type="number"
+          />{" "}
+          <DatePicker
+            disabled
+            title={CostCenterLang.editdate[languageId]}
+            value={
+              selectedCostCenter.edDate ??
+              new Date().toISOString().split("T")[0]
+            }
+            type="date"
           />
           {!selectedCostCenter.dsecondry && <Tabs contents={DetailedTabs} />}
         </>
@@ -153,7 +160,7 @@ export function Information({ selectedCostCenter }) {
           <DatePicker
             disabled
             title={CostCenterLang.creationdate[languageId]}
-            value={selectedCostCenter.dfdate}
+            value={selectedCostCenter.dvaluedate}
           />
         </>
       ) : (
@@ -174,7 +181,13 @@ export function Openingbalance({ selectedCostCenter, Currencies }) {
           {" "}
           <InputComponent
             disabled
-                  title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${selectedCostCenter.doldacC2==0?CostCenterLang.debt[languageId]:selectedCostCenter.doldacC1==0?CostCenterLang.credit[languageId] :""}`}
+            title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
+              selectedCostCenter.doldacC2 == 0
+                ? CostCenterLang.debt[languageId]
+                : selectedCostCenter.doldacC1 == 0
+                ? CostCenterLang.credit[languageId]
+                : ""
+            }`}
             value={selectedCostCenter.doldacc}
             type="number"
           />
@@ -194,31 +207,6 @@ export function Openingbalance({ selectedCostCenter, Currencies }) {
               type="number"
             />
           </div>
-          <p className="text-textPrimary text-base font-bold">
-            {CostCenterLang.ForeignCurrencies[languageId]}{" "}
-          </p>
-          <DropdownComponent
-            disabled
-            label={CostCenterLang.ChooseCurrency[languageId]}
-            value={selectedCostCenter.dcurrency}
-            options={Currencies}
-          />
-          <div className="flex gap-4">
-            <InputComponent
-              disabled
-              flex
-              title={CostCenterLang.debtor[languageId]}
-              value={selectedCostCenter.dcurrenT1}
-              type="number"
-            />
-            <InputComponent
-              disabled
-              flex
-              title={CostCenterLang.creditor[languageId]}
-              value={selectedCostCenter.dcurrenT2}
-              type="number"
-            />
-          </div>
         </>
       ) : (
         <p className="text-textPrimary text-base font-bold">
@@ -228,7 +216,7 @@ export function Openingbalance({ selectedCostCenter, Currencies }) {
     </>
   );
 }
-export function CostCenterControl({ selectedCostCenter, ViewOf }) {
+export function CostCenterControl({ selectedCostCenter }) {
   const { languageId } = useLanguage();
 
   return (
@@ -261,7 +249,6 @@ export function CostCenterControl({ selectedCostCenter, ViewOf }) {
               type="number"
             />
           )}
-         
         </>
       ) : (
         <p className="text-textPrimary text-base font-bold">
