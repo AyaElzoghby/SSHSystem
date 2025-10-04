@@ -1,8 +1,8 @@
 // src/api/api.js
 import { useUser } from "../context/UserContext";
 
-// const BASE_URL = "https://localhost:7014/api"; // هيوصل للـ public/api
-const BASE_URL = "http://dev1ebtkar-001-site1.atempurl.com/api"; 
+const BASE_URL = "https://localhost:7014/api"; // هيوصل للـ public/api
+// const BASE_URL = "http://dev1ebtkar-001-site1.atempurl.com/api"; 
 
 // Generic request function
 const request = async (method, endpoint, data, token) => {
