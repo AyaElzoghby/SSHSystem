@@ -180,10 +180,10 @@ export function Openingbalance({ selectedCostCenter, Currencies }) {
           <InputComponent
             disabled
             title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
-              selectedCostCenter.doldacC2 == 0
-                ? CostCenterLang.debt[languageId]
-                : selectedCostCenter.doldacC1 == 0
-                ? CostCenterLang.credit[languageId]
+              selectedCostCenter.doldacC2 > 0
+              ? CostCenterLang.credit[languageId]
+              : selectedCostCenter.doldacC1 > 0
+              ? CostCenterLang.debt[languageId]
                 : ""
             }`}
             value={selectedCostCenter.doldacc}

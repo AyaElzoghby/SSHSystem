@@ -106,7 +106,7 @@ export default function CostCenter() {
   // ✅ handlers
 
   useEffect(() => {
-    if (!selectedId || modalType !== "Add" || !modelVisible) return;
+    if (modalType !== "Add" || !modelVisible) return;
 
     let cancelled = false;
 
@@ -114,9 +114,10 @@ export default function CostCenter() {
       setLoadingDetails(true);
       try {
         const NewCostCenterData = await api.get(
-          `/CostCenter/GetNewCostCenterData?parentCode=${selectedId}`
+          selectedId
+            ? `/CostCenter/GetNewCostCenterData?parentCode=${selectedId}`
+            : `/CostCenter/GetNewCostCenterData`
         );
-
         if (cancelled) return;
         setFormState(() => ({
           ...initialFormState,
@@ -137,7 +138,7 @@ export default function CostCenter() {
     return () => {
       cancelled = true;
     };
-  }, [selectedId, modalType, modelVisible]);
+  }, [modalType, modelVisible]);
 
   useEffect(() => {
     if (!selectedChildCode || modalType !== "Edit") return;
@@ -264,7 +265,7 @@ export default function CostCenter() {
     setModelVisible(true);
     setModalType("Add");
     setFormState(initialFormState);
-  }, [selectedCostCenter]);
+  }, []);
 
   const handleEditCostCenter = useCallback(() => {
     if (!selectedCostCenter) return;
@@ -444,9 +445,9 @@ export default function CostCenter() {
           {/* tree */}
           <div className="col-span-12 lg:col-span-5 text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
             <div className="flex justify-between items-center">
-            <h3 className="block border-b-2 w-fit mb-4 font-bold">
-              {CostCenterLang.CostCenter[languageId]}
-            </h3>
+              <h3 className="block border-b-2 w-fit mb-4 font-bold">
+                {CostCenterLang.CostCenter[languageId]}
+              </h3>
 
               <CustomButton
                 icon={<FontAwesomeIcon icon={faSquarePlus} />}

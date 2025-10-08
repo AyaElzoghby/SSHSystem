@@ -180,7 +180,13 @@ export function Openingbalance({ selectedAccount, Currencies }) {
           {" "}
           <InputComponent
             disabled
-                  title={`${AccountsChartLang.openingBalanceCurrent[languageId]} ${selectedAccount.doldacC2==0?AccountsChartLang.debt[languageId]:selectedAccount.doldacC1==0?AccountsChartLang.credit[languageId] :""}`}
+            title={`${AccountsChartLang.openingBalanceCurrent[languageId]} ${
+              selectedAccount.doldacC2 > 0
+              ? AccountsChartLang.credit[languageId]
+              : selectedAccount.doldacC1 > 0
+              ? AccountsChartLang.debt[languageId]
+                : ""
+            }`}
             value={selectedAccount.doldacc}
             type="number"
           />
