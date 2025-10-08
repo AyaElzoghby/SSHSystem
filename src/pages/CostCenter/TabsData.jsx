@@ -69,8 +69,7 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
             disabled
             title={CostCenterLang.datecreate[languageId]}
             value={
-              selectedCostCenter.es_Date ??
-              new Date().toISOString().split("T")[0]
+              selectedCostCenter.es_Date
             }
             type="date"
           />{" "}
@@ -89,8 +88,7 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
             disabled
             title={CostCenterLang.editdate[languageId]}
             value={
-              selectedCostCenter.edDate ??
-              new Date().toISOString().split("T")[0]
+              selectedCostCenter.edDate
             }
             type="date"
           />
