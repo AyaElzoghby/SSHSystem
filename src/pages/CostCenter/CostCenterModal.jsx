@@ -328,7 +328,7 @@ export default function CostCenterModal({
                 />
                 <DatePicker
                   title={CostCenterLang.creationdate[languageId]}
-                  value={formState.dvaluedate ?? new Date()}
+                  value={modalType === "Edit"?formState.dvaluedate : new Date()}
                   onChange={(val) =>
                     setFormState((prev) => ({ ...prev, dvaluedate: val }))
                   }
@@ -342,10 +342,10 @@ export default function CostCenterModal({
                 <InputComponent
                   disabled
                   title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
-                    formState.doldacC2 == 0
-                      ? CostCenterLang.debt[languageId]
-                      : formState.doldacC1 == 0
-                      ? CostCenterLang.credit[languageId]
+                    formState.doldacC2 > 0
+                    ? CostCenterLang.credit[languageId]
+                    : formState.doldacC1 > 0
+                    ? CostCenterLang.debt[languageId]
                       : ""
                   }`}
                   value={Math.abs(formState.doldacc)}

@@ -157,7 +157,7 @@ export default function AccountModal({
               }}
             />
             <DropdownComponent
-              disabled={modalType === "Edit" || formState.dlevel >= 2}
+              disabled={modalType === "Edit" || formState.dlevel > 2}
               value={formState.dacC_TYPE}
               options={Type1}
               label={AccountsChartLang.secondaryType[languageId]}
@@ -314,7 +314,7 @@ export default function AccountModal({
                 />
                 <DatePicker
                   title={AccountsChartLang.creationdate[languageId]}
-                  value={formState.dfdate ?? new Date()}
+                  value={modalType === "Edit"?formState.dfdate : new Date()}
                   onChange={(val) =>
                     setFormState((prev) => ({ ...prev, dfdate: val }))
                   }
@@ -330,10 +330,10 @@ export default function AccountModal({
                   title={`${
                     AccountsChartLang.openingBalanceCurrent[languageId]
                   } ${
-                    formState.doldacC2 == 0
-                      ? AccountsChartLang.debt[languageId]
-                      : formState.doldacC1 == 0
-                      ? AccountsChartLang.credit[languageId]
+                    formState.doldacC2 > 0
+                    ? AccountsChartLang.credit[languageId]
+                    : formState.doldacC1 > 0
+                    ? AccountsChartLang.debt[languageId]
                       : ""
                   }`}
                   value={Math.abs(formState.doldacc)}
@@ -448,10 +448,10 @@ export default function AccountModal({
                   }
                 />
                 <Checkbox
-                  checked={formState.EMAIL_MSG}
+                  checked={formState.emaiL_MSG}
                   label={AccountsChartLang.NotifyCustomer[languageId]}
                   onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, EMAIL_MSG: val }))
+                    setFormState((prev) => ({ ...prev, emaiL_MSG: val }))
                   }
                 />
                 <Checkbox
@@ -473,13 +473,13 @@ export default function AccountModal({
                   />
                 )}
                 <Checkbox
-                  checked={formState.Accshow_Rem}
+                  checked={formState.accshow_Rem}
                   label={AccountsChartLang.AccountHandlingNotes[languageId]}
                   onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, Accshow_Rem: val }))
+                    setFormState((prev) => ({ ...prev, accshow_Rem: val }))
                   }
                 />
-                {formState.Accshow_Rem && (
+                {formState.accshow_Rem && (
                   <InputComponent
                     value={formState.acc_Rem}
                     placeholder={

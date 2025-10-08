@@ -75,7 +75,9 @@ export default function CostCenter() {
   // دالة مشتركة تجيب التفاصيل
   const fetchCostCenterDetails = async (code, setter) => {
     try {
-      const details = await api.get(`/CostCenter/GetCostCenterDetail?code=${code}`);
+      const details = await api.get(
+        `/CostCenter/GetCostCenterDetail?code=${code}`
+      );
       setter(details);
     } catch (err) {
       console.error("Fetch error:", err);
@@ -88,7 +90,6 @@ export default function CostCenter() {
     fetchCostCenterDetails(selectedId, setSelectedCostCenter);
   }, [selectedId]);
 
-  
   const Currencies = useDropdown("/Account/GetCurrencies", {}, [
     "dNum",
     "curr",
@@ -98,7 +99,6 @@ export default function CostCenter() {
     () => (SelectedType ? { type0: Number(SelectedType) } : {}),
     [SelectedType]
   );
-
 
   const handleItemSelected = useCallback((id) => {
     setSelectedId(id);
@@ -120,12 +120,11 @@ export default function CostCenter() {
         if (cancelled) return;
         setFormState(() => ({
           ...initialFormState,
-
           dcodE1: NewCostCenterData?.ccCode ?? "",
           dlevel: NewCostCenterData?.ccLevel ?? 0,
           dcodE2: selectedId ?? "",
         }));
-        setSelectedType(NewCostCenterData?.CostCenterType0 ?? "");
+        // setSelectedType(NewCostCenterData?.CostCenterType0 ?? "");
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
@@ -161,6 +160,9 @@ export default function CostCenter() {
           edDate: details?.edDate
             ? new Date(details.edDate).toISOString().split("T")[0]
             : null,
+          dvaluedate: details?.dvaluedate
+            ? new Date(details.dvaluedate).toISOString().split("T")[0]
+            : null,
         });
       } catch (err) {
         console.error("Fetch error:", err);
@@ -184,10 +186,7 @@ export default function CostCenter() {
     try {
       if (modalType === "Add") {
         const body = processFormData(formState);
-        console.log(
-          "Addddddd body",
-          console.log("Addddddd body", JSON.stringify(body))
-        );
+        console.log("Addddddd body", JSON.stringify(body));
         const response = await api.post("/CostCenter/CreateCostCenter", body);
       } else if (modalType === "Edit") {
         console.log("edit body", formState);
@@ -197,17 +196,18 @@ export default function CostCenter() {
         });
         fetchCostCenterDetails(selectedId, setSelectedCostCenter);
       }
-      toast.success( modalType === "Add"
-        ? CostCenterLang.AddDone[languageId]
-        : CostCenterLang.EditDone[languageId]
-   );
+      toast.success(
+        modalType === "Add"
+          ? CostCenterLang.AddDone[languageId]
+          : CostCenterLang.EditDone[languageId]
+      );
       await loadData();
       setModelVisible(false);
       // reset();
     } catch (error) {
       console.error("Error saving CostCenter:", error);
-    }finally{
-      toast.dismiss(toastId)
+    } finally {
+      toast.dismiss(toastId);
     }
   }
 
@@ -217,7 +217,9 @@ export default function CostCenter() {
     );
     console.log("Deleting with code:", selectedChildCode);
     try {
-      await api.delete(`/CostCenter/DeleteCostCenter?code=${selectedChildCode}`);
+      await api.delete(
+        `/CostCenter/DeleteCostCenter?code=${selectedChildCode}`
+      );
       await loadData(); // refresh tree
       setModelVisible(false);
       toast.success(CostCenterLang.DeleteDone[languageId]);
@@ -257,6 +259,12 @@ export default function CostCenter() {
     setModalType("Add");
     setFormState(initialFormState);
   }, [selectedCostCenter]);
+  const handleAddGeneralCostCenter = useCallback(() => {
+    setSelectedChildCode(null);
+    setModelVisible(true);
+    setModalType("Add");
+    setFormState(initialFormState);
+  }, [selectedCostCenter]);
 
   const handleEditCostCenter = useCallback(() => {
     if (!selectedCostCenter) return;
@@ -285,9 +293,10 @@ export default function CostCenter() {
   const DetailedTabs = useMemo(
     () => [
       {
-        tab_title: `${
-          CostCenterLang.Information[languageId]
-        } ${GetAccountName(selectedCostCenter, languageId)}`,
+        tab_title: `${CostCenterLang.Information[languageId]} ${GetAccountName(
+          selectedCostCenter,
+          languageId
+        )}`,
         tab_contents: (
           <Information
             key={`info-${selectedCostCenter?.dcodE1}`}
@@ -318,7 +327,6 @@ export default function CostCenter() {
           />
         ),
       },
-     
     ],
     [selectedCostCenter, languageId]
   );
@@ -394,7 +402,6 @@ export default function CostCenter() {
       tab_contents: (
         <>
           <CostCenterDetails
-          
             DetailedTabs={DetailedTabs}
             selectedCostCenter={selectedCostCenter}
           />
@@ -436,17 +443,29 @@ export default function CostCenter() {
         <div className="flex-row justify-center  grid grid-cols-12 my-4 gap-4">
           {/* tree */}
           <div className="col-span-12 lg:col-span-5 text-textPrimary bg-surface p-4 shadow-md h-fit rounded-lg">
+            <div className="flex justify-between items-center">
             <h3 className="block border-b-2 w-fit mb-4 font-bold">
               {CostCenterLang.CostCenter[languageId]}
             </h3>
+
+              <CustomButton
+                icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                size="small"
+                className="bg-success text-gray-100 w-24 h-8"
+                title={CostCenterLang.Add[languageId]}
+                onClick={() => handleAddGeneralCostCenter()}
+              />
+            </div>
             <div className="">
               {rawData ? (
-                <NestedTree
-                  data={rawData}
-                  selectedId={selectedId} // 👈 يتحكم من عندك
-                  onSelectedChange={setSelectedId} // 👈 يحدث الأب
-                  onItemSelected={handleItemSelected} // 👈 لو عايزة تبني لوجيك تاني
-                />
+                <>
+                  <NestedTree
+                    data={rawData}
+                    selectedId={selectedId} // 👈 يتحكم من عندك
+                    onSelectedChange={setSelectedId} // 👈 يحدث الأب
+                    onItemSelected={handleItemSelected} // 👈 لو عايزة تبني لوجيك تاني
+                  />
+                </>
               ) : (
                 <div>
                   <p className="text-textPrimary text-base">
@@ -511,7 +530,6 @@ export default function CostCenter() {
         }
       >
         <CostCenterModal
-        
           Currencies={Currencies}
           formState={formState}
           modalType={modalType}

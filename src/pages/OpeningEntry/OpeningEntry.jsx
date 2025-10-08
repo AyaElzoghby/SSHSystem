@@ -117,15 +117,15 @@ export default function OpeningEntry() {
         valueParser: (params) => parseFloat(params.newValue) || 0,
         valueFormatter: (params) => params.value?.toFixed(2), // يعرض برقمين عشريين
       },
-      {
-        field: "doldAcc",
-        headerName: languageId === 1 ? "الفرق" : "difference",
-        editable: false, // ❌ ممنوع يتعدل
-        valueGetter: (params) =>
-          (parseFloat(params.data.doldAcc2) || 0) -
-          (parseFloat(params.data.doldAcc1) || 0),
-        valueFormatter: (params) => params.value?.toFixed(2),
-      },
+      // {
+      //   field: "doldAcc",
+      //   headerName: languageId === 1 ? "الفرق" : "difference",
+      //   editable: false, // ❌ ممنوع يتعدل
+      //   valueGetter: (params) =>
+      //     (parseFloat(params.data.doldAcc2) || 0) -
+      //     (parseFloat(params.data.doldAcc1) || 0),
+      //   valueFormatter: (params) => params.value?.toFixed(2),
+      // },
       {
         field: "notes",
         headerName: languageId === 1 ? "ملاحظات" : "notes",
@@ -133,7 +133,7 @@ export default function OpeningEntry() {
       },
       {
         field: "remark",
-        headerName: languageId === 1 ? "تعليق" : "remark",
+        headerName: languageId === 1 ? "مرجع" : "remark",
         editable: true,
       },
     ];
