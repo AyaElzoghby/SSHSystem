@@ -288,7 +288,6 @@ export function AccountControl({ selectedAccount, ViewOf }) {
               disabled
               placeholder={AccountsChartLang.SuspendAccountReason[languageId]}
               value={selectedAccount.dStop_Rem}
-              type="number"
             />
           )}
           <Checkbox
@@ -301,7 +300,6 @@ export function AccountControl({ selectedAccount, ViewOf }) {
               disabled
               value={selectedAccount.acc_Rem}
               placeholder={AccountsChartLang.AccountHandlingNotes[languageId]}
-              type="number"
             />
           )}
           <Checkbox

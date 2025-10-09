@@ -231,7 +231,6 @@ export function CostCenterControl({ selectedCostCenter }) {
               disabled
               placeholder={CostCenterLang.SuspendCostCenterReason[languageId]}
               value={selectedCostCenter.dStop_Rem}
-              type="number"
             />
           )}
           <Checkbox
@@ -244,7 +243,6 @@ export function CostCenterControl({ selectedCostCenter }) {
               disabled
               value={selectedCostCenter.acc_Rem}
               placeholder={CostCenterLang.CostCenterHandlingNotes[languageId]}
-              type="number"
             />
           )}
         </>
