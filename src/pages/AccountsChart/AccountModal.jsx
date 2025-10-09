@@ -501,10 +501,10 @@ export default function AccountModal({
                   />
                 )}
                 <Checkbox
-                  checked={formState.CostCRelate}
+                  checked={formState.costCRelate}
                   label={AccountsChartLang.accountMustLinked[languageId]}
                   onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, CostCRelate: val }))
+                    setFormState((prev) => ({ ...prev, costCRelate: val }))
                   }
                 />
               </>

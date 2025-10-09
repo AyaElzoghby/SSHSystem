@@ -275,7 +275,7 @@ export function AccountControl({ selectedAccount, ViewOf }) {
           />
           <Checkbox
             disabled
-            checked={selectedAccount.EMAIL_MSG}
+            checked={selectedAccount.emaiL_MSG}
             label={AccountsChartLang.NotifyCustomer[languageId]}
           />
           <Checkbox
@@ -287,16 +287,16 @@ export function AccountControl({ selectedAccount, ViewOf }) {
             <InputComponent
               disabled
               placeholder={AccountsChartLang.SuspendAccountReason[languageId]}
-              value={selectedAccount.DStop_Rem}
+              value={selectedAccount.dStop_Rem}
               type="number"
             />
           )}
           <Checkbox
             disabled
-            checked={selectedAccount.Accshow_Rem}
+            checked={selectedAccount.accshow_Rem}
             label={AccountsChartLang.AccountHandlingNotes[languageId]}
           />
-          {selectedAccount.Accshow_Rem && (
+          {selectedAccount.accshow_Rem && (
             <InputComponent
               disabled
               value={selectedAccount.acc_Rem}
@@ -306,7 +306,7 @@ export function AccountControl({ selectedAccount, ViewOf }) {
           )}
           <Checkbox
             disabled
-            checked={selectedAccount.CostCRelate}
+            checked={selectedAccount.costCRelate}
             label={AccountsChartLang.accountMustLinked[languageId]}
           />
         </>
