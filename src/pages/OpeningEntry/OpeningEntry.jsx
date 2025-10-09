@@ -419,13 +419,13 @@ export default function OpeningEntry() {
               <InputComponent
                 disabled
                 flex
-                value={parseFloat(totals.acc1).toFixed(2)}
+                value={parseFloat(totals.acc1).toFixed(3)}
                 title={"مجموع الدائن:"}
               />
               <InputComponent
                 disabled
                 flex
-                value={parseFloat(totals.acc2).toFixed(2)}
+                value={parseFloat(totals.acc2).toFixed(3)}
                 title={"مجموع المدين:"}
               />
               <InputComponent

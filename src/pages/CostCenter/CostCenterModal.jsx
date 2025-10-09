@@ -421,7 +421,7 @@ export default function CostCenterModal({
                   checked={formState.accshow_Rem}
                   label={CostCenterLang.CostCenterHandlingNotes[languageId]}
                   onChange={(val) =>
-                    setFormState((prev) => ({ ...prev, Accshow_Rem: val }))
+                    setFormState((prev) => ({ ...prev, accshow_Rem: val }))
                   }
                 />
                 {formState.accshow_Rem && (
