@@ -94,7 +94,9 @@ export default function AccountModal({
             setnameArError(AccountsChartLang.Arabicnamenotvalid[languageId]); // invalid
           }
         } catch {
-          setnameArError(AccountsChartLang.ErrorvalidatingArabicname[languageId]);
+          setnameArError(
+            AccountsChartLang.ErrorvalidatingArabicname[languageId]
+          );
         }
       }
 
@@ -111,7 +113,9 @@ export default function AccountModal({
             setnameEnError(AccountsChartLang.Englishnamenotvalid[languageId]); // invalid
           }
         } catch {
-          setnameEnError(AccountsChartLang.ErrorvalidatingEnglishname[languageId]);
+          setnameEnError(
+            AccountsChartLang.ErrorvalidatingEnglishname[languageId]
+          );
         }
       }
     };
@@ -147,6 +151,7 @@ export default function AccountModal({
           <div className="flex gap-4 mb-4">
             <DropdownComponent
               disabled={modalType === "Edit" || formState.dlevel > 1}
+              required={formState.dlevel >= 1}
               value={formState.dacC_TYPE0}
               options={Type}
               label={AccountsChartLang.primaryType[languageId]}
@@ -158,6 +163,7 @@ export default function AccountModal({
             />
             <DropdownComponent
               disabled={modalType === "Edit" || formState.dlevel > 2}
+              required={formState.dlevel >= 2}
               value={formState.dacC_TYPE}
               options={Type1}
               label={AccountsChartLang.secondaryType[languageId]}
@@ -168,6 +174,7 @@ export default function AccountModal({
             />
             <DropdownComponent
               value={formState.dacC_TYPE2}
+              required={formState.dlevel >= 3}
               options={Type2}
               label={AccountsChartLang.tertiaryType[languageId]}
               placeholder={AccountsChartLang.Select[languageId]}
@@ -195,7 +202,8 @@ export default function AccountModal({
             <div className="col-span-3">
               <InputComponent
                 disabled={modalType === "Edit"}
-                value={Code ? Code : formState.dcodE1 ? formState.dcodE1: ""}
+                required={true}
+                value={Code ? Code : formState.dcodE1 ? formState.dcodE1 : ""}
                 error={codeError}
                 title={AccountsChartLang.accountCode[languageId]}
                 type="number"
@@ -206,9 +214,10 @@ export default function AccountModal({
 
           <InputComponent
             title={AccountsChartLang.accountNameArabic[languageId]}
+            required={true}
             className="mb-4"
             error={nameArError}
-            value={nameAr ? nameAr : formState.dname ?  formState.dname:""}
+            value={nameAr ? nameAr : formState.dname ? formState.dname : ""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameAr(val)
@@ -221,9 +230,10 @@ export default function AccountModal({
           />
           <InputComponent
             title={AccountsChartLang.accountNameEnglish[languageId]}
+            required={true}
             className="mb-4"
             error={nameEnError}
-            value={nameEn ? nameEn : formState.dnamE2 ?formState.dnamE2 :""}
+            value={nameEn ? nameEn : formState.dnamE2 ? formState.dnamE2 : ""}
             onTextChange={
               modalType === "Add"
                 ? (val) => setnameEn(val)
@@ -314,7 +324,7 @@ export default function AccountModal({
                 />
                 <DatePicker
                   title={AccountsChartLang.creationdate[languageId]}
-                  value={modalType === "Edit"?formState.dfdate : new Date()}
+                  value={modalType === "Edit" ? formState.dfdate : new Date()}
                   onChange={(val) =>
                     setFormState((prev) => ({ ...prev, dfdate: val }))
                   }
@@ -331,9 +341,9 @@ export default function AccountModal({
                     AccountsChartLang.openingBalanceCurrent[languageId]
                   } ${
                     formState.doldacC2 > 0
-                    ? AccountsChartLang.credit[languageId]
-                    : formState.doldacC1 > 0
-                    ? AccountsChartLang.debt[languageId]
+                      ? AccountsChartLang.credit[languageId]
+                      : formState.doldacC1 > 0
+                      ? AccountsChartLang.debt[languageId]
                       : ""
                   }`}
                   value={Math.abs(formState.doldacc)}
@@ -619,7 +629,7 @@ export default function AccountModal({
         </>
       ) : (
         <p className="text-base font-bold text-center">
-         {AccountsChartLang.deletion[languageId]}
+          {AccountsChartLang.deletion[languageId]}
         </p>
       )}
     </>

@@ -155,6 +155,7 @@ export default function CostCenterModal({
             <div className="col-span-3">
               <InputComponent
                 disabled={modalType === "Edit"}
+                required={true}
                 value={Code ? Code : formState.dcodE1 ? formState.dcodE1 : ""}
                 error={codeError}
                 title={CostCenterLang.CostCenterCode[languageId]}
@@ -165,6 +166,7 @@ export default function CostCenterModal({
           </div>
           <InputComponent
             title={CostCenterLang.CostCenterNameArabic[languageId]}
+            required={true}
             className="mb-4"
             error={nameArError}
             value={nameAr ? nameAr : formState.dname ? formState.dname : ""}
@@ -182,6 +184,7 @@ export default function CostCenterModal({
             title={CostCenterLang.CostCenterNameEnglish[languageId]}
             className="mb-4"
             error={nameEnError}
+            required={true}
             value={nameEn ? nameEn : formState.dnamE2 ? formState.dnamE2 : ""}
             onTextChange={
               modalType === "Add"
@@ -197,6 +200,7 @@ export default function CostCenterModal({
             disabled={modalType === "Edit"}
             title={CostCenterLang.usercreate[languageId]}
             value={formState.userName}
+            required={true}
             onTextChange={(val) =>
               setFormState((prev) => ({ ...prev, userName: val }))
             }
@@ -205,6 +209,7 @@ export default function CostCenterModal({
             disabled={modalType === "Edit"}
             title={CostCenterLang.codecreate[languageId]}
             value={formState.userNo}
+            required={true}
             type="number"
             onTextChange={(val) =>
               setFormState((prev) => ({ ...prev, userNo: val }))
@@ -213,6 +218,7 @@ export default function CostCenterModal({
           <DatePicker
             disabled={modalType === "Edit"}
             title={CostCenterLang.datecreate[languageId]}
+            required={true}
             value={formState.es_Date ?? new Date().toISOString().split("T")[0]}
             type="date"
             onTextChange={(val) =>
@@ -224,6 +230,7 @@ export default function CostCenterModal({
               <InputComponent
                 title={CostCenterLang.useredit[languageId]}
                 value={formState.eUserName}
+                required={true}
                 onTextChange={(val) =>
                   setFormState((prev) => ({ ...prev, eUserName: val }))
                 }
@@ -231,12 +238,14 @@ export default function CostCenterModal({
               <InputComponent
                 title={CostCenterLang.codeeditor[languageId]}
                 value={formState.eUserNo}
+                required={true}
                 type="number"
                 onTextChange={(val) =>
                   setFormState((prev) => ({ ...prev, eUserNo: val }))
                 }
               />
               <DatePicker
+                required={true}
                 title={CostCenterLang.editdate[languageId]}
                 value={
                   formState.edDate ?? new Date().toISOString().split("T")[0]
@@ -328,7 +337,9 @@ export default function CostCenterModal({
                 />
                 <DatePicker
                   title={CostCenterLang.creationdate[languageId]}
-                  value={modalType === "Edit"?formState.dvaluedate : new Date()}
+                  value={
+                    modalType === "Edit" ? formState.dvaluedate : new Date()
+                  }
                   onChange={(val) =>
                     setFormState((prev) => ({ ...prev, dvaluedate: val }))
                   }
@@ -343,9 +354,9 @@ export default function CostCenterModal({
                   disabled
                   title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
                     formState.doldacC2 > 0
-                    ? CostCenterLang.credit[languageId]
-                    : formState.doldacC1 > 0
-                    ? CostCenterLang.debt[languageId]
+                      ? CostCenterLang.credit[languageId]
+                      : formState.doldacC1 > 0
+                      ? CostCenterLang.debt[languageId]
                       : ""
                   }`}
                   value={Math.abs(formState.doldacc)}

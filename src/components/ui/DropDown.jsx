@@ -10,6 +10,7 @@ export default function DropdownComponent({
   initialValue = null, // ممكن يكون object أو primitive
   onChange,
   rtl = true,
+  required=false,
   placeholder = rtl ? "اختر..." : "Select...",
   flex = false,
   className = "",
@@ -47,7 +48,7 @@ export default function DropdownComponent({
             flex ? "col-span-1" : ""
           } text-textPrimary text-start`}
         >
-          {label}
+          {label} {required && <span className="text-red-500">*</span>}
         </p>
       )}
 
