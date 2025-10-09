@@ -219,8 +219,7 @@ export default function CostCenterModal({
             disabled={modalType === "Edit"}
             title={CostCenterLang.datecreate[languageId]}
             required={true}
-            value={formState.es_Date ?? new Date().toISOString().split("T")[0]}
-            type="date"
+            value={formState.es_Date ?? new Date()}
             onTextChange={(val) =>
               setFormState((prev) => ({ ...prev, es_Date: val }))
             }
@@ -248,9 +247,8 @@ export default function CostCenterModal({
                 required={true}
                 title={CostCenterLang.editdate[languageId]}
                 value={
-                  formState.edDate ?? new Date().toISOString().split("T")[0]
+                  formState.edDate ?? new Date()
                 }
-                type="date"
                 onTextChange={(val) =>
                   setFormState((prev) => ({ ...prev, edDate: val }))
                 }

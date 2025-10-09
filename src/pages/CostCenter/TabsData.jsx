@@ -71,7 +71,6 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
             value={
               selectedCostCenter.es_Date
             }
-            type="date"
           />{" "}
           <InputComponent
             disabled
@@ -90,7 +89,6 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
             value={
               selectedCostCenter.edDate
             }
-            type="date"
           />
           {!selectedCostCenter.dsecondry && <Tabs contents={DetailedTabs} />}
         </>
