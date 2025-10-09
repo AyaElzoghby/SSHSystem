@@ -236,10 +236,10 @@ export function CostCenterControl({ selectedCostCenter }) {
           )}
           <Checkbox
             disabled
-            checked={selectedCostCenter.Accshow_Rem}
+            checked={selectedCostCenter.accshow_Rem}
             label={CostCenterLang.CostCenterHandlingNotes[languageId]}
           />
-          {selectedCostCenter.Accshow_Rem && (
+          {selectedCostCenter.accshow_Rem && (
             <InputComponent
               disabled
               value={selectedCostCenter.acc_Rem}

@@ -418,13 +418,13 @@ export default function CostCenterModal({
                   />
                 )}
                 <Checkbox
-                  checked={formState.Accshow_Rem}
+                  checked={formState.accshow_Rem}
                   label={CostCenterLang.CostCenterHandlingNotes[languageId]}
                   onChange={(val) =>
                     setFormState((prev) => ({ ...prev, Accshow_Rem: val }))
                   }
                 />
-                {formState.Accshow_Rem && (
+                {formState.accshow_Rem && (
                   <InputComponent
                     value={formState.acc_Rem}
                     placeholder={
