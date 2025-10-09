@@ -287,7 +287,7 @@ export function AccountControl({ selectedAccount, ViewOf }) {
             <InputComponent
               disabled
               placeholder={AccountsChartLang.SuspendAccountReason[languageId]}
-              value={selectedAccount.dStop_Rem}
+              value={selectedAccount.DStop_Rem}
               type="number"
             />
           )}
