@@ -208,7 +208,8 @@ export default function AccountsChart() {
           ...formState,
           dcodE1: selectedChildCode,
         });
-        fetchAccountDetails(selectedId, setSelectedAccount);
+        // fetchAccountDetails(selectedId, setSelectedAccount);
+        fetchAccountDetails(selectedChildCode, setSelectedAccount);
       }
       toast.success(
         modalType === "Add"
@@ -242,21 +243,6 @@ export default function AccountsChart() {
       toast.dismiss(toastId);
     }
   }
-
-  //   async function handleDelete() {
-  //     toastId =toast.loading(AccountsChartLang.DeletingAccount[languageId])
-  //     try {
-  //       await api.delete(`/Account/DeleteAccount?code=${selectedChildCode}`);
-  //       await loadData(); // refresh tree
-  //       setModelVisible(false);
-  // toast.success("deleting Done")    } catch (err) {
-  //       toast.error(err)
-  //       console.error("Delete error:", err);
-  //     }finally{
-  //       toast.dismiss(toastId)
-  //     }
-  //   }
-
   // للأطفال
   const handleAddChild = useCallback((child) => {
     setSelectedChildCode(child.dcodE1);
@@ -372,45 +358,47 @@ export default function AccountsChart() {
         <>
           {selectedId ? (
             childrenToDisplay.length > 0 ? (
-              <ul>
-                {childrenToDisplay.map((child) => (
-                  <li
-                    key={child.dcodE1}
-                    className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
-                  >
-                    {languageId == 1
-                      ? child.dname
-                      : child.dnamE2 === ""
-                      ? child.dname
-                      : child.dnamE2}
-                    <div className="flex gap-2">
-                      {child.dsecondry && (
+              <div className="">
+                <ul>
+                  <div className="flex justify-end px-2">
+                    <CustomButton
+                      icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                      size="small"
+                      className="bg-success text-gray-100"
+                      title={AccountsChartLang.Add[languageId]}
+                      onClick={() => handleAddChild(selectedId)}
+                    />
+                  </div>
+                  {childrenToDisplay.map((child) => (
+                    <li
+                      key={child.dcodE1}
+                      className="w-full flex justify-between items-center border-[0.5px] rounded-md p-2 border-border my-1 text-textSecondary hover:text-textPrimary"
+                    >
+                      {languageId == 1
+                        ? child.dname
+                        : child.dnamE2 === ""
+                        ? child.dname
+                        : child.dnamE2}
+                      <div className="flex gap-2">
                         <CustomButton
-                          icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                          icon={<FontAwesomeIcon icon={faPenToSquare} />}
                           size="small"
-                          className="bg-success text-gray-100"
-                          title={AccountsChartLang.Add[languageId]}
-                          onClick={() => handleAddChild(child)}
+                          className="bg-warning text-gray-100"
+                          title={AccountsChartLang.Edit[languageId]}
+                          onClick={() => handleEditChild(child)}
                         />
-                      )}
-                      <CustomButton
-                        icon={<FontAwesomeIcon icon={faPenToSquare} />}
-                        size="small"
-                        className="bg-warning text-gray-100"
-                        title={AccountsChartLang.Edit[languageId]}
-                        onClick={() => handleEditChild(child)}
-                      />
-                      <CustomButton
-                        icon={<FontAwesomeIcon icon={faTrashCan} />}
-                        size="small"
-                        className="bg-danger text-gray-100"
-                        title={AccountsChartLang.Delete[languageId]}
-                        onClick={() => handleDeleteChild(child)}
-                      />
-                    </div>
-                  </li>
-                ))}
-              </ul>
+                        <CustomButton
+                          icon={<FontAwesomeIcon icon={faTrashCan} />}
+                          size="small"
+                          className="bg-danger text-gray-100"
+                          title={AccountsChartLang.Delete[languageId]}
+                          onClick={() => handleDeleteChild(child)}
+                        />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ) : (
               <>
                 <p className="text-textPrimary text-base font-bold">

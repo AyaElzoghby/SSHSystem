@@ -198,7 +198,8 @@ export default function CostCenter() {
           ...formState,
           dcodE1: selectedChildCode,
         });
-        fetchCostCenterDetails(selectedId, setSelectedCostCenter);
+        // fetchCostCenterDetails(selectedId, setSelectedCostCenter);
+        fetchCostCenterDetails(selectedChildCode, setSelectedCostCenter);
       }
       toast.success(
         modalType === "Add"
@@ -346,6 +347,15 @@ export default function CostCenter() {
           {selectedId ? (
             childrenToDisplay.length > 0 ? (
               <ul>
+                <div className="flex justify-end px-2">
+                  <CustomButton
+                    icon={<FontAwesomeIcon icon={faSquarePlus} />}
+                    size="small"
+                    className="bg-success text-gray-100"
+                    title={CostCenterLang.Add[languageId]}
+                    onClick={() => handleAddChild(selectedId)}
+                  />
+                </div>
                 {childrenToDisplay.map((child) => (
                   <li
                     key={child.dcodE1}
@@ -357,15 +367,6 @@ export default function CostCenter() {
                       ? child.dname
                       : child.dnamE2}
                     <div className="flex gap-2">
-                      {child.dsecondry && (
-                        <CustomButton
-                          icon={<FontAwesomeIcon icon={faSquarePlus} />}
-                          size="small"
-                          className="bg-success text-gray-100"
-                          title={CostCenterLang.Add[languageId]}
-                          onClick={() => handleAddChild(child)}
-                        />
-                      )}
                       <CustomButton
                         icon={<FontAwesomeIcon icon={faPenToSquare} />}
                         size="small"
