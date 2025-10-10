@@ -158,6 +158,9 @@ export default function CostCenter() {
           dfdate: details?.dfdate
             ? new Date(details.dfdate).toISOString().split("T")[0]
             : null,
+          es_Date: details?.es_Date
+            ? new Date(details.es_Date).toISOString().split("T")[0]
+            : null,
           edDate: details?.edDate
             ? new Date(details.edDate).toISOString().split("T")[0]
             : null,
@@ -262,6 +265,7 @@ export default function CostCenter() {
   }, [selectedCostCenter]);
   const handleAddGeneralCostCenter = useCallback(() => {
     setSelectedChildCode(null);
+    setSelectedId(null);
     setModelVisible(true);
     setModalType("Add");
     setFormState(initialFormState);

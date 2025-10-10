@@ -220,9 +220,10 @@ export default function CostCenterModal({
             title={CostCenterLang.datecreate[languageId]}
             required={true}
             value={formState.es_Date ?? new Date()}
-            onTextChange={(val) =>
+            onChange={(val) =>
               setFormState((prev) => ({ ...prev, es_Date: val }))
             }
+            
           />{" "}
           {modalType === "Edit" && (
             <>
@@ -246,10 +247,8 @@ export default function CostCenterModal({
               <DatePicker
                 required={true}
                 title={CostCenterLang.editdate[languageId]}
-                value={
-                  formState.edDate ?? new Date()
-                }
-                onTextChange={(val) =>
+                value={formState.edDate?? new Date()}
+                onChange={(val) =>
                   setFormState((prev) => ({ ...prev, edDate: val }))
                 }
               />

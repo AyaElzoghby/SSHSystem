@@ -68,9 +68,7 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
           <DatePicker
             disabled
             title={CostCenterLang.datecreate[languageId]}
-            value={
-              selectedCostCenter.es_Date
-            }
+            value={selectedCostCenter.es_Date}
           />{" "}
           <InputComponent
             disabled
@@ -86,9 +84,7 @@ export function CostCenterDetails({ DetailedTabs, selectedCostCenter }) {
           <DatePicker
             disabled
             title={CostCenterLang.editdate[languageId]}
-            value={
-              selectedCostCenter.edDate
-            }
+            value={selectedCostCenter.edDate}
           />
           {!selectedCostCenter.dsecondry && <Tabs contents={DetailedTabs} />}
         </>
@@ -179,9 +175,9 @@ export function Openingbalance({ selectedCostCenter, Currencies }) {
             disabled
             title={`${CostCenterLang.openingBalanceCurrent[languageId]} ${
               selectedCostCenter.doldacC2 > 0
-              ? CostCenterLang.credit[languageId]
-              : selectedCostCenter.doldacC1 > 0
-              ? CostCenterLang.debt[languageId]
+                ? CostCenterLang.credit[languageId]
+                : selectedCostCenter.doldacC1 > 0
+                ? CostCenterLang.debt[languageId]
                 : ""
             }`}
             value={selectedCostCenter.doldacc}
