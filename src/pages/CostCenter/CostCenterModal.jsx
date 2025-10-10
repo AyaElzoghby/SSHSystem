@@ -324,14 +324,14 @@ export default function CostCenterModal({
                     setFormState((prev) => ({ ...prev, email: val }))
                   }
                 />
-                <InputComponent
+                {/* <InputComponent
                   title={CostCenterLang.taxnumber[languageId]}
                   value={formState.accVatNo}
                   type="number"
                   onTextChange={(val) =>
                     setFormState((prev) => ({ ...prev, accVatNo: val }))
                   }
-                />
+                /> */}
                 <DatePicker
                   title={CostCenterLang.creationdate[languageId]}
                   value={
